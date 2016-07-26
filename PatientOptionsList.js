@@ -19,10 +19,6 @@ pink500
 
 import BaseList from './BaseList';
 
-const iconStyles = {
-  marginRight: 24
-};
-
 const StethoscopeIcon = (props) => (
   <FontIcon {...props}
     className="mdi mdi-stethoscope" />

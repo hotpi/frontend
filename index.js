@@ -18,7 +18,7 @@ injectTapEventPlugin();
 
   //<Root store={store} history={history} />,
 render(
-	<MuiThemeProvider style={{height: '100vh'}}>
+	<MuiThemeProvider style={{height: '100vh', width: '100%'}}>
 		<Root />
 	</MuiThemeProvider>,
   document.getElementById('app')

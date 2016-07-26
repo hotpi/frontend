@@ -22,23 +22,7 @@ teal200,
 grey400
 } from 'material-ui/styles/colors';
 
-const listStyle = {
-    width: '19.2em', 
-    minHeight: '100vh', 
-    borderRight: '0.1em #d0d0d0 solid', 
-    boxShadow: '3px 0 2px #aeaeae', 
-    overflowY: 'hidden', 
-    overflowX: 'hidden'
-};
-
-const iconButtonElement = (
-  <IconButton
-    touch={true}
-    tooltip="more"
-    tooltipPosition="bottom-left">
-    <ContentAdd color={grey400} />
-  </IconButton>
-);
+import BaseList from './BaseList';
 
 const clinic = (name) => {
   switch(name) {
@@ -67,135 +51,187 @@ export default class Root extends React.Component {
   render() {
 
     return (
-    		<List style={listStyle}>
-          <Paper
-            zDepth={0}
-            style={{height: '60px', width: '100%'}}>
-              <h3 style={{textAlign: 'center', paddingBottom: '0px', marginBottom: '0'}}>Something</h3>
-              <IconButton
-                tooltip="add patient"
-                tooltipPosition="top-right">
-                <ContentAdd color={grey400} />
-              </IconButton>
-              <IconButton
-                tooltip="more"
-                tooltipPosition="top-right"
-                style={{left: '68%'}}>
-                <NavigationMoreVert color={grey400} />
-              </IconButton>
-          </Paper>  
-          <Divider style={{borderBottom: '1px darkgrey solid', boxShadow: '0 0.19em 0.3em #aeaeae', zIndex: '999'}}/>
-          <Tabs style={{marginTop: '0.2em'}} tabItemContainerStyle={{borderRight: '10px #aeaeae solid'}}>
+    		<BaseList>
+          <Tabs style={{marginTop: '0'}} tabItemContainerStyle={{borderRight: '1px #aeaeae solid'}}>
             <Tab label='Station 28'>
-              <div style={{overflowY: 'auto', border: 'none'}}>
+              <div style={{overflowY: 'hidden'}}>
+                <div style={{height: '535px', overflowY: 'auto', marginBottom: '0'}}>
 
-                <Subheader inset={true}>Patients</Subheader>
-                <ListItem
-                  primaryText="Patient 1"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P1
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 2"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={teal200}>
-                      P2
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ALL'))}
-                />
-                <ListItem
-                  primaryText="Patient 3"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P3
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 4"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P4
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-                  primaryText="Patient 5"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={teal200}>
-                      P5
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ALL'))}
-                />
-                <ListItem
-                  primaryText="Patient 6"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P6
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-                  primaryText="Patient 7"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P7
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-                  primaryText="Patient 8"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P8
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 9"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P9
-                    </Avatar>}
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 10"
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P10
-                    </Avatar>}
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
+                  <Subheader inset={true}>Patients</Subheader>
+                  <ListItem
+                    primaryText="Patient 1"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={lightGreen300}>
+                        P1
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('ENDO'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 2"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={teal200}>
+                        P2
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('ALL'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 3"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={lightGreen300}>
+                        P3
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('ENDO'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 4"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={amber300}>
+                        P4
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('PNEU'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 5"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={teal200}>
+                        P5
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('ALL'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 6"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={amber300}>
+                        P6
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('PNEU'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 7"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={amber300}>
+                        P7
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('PNEU'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 8"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={lightGreen300}>
+                        P8
+                      </Avatar>
+                    }
+                    rightIcon={rightIconInfo(clinic('ENDO'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 9"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={lightGreen300}>
+                        P9
+                      </Avatar>}
+                    rightIcon={rightIconInfo(clinic('ENDO'))}
+                  />
+                  <ListItem
+                    primaryText="Patient 10"
+                    secondaryText={
+                      <p>
+                        <i className="mdi mdi-cake"></i> 
+                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                      </p>  
+                    }
+                    leftAvatar={
+                      <Avatar
+                        backgroundColor={amber300}>
+                        P10
+                      </Avatar>}
+                    rightIcon={rightIconInfo(clinic('PNEU'))}
+                  />
+                  </div> 
               </div> 
            </Tab> 
             <Tab label='Station 29'>
+              <div style={{overflow: 'hidden'}}>
               <div style={{overflowY: 'auto'}}>
 
                 <Subheader inset={true}>Patients</Subheader>
       		      <ListItem
                   primaryText="Patient 1"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={lightGreen300}>
@@ -206,6 +242,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 2"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={teal200}>
@@ -216,6 +258,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 3"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={lightGreen300}>
@@ -226,6 +274,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 4"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={amber300}>
@@ -236,6 +290,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 5"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={teal200}>
@@ -246,6 +306,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 6"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={amber300}>
@@ -256,6 +322,12 @@ export default class Root extends React.Component {
                 />
                 <ListItem
                   primaryText="Patient 7"
+                  secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
                   leftAvatar={
                     <Avatar
                       backgroundColor={amber300}>
@@ -266,7 +338,13 @@ export default class Root extends React.Component {
                 />
                 <ListItem
       		        primaryText="Patient 8"
-      		        leftAvatar={
+      		        secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
+                  leftAvatar={
       		        	<Avatar
       		        		backgroundColor={lightGreen300}>
       		        		P8
@@ -276,7 +354,13 @@ export default class Root extends React.Component {
       		      />
       		      <ListItem
       		        primaryText="Patient 9"
-      		        leftAvatar={
+      		        secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
+                  leftAvatar={
       		        	<Avatar
       		        		backgroundColor={lightGreen300}>
       		        		P9
@@ -285,7 +369,13 @@ export default class Root extends React.Component {
       		      />
       		      <ListItem
       		        primaryText="Patient 10"
-      		        leftAvatar={
+      		        secondaryText={
+                    <p>
+                      <i className="mdi mdi-cake"></i> 
+                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                    </p>  
+                  }
+                  leftAvatar={
       		        	<Avatar
       		        		backgroundColor={amber300}>
       		        		P10
@@ -293,9 +383,10 @@ export default class Root extends React.Component {
                   rightIcon={rightIconInfo(clinic('PNEU'))}
       		      />
               </div> 
+              </div> 
            </Tab> 
           </Tabs>
-		    </List>
+		    </BaseList>
     	)
   }
 }

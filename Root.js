@@ -1,37 +1,38 @@
 import React from 'react';
 
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Subheader from 'material-ui/Subheader';
-import FontIcon from 'material-ui/FontIcon';
-
-import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import ActionAssignment from 'material-ui/svg-icons/action/assignment';
-import ActionHistory from 'material-ui/svg-icons/action/history';
+import Paper from 'material-ui/Paper';
 
 import {
 deepPurple600,
 cyan500,
-pink500
+blue800
 } from 'material-ui/styles/colors';
 
-import PatientOptionsList from './PatientOptionsList';
+import PatientList from './PatientList';
+import PatientHeader from './PatientHeader';
 
-const iconStyles = {
-  marginRight: 24
+const headerStylesDesktop = {
+  height: '154px',
+  backgroundColor: blue800,
+  width: '76vw',
+  left: '19.2em'
 };
 
-const StethoscopeIcon = (props) => (
-  <FontIcon {...props}
-    className="mdi mdi-stethoscope" />
-);
-
+const headerStylesMobile = {
+  height: '154px',
+  backgroundColor: blue800,
+  width: '70vw',
+  left: '19.2em'
+};
 
 export default class Root extends React.Component {
   render() {
 
     return (
-    		<PatientOptionsList />
+        <div style={{display: 'inline-flex'}}>
+          <PatientList />
+      		<PatientHeader />
+        </div>
     	)
   }
 }

@@ -10,16 +10,17 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-import { grey400 } from 'material-ui/styles/colors';
+import { grey400, blue700 } from 'material-ui/styles/colors';
 
 const listStyle = {
     width: '19.2em', 
-    minHeight: '100vh', 
+    height: '100vh', 
     borderRight: '0.1em #d0d0d0 solid', 
+    marginRight: '0',
+    marginTop: '0',
+    paddingTop: '0',
     borderBottom: 'none',
-    boxShadow: '3px 0 2px #aeaeae', 
-    overflowY: 'hidden', 
-    overflowX: 'hidden'
+    boxShadow: '3px 0 2px #aeaeae'
 };
 
 
@@ -29,8 +30,8 @@ export default class BaseList extends React.Component {
         <List style={listStyle}>
           <Paper
             zDepth={0}
-            style={{height: '60px', width: '100%'}}>
-              <h3 style={{textAlign: 'center', paddingBottom: '0px', marginBottom: '0'}}>Something</h3>
+            style={{height: '88px', width: '100%', margin: '0', paddingTop: '24px'}}>
+              <h3 style={{textAlign: 'center', paddingBottom: '0px', margin: '0'}}>Something</h3>
               <IconButton
                 tooltip="add patient"
                 tooltipPosition="top-right">
@@ -43,9 +44,8 @@ export default class BaseList extends React.Component {
                 <NavigationMoreVert color={grey400} />
               </IconButton>
           </Paper>  
-          <Divider style={{borderBottom: '1px darkgrey solid', boxShadow: '0 0.19em 0.3em #aeaeae', zIndex: '999'}}/>
-
-          {this.props.children}
+          <Divider style={{height: '6px', border: 0, boxShadow: 'inset 0 12px 12px -12px rgba(0, 0, 0, 0.5)'}}/>
+          {this.props.children} 
         </List>
       );
   }
