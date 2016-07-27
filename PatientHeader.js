@@ -3,8 +3,6 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 
 import {
-deepPurple600,
-cyan500,
 blue800
 } from 'material-ui/styles/colors';
 
@@ -26,8 +24,9 @@ const headerStylesMobile = {
   },
   header3: {
     color: 'white', 
+    marginTop: '0',
     marginBottom: '5px', 
-    padding: '0 10px 0 30px', 
+    padding: '12px 10px 0 30px', 
     fontWeight: '200'
   },
   header2: {
@@ -83,6 +82,7 @@ const InfoLabels = (props) => {
 
 export default class Root extends React.Component {
   render() {
+
     return (        
         <Paper
           zDepth={0} 
