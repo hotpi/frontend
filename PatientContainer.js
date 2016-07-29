@@ -1,15 +1,17 @@
 import React from 'react';
 
-import Paper from 'material-ui/Paper';
 
 import {
-deepPurple600,
+green400,
 cyan500,
 blue800
 } from 'material-ui/styles/colors';
 
 import PatientList from './PatientList';
 import PatientHeader from './PatientHeader';
+import Note from './Note';
+
+
 
 const headerStylesDesktop = {
   height: '154px',
@@ -18,6 +20,12 @@ const headerStylesDesktop = {
   left: '19.2em'
 };
 
+
+//const lineOnHover = Object.assign(onHover, lineOutHover);
+
+
+
+
 const headerStylesMobile = {
   height: '154px',
   backgroundColor: blue800,
@@ -25,14 +33,21 @@ const headerStylesMobile = {
   left: '19.2em'
 };
 
-export default class Root extends React.Component {
+export default class PatientContainer extends React.Component {
+  constructor() {
+    super();
+  }
+
   render() {
 
     return (
         <div style={{display: 'inline-flex'}}>
           <PatientList />
-      		<PatientHeader />
+          <div style={{display: 'block'}}>
+        		<PatientHeader />
+            <Note />
+          </div>
         </div>
-    	)
+    	);
   }
 }
