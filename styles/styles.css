@@ -31,10 +31,23 @@ html, body {
   visibility: visible;
 }
 
+.note-line-container:focus .cancel-button {
+  visibility: visible;
+}
+
 .cancel-button {
   visibility: hidden;
 }
 
+.line-w-button {
+  display: inline-flex;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.line-w-button:focus {
+  outline: none;
+}
 .note-line-container {
   border-top: 1px transparent solid;
   border-bottom: 1px transparent solid;

@@ -62,41 +62,55 @@ export default class NoteLine extends React.Component {
     super(props);
     this.state = {
       line: props.line,
-      canGetFocus: this.props.canGetFocus,
       isEmpty: props.line.text === '' ? true : false,
       last: this.props.last
     };
-    console.log(this.state);
   }
 
   componentDidMount() {
-    if (this.state.canGetFocus) {
+    if (this.props.canGetFocus) {
       this._input.focus();
     }
   }
 
   handleKeyDown(e) {
+    console.log('ctrl, alt', e.ctrlKey, e.altKey);
     if (e.keyCode === 13) {
       e.preventDefault();  
       return this.props.appendNewLineNext();
-    }
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.line.text.length === 0) {
+      console.log('enter');
+      e.preventDefault();
+      return this.props.deleteLine();
+    } 
   }
 
   handleChange(e) {
-    this.setState({text: e.target.value}); 
-
     if (this.state.isEmpty && this.state.last) {
-      this.setState({last: Object.assign({}, this.state.last, {
-        last: !this.state.last
-      })})
+      this.setState({
+        last: false,
+        isEmpty: false
+      });
       this.props.appendNewLineEnd();
-    }
+    } 
 
-    if (e.target.value === '') {
-      this.setState({isEmpty: true});
-    } else {
-      this.setState({isEmpty: false});
-    }
+    if (e.target.value === '' && !this.state.isEmpty) {
+      console.log('last line')
+      this.setState({
+        isEmpty: true,
+        last: this.props.deleteLastLine()
+      });
+      console.log(this.state.last);
+    } 
+
+    this.setState({isEmpty: e.target.value === ''});
+
+    this.setState({
+      line: {
+          ID: this.state.line.ID,
+          text: e.target.value
+      }
+    }); 
   }
 
   handleClickDelete(e) {
@@ -110,7 +124,7 @@ export default class NoteLine extends React.Component {
   render() {
     return (
       <div className="note-line-container" style={lineOutHover}>
-        <div style={{display: 'inline-flex', marginBottom: '0', width: '100%'}} tabIndex="0">
+        <div className="line-w-button" tabIndex="0">
           <TextField 
             onChange={this.handleChange.bind(this)}
             onKeyDown={this.handleKeyDown.bind(this)}
@@ -122,7 +136,7 @@ export default class NoteLine extends React.Component {
             textareaStyle={{paddingBottom: 0}}
             inputStyle={{margin: 0, padding: 0}}
             style={{marginRight: 0, marginTop: 0, width: '94%'}} 
-            value={this.state.text}/>
+            value={this.state.line.text}/>
           <IconButton
             tooltip="Delete line"
             className="cancel-button"
