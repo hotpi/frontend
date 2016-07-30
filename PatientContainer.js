@@ -43,7 +43,7 @@ export default class PatientContainer extends React.Component {
     return (
         <div style={{display: 'inline-flex'}}>
           <PatientList />
-          <div style={{display: 'block'}}>
+          <div style={{display: 'block', overflow: 'hidden'}}>
         		<PatientHeader />
             <Note />
           </div>
