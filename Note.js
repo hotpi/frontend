@@ -1,8 +1,38 @@
 import React from 'react';
 
+import _ from 'lodash'
+
 import Paper from 'material-ui/Paper';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import NoteLine from './NoteLine';
+
+import ActionDone from 'material-ui/svg-icons/action/done';
+
+const titleArea = {
+  hidden: {
+    display: 'none'
+  },
+  visible: {
+    padding: '1em 2em', 
+    margin: '0', 
+    color: 'black', 
+    fontWeight: '200'
+  }
+};
+
+const actionsArea = {
+  hidden: {
+    display: 'none'
+  },
+  visible: {
+    display: 'inline-flex',
+    height: 65,
+    padding: '0 1em 0 2em'
+  }
+}
 
 export default class Note extends React.Component {
   constructor() {
@@ -12,8 +42,14 @@ export default class Note extends React.Component {
       lines: [{
         ID: 1,
         text: ''
-      }],
-      canAllocateFocus: false
+      }/*,
+      {
+        ID: 2,
+        text: ''
+      }*/],
+      canAllocateFocus: false,
+      hasFocus: false,
+      type: 1
     }
   }
 
@@ -25,7 +61,7 @@ export default class Note extends React.Component {
     return this.state.lines.map(line => line.ID).reduce((max, cur) => Math.max(max, cur), 0);
   }
 
-  handleKeyUp(index, positionToInsert) {
+  handleKeyDown(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
         this.setState({lines: [
@@ -33,8 +69,8 @@ export default class Note extends React.Component {
           {ID: this.getNewId()+1, text: ''},
           ...this.state.lines.slice(index+1)
         ]}); 
+
         this.setState({canAllocateFocus: true})
-        console.log('append_next');
         break;
       case 'append_end':
         this.setState({lines: [
@@ -42,7 +78,6 @@ export default class Note extends React.Component {
           {ID:this.getNewId()+1, text: ''}
         ]});
         this.setState({canAllocateFocus: false})
-        console.log('append_end');
         break;
       default:
         console.log('error')
@@ -71,23 +106,44 @@ export default class Note extends React.Component {
     return false;
   }
 
+  handleFocus(type) {
+    switch(type) {
+      case 'focus':
+        this.setState({hasFocus: true});
+        console.log('focus', this.state.hasFocus);
+        break;
+      case 'blur':
+        this.setState({hasFocus: false});
+        console.log('blur', this.state.hasFocus);
+        break;
+      default:
+        console.log('error');
+    }
+  }
+
+  handleSelectChange(e, i, value) {
+    this.setState({type: value});
+  }
+
   render() {
     return (
-      <div style={{height: 430,  overflowY: 'auto'}}>
+      <div style={{height: 533,  overflowY: 'auto'}}>
         <div style={{margin: '3em 8em'}}>
 
           <Paper
             zDepth={2}
-            style={{left: '19.2em', width: '470px', height: '430px'}}>
-            <h3 style={{padding: '1em 2em', margin: '0', color: 'black', fontWeight: '200'}}>New note</h3>
+            onClick={this.handleFocus.bind(this, 'focus')}
+            onKeyDown={(e) => {e.keyCode === 27 ? this.handleFocus.bind(this, 'blur') : null}}
+            style={{left: '19.2em', width: '470px', height: 'auto'}}>
+            <h3 style={this.state.lines.length > 1 || this.state.hasFocus ? titleArea.visible : titleArea.hidden }>New note</h3>
             <Divider />
             <div style={{padding: '1em 0', margin: '0'}}>
               {this.state.lines.map((line, i) => {
                  return <NoteLine 
                   key={line.ID} 
                   last={(i === (this.state.lines.length - 1)) }
-                  appendNewLineEnd={this.handleKeyUp.bind(this, i, 'append_end')} 
-                  appendNewLineNext={this.handleKeyUp.bind(this, i, 'append_next')} 
+                  appendNewLineEnd={this.handleKeyDown.bind(this, i, 'append_end')} 
+                  appendNewLineNext={this.handleKeyDown.bind(this, i, 'append_next')} 
                   deleteLastLine={this.handleEmptiedLine.bind(this, i)}
                   canGetFocus={this.state.canAllocateFocus} 
                   deleteLine={this.handleDeleteButton.bind(this, i)} 
@@ -95,6 +151,23 @@ export default class Note extends React.Component {
             </div>
 
             <Divider />
+            <div style={this.state.lines.length > 1 || this.state.hasFocus ? actionsArea.visible : actionsArea.hidden}>
+              <SelectField 
+                value={this.state.type}
+                onChange={this.handleSelectChange.bind(this)} 
+                errorText={this.state.type === 1 && 'Please select one'}
+                style={{width: 210, paddingTop: 3, marginRight: 100}}>
+                  <MenuItem value={1} primaryText="Select the note's type" />
+                  <MenuItem value={2} primaryText="Diagnosis" />
+                  <MenuItem value={3} primaryText="History entry" />
+                  <MenuItem value={4} primaryText="ToDo entry" />
+              </SelectField>
+              <RaisedButton
+                style={{position: 'relative', marginTop: 15, marginBottom: 15}}
+                label="Save"
+                primary={true}
+                icon={<ActionDone />} />
+            </div>
             {/*TODO: Add note actions*/}
 
           </Paper>
