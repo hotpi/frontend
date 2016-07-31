@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import ActionTouchApp from 'material-ui/svg-icons/action/touch-app';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import ToggleStar from 'material-ui/svg-icons/toggle/star';
@@ -12,8 +13,13 @@ import ContentMoveToInbox from 'material-ui/svg-icons/content/move-to-inbox';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 
 const lineOutHover = {
-  margin: '0',
-  padding: '0 3em'
+  notLast: {
+    margin: '0',
+    padding: '0 3em'
+  },
+  last: {
+    padding: '0 3em 0 1em'
+  }
 }
 
 const iconStyles = {
@@ -35,7 +41,7 @@ const iconStyles = {
 };
 
 //TODO: Object assign?
-const cancelIconStyle = Object.assign({}, iconStyles, {
+const inlineIconStyle = Object.assign({}, iconStyles, {
   iconArea: {
     padding: 0,
     margin: 10,
@@ -45,19 +51,8 @@ const cancelIconStyle = Object.assign({}, iconStyles, {
   }
 });
 
-const cancelIconStyleOut = Object.assign({}, cancelIconStyle, {
-  iconArea: {
-    visibility: 'hidden'
-  }
-});
-
-const cancelIconStyleOver = Object.assign({}, cancelIconStyle, {
-  iconArea: {
-    visibility: 'visible'
-  }
-});
-
 export default class NoteLine extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -77,12 +72,40 @@ export default class NoteLine extends React.Component {
     console.log('ctrl, alt', e.ctrlKey, e.altKey);
     if (e.keyCode === 13) {
       e.preventDefault();  
-      return this.props.appendNewLineNext();
+      if (!this.state.last) {
+        return this.props.appendNewLineNext();
+      }
     } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.line.text.length === 0) {
       console.log('enter');
       e.preventDefault();
-      return this.props.deleteLine();
+      
+      if (!this.state.last) {
+        return this.props.deleteLine();
+      }
     } 
+  }
+
+  showCancelButton() {
+    if (!this.state.last) {
+      return (
+        <IconButton
+          tooltip="Delete line"
+          className="cancel-button"
+          style={inlineIconStyle.iconArea} 
+          iconStyle={inlineIconStyle.icon} 
+          onClick={this.handleClickDelete.bind(this)} >
+          <NavigationCancel />
+        </IconButton>
+      );
+    }
+  }
+
+  showAddIcon() {
+    if (this.state.last) {
+      return (
+        <ContentAdd style={{left: 5, height: 18, width: 18, color: 'grey', paddingTop: 13, paddingRight: 2, marginRight: 5, marginLeft: 5}}/>
+      );
+    }
   }
 
   handleChange(e) {
@@ -92,15 +115,6 @@ export default class NoteLine extends React.Component {
         isEmpty: false
       });
       this.props.appendNewLineEnd();
-    } 
-
-    if (e.target.value === '' && !this.state.isEmpty) {
-      console.log('last line')
-      this.setState({
-        isEmpty: true,
-        last: this.props.deleteLastLine()
-      });
-      console.log(this.state.last);
     } 
 
     this.setState({isEmpty: e.target.value === ''});
@@ -118,13 +132,14 @@ export default class NoteLine extends React.Component {
   }
 
   handleClick(e) {
-
+    
   }
 
   render() {
     return (
-      <div className="note-line-container" style={lineOutHover}>
+      <div className="note-line-container" style={this.state.last ? lineOutHover.last : lineOutHover.notLast}>
         <div className="line-w-button" tabIndex="0">
+          {this.showAddIcon()}
           <TextField 
             onChange={this.handleChange.bind(this)}
             onKeyDown={this.handleKeyDown.bind(this)}
@@ -137,14 +152,8 @@ export default class NoteLine extends React.Component {
             inputStyle={{margin: 0, padding: 0}}
             style={{marginRight: 0, marginTop: 0, width: '94%'}} 
             value={this.state.line.text}/>
-          <IconButton
-            tooltip="Delete line"
-            className="cancel-button"
-            style={this.state.cancelIcon} 
-            iconStyle={cancelIconStyle.icon} 
-            onClick={this.handleClickDelete.bind(this)} >
-            <NavigationCancel />
-          </IconButton>
+          {this.showCancelButton()}
+          
         </div>
         <div style={{width: '100%', margin: 0, height: 30}}>
           <IconButton
