@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+
+import _ from 'lodash';
 
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
@@ -78,7 +79,7 @@ export default class NoteLine extends React.Component {
     } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.line.text.length === 0) {
       console.log('enter');
       e.preventDefault();
-      
+
       if (!this.state.last) {
         return this.props.deleteLine();
       }
@@ -104,6 +105,53 @@ export default class NoteLine extends React.Component {
     if (this.state.last) {
       return (
         <ContentAdd style={{left: 5, height: 18, width: 18, color: 'grey', paddingTop: 13, paddingRight: 2, marginRight: 5, marginLeft: 5}}/>
+      );
+    }
+  }
+
+  showLineOptions() {
+    if (!this.state.last) {
+      return (
+        <div style={{width: '100%', margin: 0, height: 30}}>
+          <IconButton
+            tooltip="Remind me on"
+            className="cancel-button"
+            style={iconStyles.iconArea}
+            iconStyle={iconStyles.icon} 
+            onClick={this.handleClick.bind(this)} >
+
+            <ActionTouchApp />
+          </IconButton>
+          <IconButton
+            tooltip="Set as important"
+            className="cancel-button"
+            style={iconStyles.iconArea}
+            iconStyle={iconStyles.icon} 
+            onClick={this.handleClick.bind(this)}>
+            <ToggleStar/>
+          </IconButton>
+          <IconButton
+            tooltip="Highlight"
+            className="cancel-button"
+            style={iconStyles.iconArea}
+            iconStyle={iconStyles.icon} >
+            <EditorHighlight/>
+          </IconButton>
+          <IconButton
+            tooltip="Move to history"
+            className="cancel-button"
+            style={iconStyles.iconArea}
+            iconStyle={iconStyles.icon} >
+            <ContentMoveToInbox />
+          </IconButton>
+          <IconButton
+            tooltip="More options"
+            className="cancel-button"
+            style={iconStyles.iconArea}
+            iconStyle={iconStyles.icon} >
+            <NavigationMoreVert/> 
+          </IconButton>
+        </div>
       );
     }
   }
@@ -152,49 +200,13 @@ export default class NoteLine extends React.Component {
             inputStyle={{margin: 0, padding: 0}}
             style={{marginRight: 0, marginTop: 0, width: '94%'}} 
             value={this.state.line.text}/>
+
           {this.showCancelButton()}
           
         </div>
-        <div style={{width: '100%', margin: 0, height: 30}}>
-          <IconButton
-            tooltip="Remind me on"
-            className="cancel-button"
-            style={iconStyles.iconArea}
-            iconStyle={iconStyles.icon} 
-            onClick={this.handleClick.bind(this)} >
 
-            <ActionTouchApp />
-          </IconButton>
-          <IconButton
-            tooltip="Set as important"
-            className="cancel-button"
-            style={iconStyles.iconArea}
-            iconStyle={iconStyles.icon} 
-            onClick={this.handleClick.bind(this)}>
-            <ToggleStar/>
-          </IconButton>
-          <IconButton
-            tooltip="Highlight"
-            className="cancel-button"
-            style={iconStyles.iconArea}
-            iconStyle={iconStyles.icon} >
-            <EditorHighlight/>
-          </IconButton>
-          <IconButton
-            tooltip="Move to history"
-            className="cancel-button"
-            style={iconStyles.iconArea}
-            iconStyle={iconStyles.icon} >
-            <ContentMoveToInbox />
-          </IconButton>
-          <IconButton
-            tooltip="More options"
-            className="cancel-button"
-            style={iconStyles.iconArea}
-            iconStyle={iconStyles.icon} >
-            <NavigationMoreVert/> 
-          </IconButton>
-        </div>
+        {this.showLineOptions()}
+        
       </div>
     );
   }
