@@ -49,6 +49,7 @@ export default class Note extends React.Component {
       }*/],
       canAllocateFocus: false,
       hasFocus: false,
+      isInArea: false,
       type: 1
     }
   }
@@ -113,12 +114,23 @@ export default class Note extends React.Component {
         console.log('focus', this.state.hasFocus);
         break;
       case 'blur':
-        this.setState({hasFocus: false});
-        console.log('blur', this.state.hasFocus);
+        if (!this.state.isInArea) { 
+          this.setState({hasFocus: false});
+          console.log('blur', this.state.hasFocus);
+        }
+
         break;
       default:
         console.log('error');
     }
+  }
+
+  handleMouseOver(e) {
+    this.setState({isInArea: true});
+  }
+
+  handleMouseOut(e) {
+    this.setState({isInArea: false});
   }
 
   handleSelectChange(e, i, value) {
@@ -128,12 +140,14 @@ export default class Note extends React.Component {
   render() {
     return (
       <div style={{height: 533,  overflowY: 'auto'}}>
-        <div style={{margin: '3em 8em'}}>
+        <div style={{margin: '3em 8em'}} onClick={this.handleFocus.bind(this, 'blur')}>
 
           <Paper
             zDepth={2}
             onClick={this.handleFocus.bind(this, 'focus')}
-            onKeyDown={(e) => {e.keyCode === 27 ? this.handleFocus.bind(this, 'blur') : null}}
+            onBlur={this.handleFocus.bind(this, 'blur')}
+            onMouseOver={this.handleMouseOver.bind(this)}
+            onMouseOut={this.handleMouseOut.bind(this)}
             style={{left: '19.2em', width: '470px', height: 'auto'}}>
             <h3 style={this.state.lines.length > 1 || this.state.hasFocus ? titleArea.visible : titleArea.hidden }>New note</h3>
             <Divider />
@@ -147,7 +161,8 @@ export default class Note extends React.Component {
                   deleteLastLine={this.handleEmptiedLine.bind(this, i)}
                   canGetFocus={this.state.canAllocateFocus} 
                   deleteLine={this.handleDeleteButton.bind(this, i)} 
-                  line={line}/>;})}
+                  line={line}/>;
+                })}
             </div>
 
             <Divider />
@@ -168,7 +183,6 @@ export default class Note extends React.Component {
                 primary={true}
                 icon={<ActionDone />} />
             </div>
-            {/*TODO: Add note actions*/}
 
           </Paper>
         </div>
