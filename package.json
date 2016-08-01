@@ -7,6 +7,12 @@
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": { 
+    "type": "git",
+    "url": "https://github.com/hotpi/frontend"
+  },
+  "homepage": "https://github.com/hotpi/frontend#readme",
+  "bugs": "https://github.com/hotpi/frontend/issues",
   "keywords": [
     "react",
     "patient",
