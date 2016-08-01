@@ -27,15 +27,15 @@ html, body {
   margin: 0;
 }
 
-.note-line-container:hover .cancel-button {
+.note-line-container:hover .line-buttons {
   visibility: visible;
 }
 
-.note-line-container:focus .cancel-button {
+.note-line-container:focus .line-buttons {
   visibility: visible;
 }
 
-.cancel-button {
+.line-buttons {
   visibility: hidden;
 }
 
@@ -48,6 +48,7 @@ html, body {
 .line-w-button:focus {
   outline: none;
 }
+
 .note-line-container {
   border-top: 1px transparent solid;
   border-bottom: 1px transparent solid;
