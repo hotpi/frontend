@@ -101,7 +101,7 @@ export default class Note extends React.Component {
         ]
 
       });
-      console.log('lines', index, this.state.lines.length, index === this.state.lines.length - 1);
+
       return index === this.state.lines.length - 2;
     }
     return false;
@@ -111,12 +111,10 @@ export default class Note extends React.Component {
     switch(type) {
       case 'focus':
         this.setState({hasFocus: true});
-        console.log('focus', this.state.hasFocus);
         break;
       case 'blur':
         if (!this.state.isInArea) { 
           this.setState({hasFocus: false});
-          console.log('blur', this.state.hasFocus);
         }
 
         break;
