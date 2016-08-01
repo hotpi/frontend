@@ -139,7 +139,7 @@ export default class Note extends React.Component {
 
   render() {
     return (
-      <div style={{height: 533,  overflowY: 'auto'}}>
+      <div style={{height: 532,  overflowY: 'auto'}}>
         <div style={{margin: '3em 8em'}} onClick={this.handleFocus.bind(this, 'blur')}>
 
           <Paper

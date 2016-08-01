@@ -26,7 +26,7 @@ const headerStylesMobile = {
     color: 'white', 
     marginTop: '0',
     marginBottom: '5px', 
-    padding: '12px 10px 0 30px', 
+    padding: '18px 10px 0 30px', 
     fontWeight: '200'
   },
   header2: {
