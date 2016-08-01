@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -31,22 +32,28 @@ export default class PatientOptionsList extends React.Component {
     return (
     		<BaseList>
           <div style={{overflowY: 'auto', border: 'none'}}>
-            
-            <ListItem 
-              primaryText="Back"
-              leftIcon={<NavigationChevronLeft />}
-              />
+            <Link to="/" style={{textDecoration: 'none'}}>
+              <ListItem 
+                primaryText="Back"
+                leftIcon={<NavigationChevronLeft />} >
+              </ListItem>
+            </Link>
             <Divider />
 
             <Subheader inset={true}>Patient Information</Subheader>
-            <ListItem
-              primaryText="New note"
-              leftIcon={
-                <AvLibraryAdd
-                  color={green400} />
-              }
-              style={{padding: '5px 0'}}
-            />
+            <Link to="/patient/1/New" style={{textDecoration: 'none'}}>
+
+              <ListItem
+                primaryText="New note"
+                leftIcon={
+                  <AvLibraryAdd
+                    color={green400} />
+                }
+                style={{padding: '5px 0'}}
+              />
+            </Link>
+
+            <Link to="/patient/1/Diagnosis" style={{textDecoration: 'none'}}>
             <ListItem
               primaryText="Diagnosis"
               leftIcon={
@@ -55,14 +62,18 @@ export default class PatientOptionsList extends React.Component {
               }
               style={{padding: '5px 0'}}
             />
-            <ListItem
-              primaryText="History"
-              leftIcon={
-                <ActionHistory
-                  color={pink500} />
-              }
-              style={{padding: '5px 0'}}
-            />
+            </Link>
+            <Link to="/patient/1/History" style={{textDecoration: 'none'}}>
+              <ListItem
+                primaryText="History"
+                leftIcon={
+                  <ActionHistory
+                    color={pink500} />
+                }
+                style={{padding: '5px 0'}}
+              />
+            </Link>
+            <Link to="/patient/1/ToDo" style={{textDecoration: 'none'}}>
             <ListItem
               primaryText="ToDo"
               leftIcon={
@@ -71,6 +82,8 @@ export default class PatientOptionsList extends React.Component {
               }
               style={{padding: '5px 0'}}
             />  
+            </Link>
+            
           </div>  
 		    </BaseList>
     	)

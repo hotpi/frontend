@@ -45,11 +45,15 @@ export default class PatientContainer extends React.Component {
           <PatientList />
           <div style={{display: 'block', overflow: 'hidden'}}>
         		<PatientHeader />
-            <Note 
-              title="History" 
-              type="History"/>
+            <Note />
           </div>
         </div>
     	);
+  }
+}
+
+PatientContainer.defaultProps = {
+  params: {
+    id: 1
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -58,7 +59,194 @@ export default class Root extends React.Component {
                 <div style={{height: '535px', overflowY: 'auto', marginBottom: '0'}}>
 
                   <Subheader inset={true}>Patients</Subheader>
-                  <ListItem
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 1"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={lightGreen300}>
+                          P1
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('ENDO'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 2"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={teal200}>
+                          P2
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('ALL'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 3"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={lightGreen300}>
+                          P3
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('ENDO'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 4"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={amber300}>
+                          P4
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('PNEU'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 5"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={teal200}>
+                          P5
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('ALL'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 6"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={amber300}>
+                          P6
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('PNEU'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 7"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={amber300}>
+                          P7
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('PNEU'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 8"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={lightGreen300}>
+                          P8
+                        </Avatar>
+                      }
+                      rightIcon={rightIconInfo(clinic('ENDO'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 9"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={lightGreen300}>
+                          P9
+                        </Avatar>}
+                      rightIcon={rightIconInfo(clinic('ENDO'))}
+                    />
+                  </Link>
+                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
+                    <ListItem
+                      primaryText="Patient 10"
+                      secondaryText={
+                        <p>
+                          <i className="mdi mdi-cake"></i> 
+                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
+                        </p>  
+                      }
+                      leftAvatar={
+                        <Avatar
+                          backgroundColor={amber300}>
+                          P10
+                        </Avatar>}
+                      rightIcon={rightIconInfo(clinic('PNEU'))}
+                    />
+                  </Link>
+                  </div> 
+              </div> 
+           </Tab> 
+            <Tab label='Station 29'>
+              <div style={{overflow: 'hidden'}}>
+              <div style={{overflowY: 'auto'}}>
+
+                <Subheader inset={true}>Patients</Subheader>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
+        		      <ListItem
                     primaryText="Patient 1"
                     secondaryText={
                       <p>
@@ -74,6 +262,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('ENDO'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 2"
                     secondaryText={
@@ -90,6 +280,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('ALL'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 3"
                     secondaryText={
@@ -106,6 +298,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('ENDO'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 4"
                     secondaryText={
@@ -122,6 +316,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('PNEU'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 5"
                     secondaryText={
@@ -138,6 +334,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('ALL'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 6"
                     secondaryText={
@@ -154,6 +352,8 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('PNEU'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
                     primaryText="Patient 7"
                     secondaryText={
@@ -170,218 +370,59 @@ export default class Root extends React.Component {
                     }
                     rightIcon={rightIconInfo(clinic('PNEU'))}
                   />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
                   <ListItem
-                    primaryText="Patient 8"
-                    secondaryText={
+        		        primaryText="Patient 8"
+        		        secondaryText={
                       <p>
                         <i className="mdi mdi-cake"></i> 
                         <span style={{paddingLeft: '5px'}}>21.12.1991</span>
                       </p>  
                     }
                     leftAvatar={
-                      <Avatar
-                        backgroundColor={lightGreen300}>
-                        P8
-                      </Avatar>
-                    }
+        		        	<Avatar
+        		        		backgroundColor={lightGreen300}>
+        		        		P8
+        		        	</Avatar>
+        		        }
                     rightIcon={rightIconInfo(clinic('ENDO'))}
-                  />
-                  <ListItem
-                    primaryText="Patient 9"
-                    secondaryText={
+        		      />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
+        		      <ListItem
+        		        primaryText="Patient 9"
+        		        secondaryText={
                       <p>
                         <i className="mdi mdi-cake"></i> 
                         <span style={{paddingLeft: '5px'}}>21.12.1991</span>
                       </p>  
                     }
                     leftAvatar={
-                      <Avatar
-                        backgroundColor={lightGreen300}>
-                        P9
-                      </Avatar>}
+        		        	<Avatar
+        		        		backgroundColor={lightGreen300}>
+        		        		P9
+        		        	</Avatar>}
                     rightIcon={rightIconInfo(clinic('ENDO'))}
-                  />
-                  <ListItem
-                    primaryText="Patient 10"
-                    secondaryText={
+        		      />
+                </Link>
+                <Link to="/patient/1" style={{textDecoration: 'none'}}>
+        		      <ListItem
+        		        primaryText="Patient 10"
+        		        secondaryText={
                       <p>
                         <i className="mdi mdi-cake"></i> 
                         <span style={{paddingLeft: '5px'}}>21.12.1991</span>
                       </p>  
                     }
                     leftAvatar={
-                      <Avatar
-                        backgroundColor={amber300}>
-                        P10
-                      </Avatar>}
+        		        	<Avatar
+        		        		backgroundColor={amber300}>
+        		        		P10
+        		        	</Avatar>}
                     rightIcon={rightIconInfo(clinic('PNEU'))}
-                  />
-                  </div> 
-              </div> 
-           </Tab> 
-            <Tab label='Station 29'>
-              <div style={{overflow: 'hidden'}}>
-              <div style={{overflowY: 'auto'}}>
-
-                <Subheader inset={true}>Patients</Subheader>
-      		      <ListItem
-                  primaryText="Patient 1"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P1
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 2"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={teal200}>
-                      P2
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ALL'))}
-                />
-                <ListItem
-                  primaryText="Patient 3"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={lightGreen300}>
-                      P3
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-                />
-                <ListItem
-                  primaryText="Patient 4"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P4
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-                  primaryText="Patient 5"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={teal200}>
-                      P5
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('ALL'))}
-                />
-                <ListItem
-                  primaryText="Patient 6"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P6
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-                  primaryText="Patient 7"
-                  secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-                    <Avatar
-                      backgroundColor={amber300}>
-                      P7
-                    </Avatar>
-                  }
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-                />
-                <ListItem
-      		        primaryText="Patient 8"
-      		        secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-      		        	<Avatar
-      		        		backgroundColor={lightGreen300}>
-      		        		P8
-      		        	</Avatar>
-      		        }
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-      		      />
-      		      <ListItem
-      		        primaryText="Patient 9"
-      		        secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-      		        	<Avatar
-      		        		backgroundColor={lightGreen300}>
-      		        		P9
-      		        	</Avatar>}
-                  rightIcon={rightIconInfo(clinic('ENDO'))}
-      		      />
-      		      <ListItem
-      		        primaryText="Patient 10"
-      		        secondaryText={
-                    <p>
-                      <i className="mdi mdi-cake"></i> 
-                      <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                    </p>  
-                  }
-                  leftAvatar={
-      		        	<Avatar
-      		        		backgroundColor={amber300}>
-      		        		P10
-      		        	</Avatar>}
-                  rightIcon={rightIconInfo(clinic('PNEU'))}
-      		      />
+        		      />
+                </Link>
               </div> 
               </div> 
            </Tab> 
