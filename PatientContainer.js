@@ -45,7 +45,9 @@ export default class PatientContainer extends React.Component {
           <PatientList />
           <div style={{display: 'block', overflow: 'hidden'}}>
         		<PatientHeader />
-            <Note />
+            <Note 
+              title="History" 
+              type="History"/>
           </div>
         </div>
     	);

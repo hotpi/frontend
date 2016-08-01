@@ -7,9 +7,14 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
-import NoteLine from './NoteLine';
+import IconButton from 'material-ui/IconButton';
 
 import ActionDone from 'material-ui/svg-icons/action/done';
+import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
+
+import NoteLine from './NoteLine';
+import { iconStyles } from './NoteLine'
 
 const titleArea = {
   hidden: {
@@ -35,8 +40,8 @@ const actionsArea = {
 }
 
 export default class Note extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       lines: [{
@@ -138,7 +143,7 @@ export default class Note extends React.Component {
   render() {
     return (
       <div style={{height: 532,  overflowY: 'auto'}}>
-        <div style={{margin: '3em 8em'}} onClick={this.handleFocus.bind(this, 'blur')}>
+        <div style={{margin: '3em 0 3em 8em', display: 'inline-flex'}} onClick={this.handleFocus.bind(this, 'blur')}>
 
           <Paper
             zDepth={2}
@@ -147,7 +152,7 @@ export default class Note extends React.Component {
             onMouseOver={this.handleMouseOver.bind(this)}
             onMouseOut={this.handleMouseOut.bind(this)}
             style={{left: '19.2em', width: '470px', height: 'auto'}}>
-            <h3 style={this.state.lines.length > 1 || this.state.hasFocus ? titleArea.visible : titleArea.hidden }>New note</h3>
+            <h3 style={this.state.lines.length > 1 || this.state.hasFocus || this.props.type !== "New" ? titleArea.visible : titleArea.hidden }>{this.props.title}</h3>
             <Divider />
             <div style={{padding: '1em 0', margin: '0'}}>
               {this.state.lines.map((line, i) => {
@@ -164,27 +169,36 @@ export default class Note extends React.Component {
             </div>
 
             <Divider />
-            <div style={this.state.lines.length > 1 || this.state.hasFocus ? actionsArea.visible : actionsArea.hidden}>
+            <div style={this.state.lines.length > 1 || this.state.hasFocus || this.props.type !== "New" ? actionsArea.visible : actionsArea.hidden}>
               <SelectField 
                 value={this.state.type}
                 onChange={this.handleSelectChange.bind(this)} 
                 errorText={this.state.type === 1 && 'Please select one'}
-                style={{width: 210, paddingTop: 3, marginRight: 100}}>
+                style={{width: 210, paddingTop: 3, marginRight: 100, display: this.props.type !== "New" ? 'none' : 'block' }}>
                   <MenuItem value={1} primaryText="Select the note's type" />
                   <MenuItem value={2} primaryText="Diagnosis" />
                   <MenuItem value={3} primaryText="History entry" />
                   <MenuItem value={4} primaryText="ToDo entry" />
               </SelectField>
               <RaisedButton
-                style={{position: 'relative', marginTop: 15, marginBottom: 15}}
+                style={{position: 'relative', marginTop: 15, marginBottom: 15, marginLeft: this.props.type !== "New" ? 300 : 0}}
                 label="Save"
                 primary={true}
                 icon={<ActionDone />} />
             </div>
 
           </Paper>
+          <Paper  
+            zDepth={1}
+            style={{width: 120, height: 40, marginLeft: 1, display: this.props.type === "History" ? 'inline-flex': 'none'}}>
+            <DeviceAccessTime style={{color: 'grey', height: 24, width: 24, marginLeft: 10, marginTop: 10}}/><h3 style={{padding: 12, margin: 0, textAlign: 'center', fontWeight: 100}}>Today</h3>
+          </Paper>
         </div>
       </div>
     );
   }
 };
+
+Note.defaultProps = {
+  title: 'New note'
+} 

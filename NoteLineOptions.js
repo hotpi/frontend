@@ -39,12 +39,12 @@ export default class NoteLineOptions extends React.Component {
   handleChange(type, e, value) {
     switch (type) {
     case 'highlight':
-      let newStateHighlight = {set: value !== 0, color: highlightColors[+value], value: value}
+      let newStateHighlight = {set: +value !== 0, color: highlightColors[+value], value: value}
       this.setState({highlight: newStateHighlight});
       this.props.updateOptions({highlight: newStateHighlight});
       break;
     case 'important':
-      let newStateImportant = {set: value !== 0, color: importantColors[+value], value: value}
+      let newStateImportant = {set: +value !== 0, color: importantColors[+value], value: value}
       this.setState({important: newStateImportant})
       this.props.updateOptions({important: newStateImportant})
       break;
