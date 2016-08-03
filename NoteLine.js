@@ -26,6 +26,8 @@ import {
 } from 'material-ui/styles/colors'
 
 import NoteLineOptions from './NoteLineOptions'
+import { CancelButton } from './CancelButton'
+import { AddIcon } from './AddIcon'
 
 export const importantColors = ["transparent", amber700, amber400, amber100];
 export const highlightColors = ["transparent", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
@@ -58,7 +60,7 @@ export const iconStyles = {
   }
 };
 
-const inlineIconStyle = Object.assign({}, iconStyles, {
+export const inlineIconStyle = Object.assign({}, iconStyles, {
   iconArea: {
     padding: 0,
     margin: 10,
@@ -68,100 +70,31 @@ const inlineIconStyle = Object.assign({}, iconStyles, {
   }
 });
 
-const noteLineOptions = (state = {
-  important: {
-    set: false,
-    color: "transparent",
-    value: 0
-  },
-  highlight: {
-    set: false,
-    color: "transparent",
-    value: 0
-  }
-}, action ) => {
-  console.log('dispatching: ', action.type)
-  switch (action.type) {
-    case 'HIGHLIGHT':
-      return {
-        ...state,
-        highlight: {
-          set: +action.value !== 0,
-          color: action.color,
-          value: action.value
-        }
-      }
-    case 'IMPORTANT':
-      return {
-        ...state,
-        important: {
-          set: +action.value !== 0,
-          color: action.color,
-          value: action.value
-        }
-      }
-    default:
-      return state
-  }
-}
-
-const store = createStore(noteLineOptions);
-
-store.subscribe(() =>
-  console.log(store.getState())
-)
-
 export default class NoteLine extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      line: props.line,
-      isEmpty: props.line.text === '' ? true : false,
-      last: props.last,
-      options: {
-        important: {
-          set: false,
-          color: "transparent",
-          value: 0
-        },
-        reminder: {
-          set: false,
-          value: "21/12/1991"
-        },
-        highlight: {
-          set: false,
-          value: 0,
-          color: "transparent"
-        }
-      }
+      isEmpty: props.text === '' ? true : false,
+      last: props.last
     }
+    this.store = this.props.store
+    console.log(this.store)
   }
 
   componentDidMount() {
     if (this.props.canGetFocus) {
       this._input.focus();
     }
+    this.store.subscribe(() => this.forceUpdate());
   }
 
-  /*componentWillUpdate() {
-    console.log('current state: ', store.getState());
-  }*/
-
   isHighlighted() {
-    return this.state.options.highlight.set;
+    return this.props.highlight.set;
   }
 
   isImportant() {
-    return this.state.options.important.set;
-  }
-
-  updateOptions(optionsToUpdate) {
-    let options = {important: this.state.options.important, highlight: this.state.options.highlight, reminder: this.state.options.reminder}
-    let optionsUntouched = _.omit(options, _.keys(optionsToUpdate));
-    let newOptions = _.assign(optionsUntouched, optionsToUpdate);
-
-    this.setState({options: newOptions})
+    return this.props.important.set;
   }
 
   handleKeyDown(e) {
@@ -171,7 +104,7 @@ export default class NoteLine extends React.Component {
       if (!this.state.last) {
         return this.props.appendNewLineNext();
       }
-    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.line.text.length === 0) {
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.text.length === 0) {
       e.preventDefault();
 
       if (!this.state.last) {
@@ -191,16 +124,11 @@ export default class NoteLine extends React.Component {
 
     this.setState({isEmpty: e.target.value === ''});
 
-    this.setState({
-      line: {
-          ID: this.state.line.ID,
-          text: e.target.value
-      }
-    }); 
-  }
-
-  handleClickDelete(e) {
-    this.props.deleteLine();
+    this.props.store.dispatch({
+      type: 'UPDATE_LINE_VALUE',
+      ID: this.props.ID,
+      text: e.target.value
+    })
   }
 
   getLine() {
@@ -213,10 +141,11 @@ export default class NoteLine extends React.Component {
       ref={(c) => this._input = c}
       multiLine={true}
       underlineShow={false} 
-      textareaStyle={{paddingBottom: 0, backgroundColor: this.isHighlighted() ? this.state.options.highlight.color : 'transparent'}}
+      textareaStyle={{paddingBottom: 0, backgroundColor: this.isHighlighted() ? this.props.highlight.color : 'transparent'}}
       inputStyle={{margin: 0, padding: 0}}
       style={{marginRight: 0, marginTop: 0, width: '94%'}} 
-      value={this.state.line.text}>
+      value={this.props.text}
+      >
     </TextField>
     );
   }
@@ -225,9 +154,9 @@ export default class NoteLine extends React.Component {
     if (this.isImportant()) {
       return (
         <Badge 
-            badgeContent={+this.state.options.important.value}
+            badgeContent={this.props.important.value}
             style={{width: '94%', margin: 0, padding: 0}}
-            badgeStyle={{backgroundColor: this.state.options.important.color, left: 343, margin: 0, padding: 0}}
+            badgeStyle={{backgroundColor: this.props.important.color, left: 343, margin: 0, padding: 0}}
             >
             {this.getLine()}
         </Badge>
@@ -237,79 +166,40 @@ export default class NoteLine extends React.Component {
     return this.getLine();
   }
 
-  renderLineOptions() {
-    if (!this.state.last) {
-      return <NoteLineOptions
-
-                store={ store }
-
-                onHighlight={(e, value) => store.dispatch({
-                    type: 'HIGHLIGHT', 
-                    color: highlightColors[+value],
-                    value: value                    
-                  })
-                }
-                onImportant={(e, value) => store.dispatch({
-                    type: 'IMPORTANT',
-                    color: importantColors[+value],
-                    value: value
-                  })
-                }
-                />
-    }
-  }
-
-  renderCancelButton() {
-    if (!this.state.last) {
-      return (
-        <IconButton
-          tooltip="Delete line"
-          className="line-buttons"
-          style={inlineIconStyle.iconArea} 
-          iconStyle={inlineIconStyle.icon} 
-          onClick={this.handleClickDelete.bind(this)} >
-          <NavigationCancel />
-        </IconButton>
-      );
-    }
-  }
-
-  renderAddIcon() {
-    if (this.state.last) {
-      return (
-        <ContentAdd style={{left: 5, height: 18, width: 18, color: 'grey', paddingTop: 13, paddingRight: 2, marginRight: 5, marginLeft: 5}}/>
-      );
-    }
-  }
-
   render() {
     return (
       <div className="note-line-container" style={this.state.last ? lineOutHover.last : lineOutHover.notLast}>
         <div className="line-w-button" tabIndex="0">
-          {this.renderAddIcon()}
+          <AddIcon last={this.state.last} />
 
           {this.renderLine()}
 
-          {this.renderCancelButton()}
+          <CancelButton last={this.state.last} onClick={this.props.deleteLine} />
           
         </div>
 
-        {this.renderLineOptions()}
+        <NoteLineOptions
+          last={this.state.last}
+          importantValue={this.props.important}
+          highlightValue={this.props.highlight}
+          onHighlight={(e, value) => this.props.store.dispatch({
+              type: 'HIGHLIGHT_LINE', 
+              color: highlightColors[+value],
+              ID: this.props.ID,
+              value: value                    
+            })
+          }
+          onImportant={(e, value) => this.props.store.dispatch({
+              type: 'IMPORTANT_LINE',
+              color: importantColors[+value],
+              ID: this.props.ID,
+              value: value
+            })
+          }
+          />
         
       </div>
     );
   }
 }
 
-NoteLine.propTypes =  {
-    line: React.PropTypes.shape({
-      ID: React.PropTypes.number.isRequired,
-      text: React.PropTypes.string
-    })
-};
-
-NoteLine.defaultProps = { 
-  line: {
-    text: ''
-  }
-};
