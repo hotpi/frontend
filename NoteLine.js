@@ -2,6 +2,8 @@ import React from 'react';
 
 import _ from 'lodash';
 
+import { createStore } from 'redux';
+
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Badge from 'material-ui/Badge';
@@ -66,6 +68,49 @@ const inlineIconStyle = Object.assign({}, iconStyles, {
   }
 });
 
+const noteLineOptions = (state = {
+  important: {
+    set: false,
+    color: "transparent",
+    value: 0
+  },
+  highlight: {
+    set: false,
+    color: "transparent",
+    value: 0
+  }
+}, action ) => {
+  console.log('dispatching: ', action.type)
+  switch (action.type) {
+    case 'HIGHLIGHT':
+      return {
+        ...state,
+        highlight: {
+          set: +action.value !== 0,
+          color: action.color,
+          value: action.value
+        }
+      }
+    case 'IMPORTANT':
+      return {
+        ...state,
+        important: {
+          set: +action.value !== 0,
+          color: action.color,
+          value: action.value
+        }
+      }
+    default:
+      return state
+  }
+}
+
+const store = createStore(noteLineOptions);
+
+store.subscribe(() =>
+  console.log(store.getState())
+)
+
 export default class NoteLine extends React.Component {
 
   constructor(props) {
@@ -98,6 +143,10 @@ export default class NoteLine extends React.Component {
       this._input.focus();
     }
   }
+
+  /*componentWillUpdate() {
+    console.log('current state: ', store.getState());
+  }*/
 
   isHighlighted() {
     return this.state.options.highlight.set;
@@ -191,10 +240,21 @@ export default class NoteLine extends React.Component {
   renderLineOptions() {
     if (!this.state.last) {
       return <NoteLineOptions
-                reminder={this.state.options.reminder}
-                highlight={this.state.options.highlight}
-                important={this.state.options.important}
-                updateOptions={this.updateOptions.bind(this)}
+
+                store={ store }
+
+                onHighlight={(e, value) => store.dispatch({
+                    type: 'HIGHLIGHT', 
+                    color: highlightColors[+value],
+                    value: value                    
+                  })
+                }
+                onImportant={(e, value) => store.dispatch({
+                    type: 'IMPORTANT',
+                    color: importantColors[+value],
+                    value: value
+                  })
+                }
                 />
     }
   }

@@ -46,12 +46,16 @@ export default class Note extends React.Component {
     this.state = {
       lines: [{
         ID: 1,
-        text: ''
-      }/*,
+        text: 'asdfasdf'
+      },
       {
         ID: 2,
-        text: ''
-      }*/],
+        text: 'asdfasdf'
+      },
+      {
+        ID: 3,
+        text: 'asdfasdf'
+      }],
       canAllocateFocus: false,
       hasFocus: false,
       isInArea: false,

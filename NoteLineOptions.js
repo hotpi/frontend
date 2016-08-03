@@ -26,32 +26,7 @@ import {
 import { iconStyles, importantColors, highlightColors } from './NoteLine'
 
 export default class NoteLineOptions extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      reminder: props.reminder,
-      highlight: props.highlight,
-      important: props.important
-    }
-  }
-
-  handleChange(type, e, value) {
-    switch (type) {
-    case 'highlight':
-      let newStateHighlight = {set: +value !== 0, color: highlightColors[+value], value: value}
-      this.setState({highlight: newStateHighlight});
-      this.props.updateOptions({highlight: newStateHighlight});
-      break;
-    case 'important':
-      let newStateImportant = {set: +value !== 0, color: importantColors[+value], value: value}
-      this.setState({important: newStateImportant})
-      this.props.updateOptions({important: newStateImportant})
-      break;
-    }
-  }
-
-
+  /*
   showChips() {
     if (this.props.reminder.set) {
       return (
@@ -60,23 +35,24 @@ export default class NoteLineOptions extends React.Component {
           labelStyle={{padding: 4, top: 14, margin: 4, marginTop: 0, paddingTop: 0, lineHeight: '1.6em', height: 20}}>
       </Chip>)
     }
-  }
+  }*/
 
   render() {
+    const { onHighlight, onImportant, store } = this.props
+    console.log('props', store.getState())
     return (
         <div style={{width: '100%', margin: 0, height: 30, display: 'inline-flex'}}>
-          <IconButton
+          {/*<IconButton
             tooltip="Remind me on"
             tooltipPosition="top-right"
             className="line-buttons"
             style={iconStyles.iconArea}
             iconStyle={iconStyles.icon} >
             <ActionTouchApp />
-          </IconButton>
-          {/* TODO: Add onChange functions and values for set as important and highlight color*/}
+          </IconButton>*/}
           <IconMenu
-            onChange={this.handleChange.bind(this, 'important')}
-            value={this.state.important.value}
+            onChange={onImportant}
+            value={store.getState().important.value}
             iconButtonElement={(
               <IconButton
                 tooltip="Set as important"
@@ -95,8 +71,8 @@ export default class NoteLineOptions extends React.Component {
               <MenuItem value="3" leftIcon={<ToggleStar color={amber100}/>} primaryText="Priority 3" />
           </IconMenu>
           <IconMenu
-            onChange={this.handleChange.bind(this, 'highlight')}
-            value={this.state.highlight.value}
+            onChange={onHighlight}
+            value={store.getState().highlight.value}
             iconButtonElement={(
               <IconButton
                 tooltip="Highlight"
@@ -116,7 +92,7 @@ export default class NoteLineOptions extends React.Component {
               <MenuItem value="4" leftIcon={<ImageLens color={orangeA100}/>} primaryText="Orange" />
               <MenuItem value="5" leftIcon={<ImageLens color={cyanA100}/>} primaryText="Blue-green" />
           </IconMenu>
-          <IconButton
+          {/*<IconButton
             tooltip="Move to history"
             tooltipPosition="top-right"
             className="line-buttons"
@@ -131,7 +107,7 @@ export default class NoteLineOptions extends React.Component {
             style={iconStyles.iconArea}
             iconStyle={iconStyles.icon} >
             <NavigationMoreVert /> 
-          </IconButton> 
+          </IconButton> */}
           {/*this.showChips()*/}
         </div>
       );
