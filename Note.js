@@ -61,6 +61,16 @@ const noteLine = (state = {
 }, action ) => {
   console.log('dispatching in noteLine: ', action.type, action, state)
   switch (action.type) {
+    case 'NOT_EMPTY_AND_NOT_LAST': 
+      if (state.ID !== action.ID) {
+        return state;
+      }
+
+      return {
+          ...state,
+         isEmpty: false,
+         last: false
+        }
     case 'CREATE_AND_APPEND_NEXT':
       return {
         ...state,
@@ -134,7 +144,7 @@ const noteLines = (state = [{
     },
     last: false,
     isEmpty: false
-  },
+  }/*,
   {
     ID: v4(),
     text: '12312312',
@@ -166,7 +176,7 @@ const noteLines = (state = [{
     },
     last: true,
     isEmpty: false
-  }], action ) => {
+  }*/], action ) => {
   console.log('dispatching in noteLines: ', action.type, action, state)
   switch (action.type) {
     case 'DELETE_LINE':
@@ -185,6 +195,7 @@ const noteLines = (state = [{
           ...state,
           noteLine(undefined, action)
         ];
+    case 'NOT_EMPTY_AND_NOT_LAST':
     case 'HIGHLIGHT_LINE':
     case 'IMPORTANT_LINE':
     case 'UPDATE_LINE_VALUE':
@@ -248,13 +259,13 @@ const store = createStore(mainReducer);
 
 
 export default class Note extends React.Component {
-  /*constructor(props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       type: 1
     }
-  }*/
+  }
 
   componentDidMount() {
     store.dispatch({type: 'CAN_ALLOCATE_FOCUS'});
@@ -268,38 +279,44 @@ export default class Note extends React.Component {
           type: 'CREATE_AND_APPEND_NEXT',
           index
         });
-        store.dispatch({type: 'CAN_ALLOCATE_FOCUS'});
+        store.dispatch({
+          type: 'CAN_ALLOCATE_FOCUS'
+        });
         break;
       case 'append_end':
         store.dispatch({
           type: 'CREATE_AND_APPEND_LAST'
         });
-        store.dispatch({type: 'CANNOT_ALLOCATE_FOCUS'});
+        store.dispatch({
+          type: 'CANNOT_ALLOCATE_FOCUS'
+        });
         break;
       default:
         console.log('error')
     }    
   }
 
-  /*handleFocus(type) {
+  handleFocus(type) {
     switch(type) {
       case 'focus':
         
         break;
       case 'blur':
         if (store.getState().note.isInArea) { 
-          store.dispatch({type: 'LOST_FOCUS'});
+          store.dispatch({
+            type: 'LOST_FOCUS'
+          });
         }
 
         break;
       default:
         console.log('error');
     }
-  }*/
+  }
 
-  /*handleSelectChange(e, i, value) {
+  handleSelectChange(e, i, value) {
     this.setState({type: value});
-  }*/
+  }
 
   render() {
     const { type, title } = this.props;
@@ -307,19 +324,20 @@ export default class Note extends React.Component {
     return (
       <div style={{height: 532,  overflowY: 'auto'}}>
         <div style={{margin: '3em 0 3em 8em', display: 'inline-flex'}}
-           //onClick={() => store.dispatch({type: 'LOST_FOCUS'})}
+           onClick={() => {
+              if (!store.getState().note.isInArea) {
+                return store.dispatch({type: 'LOST_FOCUS'})              
+              }
+            }}
            >
 
           <Paper
             zDepth={2}
-            //onClick={() => store.dispatch({type: 'GAINED_FOCUS'})}
-            //onBlur={() => store.getState().note.isInArea ? null : store.dispatch({
-            //  type: 'LOST_FOCUS'
-            //})}
-            //onMouseOver={() => store.dispatch({type: 'IS_IN_AREA'})}
-            //onMouseOut={() => store.dispatch({type: 'IS_NOT_IN_AREA'})}
+            onClick={() => store.dispatch({type: 'GAINED_FOCUS'})}            
+            onMouseOver={() => store.dispatch({type: 'IS_IN_AREA'})}
+            onMouseOut={() => store.dispatch({type: 'IS_NOT_IN_AREA'})}
             style={{left: '19.2em', width: '470px', height: 'auto'}}>
-            {/*<h3 style={store.getState().noteLines.length > 1 || store.getState().note.hasFocus || type !== "New" ? titleArea.visible : titleArea.hidden }>{title}</h3>*/}
+            {<h3 style={store.getState().noteLines.length > 1 || store.getState().note.hasFocus || type !== "New" ? titleArea.visible : titleArea.hidden }>{title}</h3>}
             <Divider />
             <div style={{padding: '1em 0', margin: '0'}}>
               {store.getState().noteLines.map((line, index) => {
@@ -340,7 +358,7 @@ export default class Note extends React.Component {
             </div>
 
             <Divider />
-            {/*<div style={store.getState().noteLines.length > 1 || store.getState().note.hasFocus || type !== "New" ? actionsArea.visible : actionsArea.hidden}>
+            {<div style={store.getState().noteLines.length > 1 || store.getState().note.hasFocus || type !== "New" ? actionsArea.visible : actionsArea.hidden}>
               <SelectField 
                 value={this.state.type}
                 onChange={this.handleSelectChange.bind(this)} 
@@ -356,7 +374,7 @@ export default class Note extends React.Component {
                 label="Save"
                 primary={true}
                 icon={<ActionDone />} />
-            </div>*/}
+            </div>}
 
           </Paper>
           <Paper  

@@ -86,7 +86,11 @@ export default class NoteLine extends React.Component {
     if (this.props.canGetFocus) {
       this._input.focus();
     }
-    this.store.subscribe(() => this.forceUpdate());
+    this.unsubscribe = this.store.subscribe(() => this.forceUpdate());
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   isHighlighted() {
@@ -101,30 +105,29 @@ export default class NoteLine extends React.Component {
     if (e.keyCode === 13) {
       e.preventDefault();  
 
-      if (!this.state.last) {
+      if (!this.props.last) {
         return this.props.appendNewLineNext();
       }
-    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.state.text.length === 0) {
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.text.length === 0) {
       e.preventDefault();
 
-      if (!this.state.last) {
+      if (!this.props.last) {
         return this.props.deleteLine();
       }
     } 
   }
 
   handleChange(e) {
-    if (this.state.isEmpty && this.state.last) {
-      this.setState({
-        last: false,
-        isEmpty: false
-      });
+    // TODO: Dispatch new line at the end action and 
+    if (this.props.text.length === 0 && this.props.last) {
+      this.store.dispatch({
+        type: 'NOT_EMPTY_AND_NOT_LAST',
+        ID: this.props.ID
+      })
       this.props.appendNewLineEnd();
     } 
 
-    this.setState({isEmpty: e.target.value === ''});
-
-    this.props.store.dispatch({
+    this.store.dispatch({
       type: 'UPDATE_LINE_VALUE',
       ID: this.props.ID,
       text: e.target.value
@@ -167,37 +170,34 @@ export default class NoteLine extends React.Component {
   }
 
   render() {
+    const { deleteLine, last, important, highlight, store, ID } = this.props
+
     return (
-      <div className="note-line-container" style={this.state.last ? lineOutHover.last : lineOutHover.notLast}>
+      <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
         <div className="line-w-button" tabIndex="0">
-          <AddIcon last={this.state.last} />
-
+          <AddIcon last={last} />
           {this.renderLine()}
-
-          <CancelButton last={this.state.last} onClick={this.props.deleteLine} />
-          
+          <CancelButton last={last} onClickDo={deleteLine} />          
         </div>
-
         <NoteLineOptions
-          last={this.state.last}
-          importantValue={this.props.important}
-          highlightValue={this.props.highlight}
-          onHighlight={(e, value) => this.props.store.dispatch({
+          last={last}
+          importantValue={important}
+          highlightValue={highlight}
+          onHighlight={(e, value) => store.dispatch({
               type: 'HIGHLIGHT_LINE', 
               color: highlightColors[+value],
-              ID: this.props.ID,
+              ID: ID,
               value: value                    
             })
           }
-          onImportant={(e, value) => this.props.store.dispatch({
+          onImportant={(e, value) => store.dispatch({
               type: 'IMPORTANT_LINE',
               color: importantColors[+value],
-              ID: this.props.ID,
+              ID: ID,
               value: value
             })
           }
-          />
-        
+          />        
       </div>
     );
   }

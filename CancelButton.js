@@ -7,7 +7,7 @@ import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import { inlineIconStyle } from './NoteLine'
 
 export const CancelButton = ({
-  deleteLine,
+  onClickDo,
   last
 }) => {
   if (!last) {
@@ -17,7 +17,7 @@ export const CancelButton = ({
         className="line-buttons"
         style={inlineIconStyle.iconArea} 
         iconStyle={inlineIconStyle.icon} 
-        onClick={deleteLine} >
+        onClick={onClickDo} >
         <NavigationCancel />
       </IconButton>
     )
