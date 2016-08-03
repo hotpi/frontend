@@ -27,7 +27,7 @@ export default class NoteLineOptions extends React.Component {
   }*/
 
   render() {
-    const { onHighlight, onImportant, lhighlightValue, importantValue, last } = this.props
+    const { onHighlight, onImportant, highlightValue, importantValue, last } = this.props
     if (!last) {
       return (
           <div style={{width: '100%', margin: 0, height: 30, display: 'inline-flex'}}>
@@ -40,12 +40,12 @@ export default class NoteLineOptions extends React.Component {
               <ActionTouchApp />
             </IconButton>*/}
             <ImportantIcon 
-              onChangeDo={() => onImportant}
+              onChangeDo={onImportant}
               value={importantValue}
               />
             <HighlightIcon 
               onChangeDo={onHighlight}
-              value={() => highlightValue}
+              value={highlightValue}
               />
             {/*<IconButton
               tooltip="Move to history"

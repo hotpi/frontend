@@ -156,7 +156,7 @@ export default class NoteLine extends React.Component {
         <Badge 
             badgeContent={this.props.important.value}
             style={{width: '94%', margin: 0, padding: 0}}
-            badgeStyle={{backgroundColor: this.props.important.color, left: 343, margin: 0, padding: 0}}
+            badgeStyle={{backgroundColor: this.props.important.color, left: 313, margin: 0, padding: 0}}
             >
             {this.getLine()}
         </Badge>
