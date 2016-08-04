@@ -21,6 +21,14 @@ export const HighlightIcon = ({
   onChangeDo,
   highlight
 }) => {
+  let iconStyle = {
+    ...iconStyles,
+    icon: {
+      ...iconStyles.icon,
+      color: highlight.color
+    }
+   }
+
   return (
     <IconMenu
       onChange={onChangeDo}
@@ -30,8 +38,8 @@ export const HighlightIcon = ({
           tooltip="Highlight"
           tooltipPosition="top-right"
           className="line-buttons"
-          style={iconStyles.iconArea}
-          iconStyle={iconStyles.icon} >
+          style={iconStyle.iconArea}
+          iconStyle={iconStyle.icon} >
           <EditorHighlight />
         </IconButton>
       )}            

@@ -1,3 +1,5 @@
+import { highlightColors, importantColors } from '../Helpers'
+
 export const createAndAppendNext = (index) => ({
   type: 'CREATE_AND_APPEND_NEXT',
   index

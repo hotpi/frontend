@@ -30,17 +30,21 @@ import {
   changeNoteType,
 } from './actions/note';
 
-//TODO: Delete me!
-import configureStore from './configureStore';
-const store = configureStore();
-
 export default class Note extends React.Component {
   componentDidMount() {
+    const { store } = this.context; 
+
     store.dispatch(canAllocateFocus());
-    store.subscribe(() => this.forceUpdate());
+    this._unsubscribe = store.subscribe(() => this.forceUpdate());
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   handleKeyDown(index, positionToInsert) {
+    const { store } = this.context; 
+
     switch(positionToInsert) {
       case 'append_next': 
         store.dispatch(createAndAppendNext(index));
@@ -56,6 +60,8 @@ export default class Note extends React.Component {
   }
 
   handleFocus(type) {
+    const { store } = this.context; 
+
     switch(type) {
       case 'blur':
         if (store.getState().note.isInArea) { 
@@ -70,6 +76,7 @@ export default class Note extends React.Component {
 
   render() {
     const { type, title } = this.props; // TODO: Title can be get from the type, no need to pass it down
+    const { store } = this.context; 
 
     return (
       <div style={{height: 532,  overflowY: 'auto'}}>
@@ -91,8 +98,7 @@ export default class Note extends React.Component {
 
             <div style={{padding: '1em 0', margin: '0'}}>
               {store.getState().noteLines.map((line, index) => {
-                 return <NoteLine 
-                  store={store}
+                 return <NoteLine
                   key={line.ID} 
                   last={(index === (store.getState().noteLines.length - 1)) }
                   appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end')} 
@@ -122,6 +128,10 @@ export default class Note extends React.Component {
     );
   }
 };
+
+Note.contextTypes = {
+  store: React.PropTypes.object
+}
 
 Note.defaultProps = {
   title: 'New note',

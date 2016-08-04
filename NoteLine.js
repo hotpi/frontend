@@ -29,7 +29,9 @@ import {
 export default class NoteLine extends React.Component {
 
   componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
+    const { store } = this.context; 
+
+    this.unsubscribe = store.subscribe(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
@@ -53,17 +55,27 @@ export default class NoteLine extends React.Component {
   }
 
   handleChange(e) {
+    const { ID, text, last, isEmpty } = this.props;
+    const { store } = this.context; 
+
+    /*if (store.getState().noteLines.filter((value) => {
+      if (value.ID === ID) {
+        return value
+      }}).isEmpty && this.props.last) {*/
+
     // TODO: Dispatch new line at the end action and
-    if (this.props.text.length === 0 && this.props.last) {
-      this.props.store.dispatch(notEmptyAndNotLast(this.props.ID))
+    if (isEmpty && last) {
+      console.log('hier');
+      store.dispatch(notEmptyAndNotLast(ID))
       this.props.appendNewLineEnd();
     } 
 
-    this.props.store.dispatch(updateLineValue(this.props.ID, e.target.value))
+    store.dispatch(updateLineValue(ID, e.target.value))
   }
 
   render() {
-    const { deleteLine, last, important, highlight, store, ID, text, canGetFocus } = this.props
+    const { deleteLine, last, important, highlight, ID, text, canGetFocus } = this.props
+    const { store } = this.context; 
 
     return (
       <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
@@ -93,5 +105,9 @@ export default class NoteLine extends React.Component {
       </div>
     );
   }
+}
+
+NoteLine.contextTypes = {
+  store: React.PropTypes.object
 }
 
