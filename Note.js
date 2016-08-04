@@ -16,6 +16,19 @@ import NoteFooter from './NoteFooter';
 import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
 
+import { 
+  createAndAppendNext,
+  createAndAppendLast,
+  deleteLine,
+} from './actions/noteLines';
+
+import {
+  canAllocateFocus,
+  cannotAllocateFocus,
+  gainedFocus,
+  lostFocus,
+  changeNoteType,
+} from './actions/note';
 
 //TODO: Delete me!
 import configureStore from './configureStore';
@@ -23,28 +36,19 @@ const store = configureStore();
 
 export default class Note extends React.Component {
   componentDidMount() {
-    store.dispatch({type: 'CAN_ALLOCATE_FOCUS'});
+    store.dispatch(canAllocateFocus());
     store.subscribe(() => this.forceUpdate());
   }
 
   handleKeyDown(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
-        store.dispatch({
-          type: 'CREATE_AND_APPEND_NEXT',
-          index
-        });
-        store.dispatch({
-          type: 'CAN_ALLOCATE_FOCUS'
-        });
+        store.dispatch(createAndAppendNext(index));
+        store.dispatch(canAllocateFocus());
         break;
       case 'append_end':
-        store.dispatch({
-          type: 'CREATE_AND_APPEND_LAST'
-        });
-        store.dispatch({
-          type: 'CANNOT_ALLOCATE_FOCUS'
-        });
+        store.dispatch(createAndAppendLast());
+        store.dispatch(cannotAllocateFocus());
         break;
       default:
         console.log('error')
@@ -53,14 +57,9 @@ export default class Note extends React.Component {
 
   handleFocus(type) {
     switch(type) {
-      case 'focus':
-        
-        break;
       case 'blur':
         if (store.getState().note.isInArea) { 
-          store.dispatch({
-            type: 'LOST_FOCUS'
-          });
+          store.dispatch(lostFocus());
         }
 
         break;
@@ -78,7 +77,7 @@ export default class Note extends React.Component {
 
           <Paper
             zDepth={2}
-            onClick={() => store.dispatch({type: 'GAINED_FOCUS'})}
+            onClick={() => store.dispatch(gainedFocus())}
             style={{left: '19.2em', width: '470px', height: 'auto'}}>
             
             <NoteHeader 
@@ -99,11 +98,7 @@ export default class Note extends React.Component {
                   appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end')} 
                   appendNewLineNext={this.handleKeyDown.bind(this, index, 'append_next')} 
                   canGetFocus={store.getState().note.canAllocateFocus} 
-                  deleteLine={() => store.dispatch({
-                      type: 'DELETE_LINE',
-                      index
-                    })
-                  }
+                  deleteLine={() => store.dispatch(deleteLine(index))}
                   {...line}/>;
                 })}
             </div>
@@ -114,10 +109,7 @@ export default class Note extends React.Component {
               noteLines={store.getState().noteLines.length}
               hasFocus={store.getState().note.hasFocus}
               type={type}
-              onChangeDo={(e, i, value) => store.dispatch({
-                type: 'CHANGE_NOTE_TYPE',
-                value: typeValues[i]
-              })}
+              onChangeDo={(e, i, value) => store.dispatch(changeNoteType(i))}
               />     
 
           </Paper>

@@ -19,6 +19,13 @@ import LineText from './LineText'
 
 import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
 
+import { 
+  updateLineValue, 
+  notEmptyAndNotLast, 
+  importantLine, 
+  highlightLine 
+} from './actions/noteLines'
+
 export default class NoteLine extends React.Component {
 
   componentDidMount() {
@@ -48,18 +55,11 @@ export default class NoteLine extends React.Component {
   handleChange(e) {
     // TODO: Dispatch new line at the end action and
     if (this.props.text.length === 0 && this.props.last) {
-      this.props.store.dispatch({
-        type: 'NOT_EMPTY_AND_NOT_LAST',
-        ID: this.props.ID
-      })
+      this.props.store.dispatch(notEmptyAndNotLast(this.props.ID))
       this.props.appendNewLineEnd();
     } 
 
-    this.props.store.dispatch({
-      type: 'UPDATE_LINE_VALUE',
-      ID: this.props.ID,
-      text: e.target.value
-    })
+    this.props.store.dispatch(updateLineValue(this.props.ID, e.target.value))
   }
 
   render() {
@@ -87,20 +87,8 @@ export default class NoteLine extends React.Component {
           last={last}
           important={important}
           highlight={highlight}
-          onHighlight={(e, value) => store.dispatch({
-              type: 'HIGHLIGHT_LINE', 
-              color: highlightColors[+value],
-              ID: ID,
-              value: value                    
-            })
-          }
-          onImportant={(e, value) => store.dispatch({
-              type: 'IMPORTANT_LINE',
-              color: importantColors[+value],
-              ID: ID,
-              value: value
-            })
-          }
+          onHighlight={(e, value) => store.dispatch(highlightLine(ID, value))}
+          onImportant={(e, value) => store.dispatch(importantLine(ID, value))}
           />        
       </div>
     );

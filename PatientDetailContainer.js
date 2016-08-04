@@ -12,7 +12,7 @@ import Note from './Note';
 
 export default class PatientDetailContainer extends React.Component {
   render() {
-
+    
     return (
         <div style={{display: 'inline-flex'}}>
           <PatientOptionsList />
