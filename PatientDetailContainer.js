@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 import {
 green400,
 cyan500,
@@ -11,33 +10,7 @@ import PatientOptionsList from './PatientOptionsList';
 import PatientHeader from './PatientHeader';
 import Note from './Note';
 
-
-
-const headerStylesDesktop = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '76vw',
-  left: '19.2em'
-};
-
-
-//const lineOnHover = Object.assign(onHover, lineOutHover);
-
-
-
-
-const headerStylesMobile = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '70vw',
-  left: '19.2em'
-};
-
 export default class PatientDetailContainer extends React.Component {
-  constructor() {
-    super();
-  }
-
   render() {
 
     return (

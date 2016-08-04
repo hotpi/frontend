@@ -4,9 +4,9 @@ import IconButton from 'material-ui/IconButton';
 
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 
-import { inlineIconStyle } from './NoteLine'
+import { inlineIconStyle } from './Helpers'
 
-export const CancelButton = ({
+const CancelButton = ({
   onClickDo,
   last
 }) => {
@@ -27,3 +27,5 @@ export const CancelButton = ({
     <div style={{display: 'none'}}></div>
   );
 }
+
+export default CancelButton;

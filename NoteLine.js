@@ -12,93 +12,21 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 
-import {
-  amber700,
-  amber400,
-  amber100,
-  yellowA100,
-  blueA100,
-  lightBlue50,
-  greenA100,
-  orangeA100,
-  cyanA100,
-  grey400
-} from 'material-ui/styles/colors'
-
 import NoteLineOptions from './NoteLineOptions'
-import { CancelButton } from './CancelButton'
-import { AddIcon } from './AddIcon'
+import CancelButton from './CancelButton'
+import AddIcon from './AddIcon'
+import LineText from './LineText'
 
-export const importantColors = ["transparent", amber700, amber400, amber100];
-export const highlightColors = ["transparent", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
-
-const lineOutHover = {
-  notLast: {
-    margin: '0',
-    padding: '0 1.5em 0 3em'
-  },
-  last: {
-    padding: '0 1.5em 0 1em'
-  }
-}
-
-export const iconStyles = {
-  icon: {
-    width: '18px',
-    height: '18px',
-    fontSize: '18px',
-    color: 'grey'
-  },
-  iconArea: {
-    width: '46px',
-    height: '46px',
-    padding: 0,
-    marginRight: 5,
-    marginLeft: 0,
-    right: 13,
-    bottom: 5
-  }
-};
-
-export const inlineIconStyle = Object.assign({}, iconStyles, {
-  iconArea: {
-    padding: 0,
-    margin: 10,
-    marginTop: 14,
-    width: 20,
-    height: 20
-  }
-});
+import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
 
 export default class NoteLine extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEmpty: props.text === '' ? true : false,
-      last: props.last
-    }
-    this.store = this.props.store
-    console.log(this.store)
-  }
-
   componentDidMount() {
-    if (this.props.canGetFocus) {
-      this._input.focus();
-    }
-    this.unsubscribe = this.store.subscribe(() => this.forceUpdate());
+    this.unsubscribe = this.props.store.subscribe(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-  }
-
-  isHighlighted() {
-    return this.props.highlight.set;
-  }
-
-  isImportant() {
-    return this.props.important.set;
   }
 
   handleKeyDown(e) {
@@ -106,83 +34,59 @@ export default class NoteLine extends React.Component {
       e.preventDefault();  
 
       if (!this.props.last) {
-        return this.props.appendNewLineNext();
+        this.props.appendNewLineNext();
       }
     } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.text.length === 0) {
       e.preventDefault();
 
       if (!this.props.last) {
-        return this.props.deleteLine();
+        this.props.deleteLine();
       }
     } 
   }
 
   handleChange(e) {
-    // TODO: Dispatch new line at the end action and 
+    // TODO: Dispatch new line at the end action and
     if (this.props.text.length === 0 && this.props.last) {
-      this.store.dispatch({
+      this.props.store.dispatch({
         type: 'NOT_EMPTY_AND_NOT_LAST',
         ID: this.props.ID
       })
       this.props.appendNewLineEnd();
     } 
 
-    this.store.dispatch({
+    this.props.store.dispatch({
       type: 'UPDATE_LINE_VALUE',
       ID: this.props.ID,
       text: e.target.value
     })
   }
 
-  getLine() {
-    return (
-    <TextField 
-      onChange={this.handleChange.bind(this)}
-      onKeyDown={this.handleKeyDown.bind(this)}
-      hintText={'Write here to start a new line'}
-      rows={1}
-      ref={(c) => this._input = c}
-      multiLine={true}
-      underlineShow={false} 
-      textareaStyle={{paddingBottom: 0, backgroundColor: this.isHighlighted() ? this.props.highlight.color : 'transparent'}}
-      inputStyle={{margin: 0, padding: 0}}
-      style={{marginRight: 0, marginTop: 0, width: '94%'}} 
-      value={this.props.text}
-      >
-    </TextField>
-    );
-  }
-
-  renderLine() {
-    if (this.isImportant()) {
-      return (
-        <Badge 
-            badgeContent={this.props.important.value}
-            style={{width: '94%', margin: 0, padding: 0}}
-            badgeStyle={{backgroundColor: this.props.important.color, left: 313, margin: 0, padding: 0}}
-            >
-            {this.getLine()}
-        </Badge>
-        )
-    } 
-
-    return this.getLine();
-  }
-
   render() {
-    const { deleteLine, last, important, highlight, store, ID } = this.props
+    const { deleteLine, last, important, highlight, store, ID, text, canGetFocus } = this.props
 
     return (
       <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
         <div className="line-w-button" tabIndex="0">
-          <AddIcon last={last} />
-          {this.renderLine()}
-          <CancelButton last={last} onClickDo={deleteLine} />          
+          <AddIcon 
+            last={last} 
+            />
+          <LineText 
+            onChangeDo={this.handleChange.bind(this)}
+            onKeyDownDo={this.handleKeyDown.bind(this)}
+            text={text}
+            highlight={highlight}
+            canGetFocus={canGetFocus}
+            />
+          <CancelButton 
+            last={last}
+            onClickDo={deleteLine}
+            />          
         </div>
         <NoteLineOptions
           last={last}
-          importantValue={important}
-          highlightValue={highlight}
+          important={important}
+          highlight={highlight}
           onHighlight={(e, value) => store.dispatch({
               type: 'HIGHLIGHT_LINE', 
               color: highlightColors[+value],

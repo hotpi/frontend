@@ -25,7 +25,6 @@ const StethoscopeIcon = (props) => (
     className="mdi mdi-stethoscope" />
 );
 
-
 export default class PatientOptionsList extends React.Component {
   render() {
 

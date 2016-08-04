@@ -11,27 +11,7 @@ import PatientList from './PatientList';
 import PatientHeader from './PatientHeader';
 import Note from './Note';
 
-
-
-const headerStylesDesktop = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '76vw',
-  left: '19.2em'
-};
-
-
-//const lineOnHover = Object.assign(onHover, lineOutHover);
-
-
-
-
-const headerStylesMobile = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '70vw',
-  left: '19.2em'
-};
+import { headerStylesDesktop, headerStylesMobile } from './Helpers'
 
 export default class PatientContainer extends React.Component {
   constructor() {

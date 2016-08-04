@@ -15,16 +15,16 @@ import {
   cyanA100
 } from 'material-ui/styles/colors'
 
-import { iconStyles } from './NoteLine'
+import { iconStyles } from './Helpers'
 
 export const HighlightIcon = ({
   onChangeDo,
-  value
+  highlight
 }) => {
   return (
     <IconMenu
       onChange={onChangeDo}
-      value={value}
+      value={highlight.value}
       iconButtonElement={(
         <IconButton
           tooltip="Highlight"

@@ -12,17 +12,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import { grey400, blue700 } from 'material-ui/styles/colors';
 
-const listStyle = {
-    width: '19.2em', 
-    height: '100vh', 
-    borderRight: '0.1em #d0d0d0 solid', 
-    marginRight: '0',
-    marginTop: '0',
-    paddingTop: '0',
-    borderBottom: 'none',
-    boxShadow: '3px 0 2px #aeaeae'
-};
-
+import { listStyle } from './Helpers';
 
 export default class BaseList extends React.Component {
   render() {

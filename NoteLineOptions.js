@@ -1,14 +1,12 @@
 import React from 'react';
 
 /*import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
 import Chip from 'material-ui/Chip';
 
 import ActionTouchApp from 'material-ui/svg-icons/action/touch-app';
 import ContentMoveToInbox from 'material-ui/svg-icons/content/move-to-inbox';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
-import { iconStyles, importantColors, highlightColors } from './NoteLine'
+import { iconStyles, importantColors, highlightColors } from './Helpers'
 */
 
 import { ImportantIcon } from './ImportantIcon';
@@ -27,7 +25,7 @@ export default class NoteLineOptions extends React.Component {
   }*/
 
   render() {
-    const { onHighlight, onImportant, highlightValue, importantValue, last } = this.props
+    const { onHighlight, onImportant, highlight, important, last } = this.props
     if (!last) {
       return (
           <div style={{width: '100%', margin: 0, height: 30, display: 'inline-flex'}}>
@@ -41,11 +39,11 @@ export default class NoteLineOptions extends React.Component {
             </IconButton>*/}
             <ImportantIcon 
               onChangeDo={onImportant}
-              value={importantValue}
+              important={important}
               />
             <HighlightIcon 
               onChangeDo={onHighlight}
-              value={highlightValue}
+              highlight={highlight}
               />
             {/*<IconButton
               tooltip="Move to history"

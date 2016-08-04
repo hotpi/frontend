@@ -9,9 +9,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 //import Root from './containers/Root'
 import Root from './Root'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-//import configureStore from './store/configureStore'
+import configureStore from './configureStore'
 
-//const store = configureStore()
+const store = configureStore()
 //const history = syncHistoryWithStore(browserHistory, store)
 
 injectTapEventPlugin();
@@ -19,7 +19,7 @@ injectTapEventPlugin();
   //<Root store={store} history={history} />,
 render(
 	<MuiThemeProvider style={{height: '100vh', width: '100%'}}>
-		<Root />
+		<Root store={store}/>
 	</MuiThemeProvider>,
   document.getElementById('app')
 )
