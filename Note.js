@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 
 import Paper from 'material-ui/Paper';
@@ -31,15 +31,40 @@ import {
 } from './actions/note';
 
 export default class Note extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      canAllocateFocus: false,
+      hasFocus: false,
+      isInArea: false,
+    }
+  }
+
   componentDidMount() {
     const { store } = this.context; 
 
-    store.dispatch(canAllocateFocus());
+    this.setState({canAllocateFocus: true});
     this._unsubscribe = store.subscribe(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
     this._unsubscribe();
+  }
+
+  isNoteLineEmpty() {
+    const { store } = this.context;
+
+    if (store.getState().noteLines.length < 1) {
+      return false;
+    }
+
+    return store.getState().noteLines[0].isEmpty;
+  }
+
+  canShowHeaderAndFooter() {
+    const { store } = this.context;
+
+    return store.getState().noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || type !== "New"
   }
 
   handleKeyDown(index, positionToInsert) {
@@ -48,30 +73,15 @@ export default class Note extends React.Component {
     switch(positionToInsert) {
       case 'append_next': 
         store.dispatch(createAndAppendNext(index));
-        store.dispatch(canAllocateFocus());
+        this.setState({canAllocateFocus: true});
         break;
       case 'append_end':
         store.dispatch(createAndAppendLast());
-        store.dispatch(cannotAllocateFocus());
+        this.setState({canAllocateFocus: false});
         break;
       default:
         console.log('error')
     }    
-  }
-
-  handleFocus(type) {
-    const { store } = this.context; 
-
-    switch(type) {
-      case 'blur':
-        if (store.getState().note.isInArea) { 
-          store.dispatch(lostFocus());
-        }
-
-        break;
-      default:
-        console.log('error');
-    }
   }
 
   render() {
@@ -80,17 +90,16 @@ export default class Note extends React.Component {
 
     return (
       <div style={{height: 532,  overflowY: 'auto'}}>
-        <div style={{margin: '3em 0 3em 8em', display: 'inline-flex'}}>
+        <div
+          style={{margin: '3em 0 3em 8em', display: 'inline-flex'}}
+          >
 
           <Paper
             zDepth={2}
-            onClick={() => store.dispatch(gainedFocus())}
             style={{left: '19.2em', width: '470px', height: 'auto'}}>
             
             <NoteHeader 
-              noteLines={store.getState().noteLines.length - 1}
-              hasFocus={store.getState().note.hasFocus}
-              type={type}
+              show={this.canShowHeaderAndFooter()}
               title={title}
               />
 
@@ -98,22 +107,23 @@ export default class Note extends React.Component {
 
             <div style={{padding: '1em 0', margin: '0'}}>
               {store.getState().noteLines.map((line, index) => {
-                 return <NoteLine
+                return <NoteLine
                   key={line.ID} 
                   last={(index === (store.getState().noteLines.length - 1)) }
+                  isEmpty={line.text === ''}
+                  type={type}
                   appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end')} 
                   appendNewLineNext={this.handleKeyDown.bind(this, index, 'append_next')} 
-                  canGetFocus={store.getState().note.canAllocateFocus} 
+                  canGetFocus={this.state.canAllocateFocus} 
                   deleteLine={() => store.dispatch(deleteLine(index))}
                   {...line}/>;
-                })}
+              })}
             </div>
 
             <Divider />
 
             <NoteFooter 
-              noteLines={store.getState().noteLines.length}
-              hasFocus={store.getState().note.hasFocus}
+              show={this.canShowHeaderAndFooter()}
               type={type}
               onChangeDo={(e, i, value) => store.dispatch(changeNoteType(i))}
               />     

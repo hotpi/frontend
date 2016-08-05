@@ -2,7 +2,8 @@ import { v4 } from 'node-uuid';
 import noteLine from './noteLine'
 
 export const noteLines = (state = [], action ) => {
-  console.log('dispatching in noteLines: ', action.type, action, state)
+  if (action.type === 'NOT_EMPTY_AND_NOT_LAST')
+  {console.log('dispatching in noteLines: ', action.type, action, state)}
   switch (action.type) {
     case 'DELETE_LINE':
       return [

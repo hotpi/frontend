@@ -9,15 +9,14 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import { actionsArea, typeValues } from './Helpers'
 
 const NoteFooter = ({
-  noteLines,
-  hasFocus,
+  show,
   type,
   onChangeDo,
   onSaveDo
 }) => {
-  console.log("" + typeValues.indexOf(type))
+  //console.log("" + typeValues.indexOf(type))
   return (
-    <div style={noteLines > 1 || hasFocus || type !== "New" ? actionsArea.visible : actionsArea.hidden}>
+    <div style={show ? actionsArea.visible : actionsArea.hidden}>
       <SelectField 
         value={"" + typeValues.indexOf(type)}
         onChange={onChangeDo} 

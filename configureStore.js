@@ -8,9 +8,12 @@ import throttle from 'lodash/throttle';
 
 const configureStore = () => {
   const persistedState = {
+    note: {
+      type: 'New'
+    },
     noteLines: [{
     ID: v4(),
-    text: 'asdfasdf',
+    text: '',
     important: {
       set: false,
       color: "grey",
@@ -18,11 +21,9 @@ const configureStore = () => {
     },
     highlight: {
       set: false,
-      color: "transparent",
+      color: "grey",
       value: "0"
-    },
-    last: false,
-    isEmpty: false
+    }
   }/*,
   {
     ID: v4(),
@@ -60,7 +61,8 @@ const configureStore = () => {
 
   const store = createStore(
     reducer,
-    persistedState
+    persistedState,
+    window.devToolsExtension && window.devToolsExtension()
   );
 
   // store.subscribe(throttle(() => {

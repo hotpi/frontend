@@ -27,9 +27,25 @@ import {
 } from './actions/noteLines'
 
 export default class NoteLine extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      canGetFocus: props.canGetFocus
+    }
+  }
+
+  componentWillMount() {
+  }
 
   componentDidMount() {
+    const { appendNewLineEnd, type, last, isEmpty } = this.props;
     const { store } = this.context; 
+    console.log(type);
+    this.setState({canGetFocus: false});  
+    
+    if (last && !isEmpty && type === "New") {
+      appendNewLineEnd();
+    }
 
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
   }
@@ -58,15 +74,8 @@ export default class NoteLine extends React.Component {
     const { ID, text, last, isEmpty } = this.props;
     const { store } = this.context; 
 
-    /*if (store.getState().noteLines.filter((value) => {
-      if (value.ID === ID) {
-        return value
-      }}).isEmpty && this.props.last) {*/
-
     // TODO: Dispatch new line at the end action and
     if (isEmpty && last) {
-      console.log('hier');
-      store.dispatch(notEmptyAndNotLast(ID))
       this.props.appendNewLineEnd();
     } 
 

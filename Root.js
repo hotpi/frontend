@@ -21,8 +21,7 @@ export default class Root extends React.Component {
       <Provider store={store}>
         <Router history={browserHistory}>
           <Route path="/" component={PatientContainer} />
-          <Route path="/patient/:id" component={PatientDetailContainer} />
-          <Route path="/patient/:id/:type" component={PatientDetailContainer} /> 
+          <Route path="/patient/:id(/:type)" component={PatientDetailContainer} />
         </Router>
       </Provider>
     	);

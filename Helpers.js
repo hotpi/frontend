@@ -12,8 +12,8 @@ import {
   grey400
 } from 'material-ui/styles/colors'
 
-export const importantColors = ["transparent", amber700, amber400, amber100];
-export const highlightColors = ["transparent", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
+export const importantColors = ["grey", amber700, amber400, amber100];
+export const highlightColors = ["grey", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
 export const typeValues = ["New", "Diagnosis", "History", "ToDo"];
 
 export const headerStylesDesktop = {

@@ -10,45 +10,19 @@ const noteLine = (state = {
   },
   highlight: {
     set: false,
-    color: "transparent",
+    color: "grey",
     value: 0
-  },
-  isEmpty: true,
-  last: false
+  }
 }, action ) => {
-  console.log('dispatching in noteLine: ', action.type, action, state)
+  if (action.type === 'NOT_EMPTY_AND_NOT_LAST')
+    {console.log('dispatching in noteLine: ', action.type, action, state)}
   switch (action.type) {
-    case 'NOT_EMPTY_AND_NOT_LAST': 
-      if (state.ID !== action.ID) {
-        return state;
-      }
-
-      return {
-          ...state,
-         isEmpty: false,
-         last: false
-        }
     case 'CREATE_AND_APPEND_NEXT':
-      return {
-        ...state,
-        last: false
-      }
     case 'CREATE_AND_APPEND_LAST':
-      return {
-        ...state,
-        last: true
-      }
+      return state;
     case 'UPDATE_LINE_VALUE':
       if (state.ID !== action.ID) {
         return state;
-      }
-
-      if (action.text === '') {
-        return {
-          ...state,
-          text: action.text,
-          isEmpty: true
-        }
       }
 
       return {

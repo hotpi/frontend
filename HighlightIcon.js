@@ -1,3 +1,5 @@
+// TODO: Can be abstracted together with ImportantIcon component.
+
 import React from 'react';
 
 import IconButton from 'material-ui/IconButton';
