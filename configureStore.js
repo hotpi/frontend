@@ -1,5 +1,5 @@
 
-import reducer from './reducers'
+import rootReducer from './reducers'
 
 import { createStore } from 'redux'
 
@@ -60,7 +60,7 @@ const configureStore = () => {
   };
 
   const store = createStore(
-    reducer,
+    rootReducer,
     persistedState,
     window.devToolsExtension && window.devToolsExtension()
   );

@@ -19,7 +19,7 @@ import {
 
 import { iconStyles } from './Helpers'
 
-export const HighlightIcon = ({
+const HighlightIcon = ({
   onChangeDo,
   highlight
 }) => {
@@ -56,3 +56,14 @@ export const HighlightIcon = ({
     </IconMenu>
   );
 }
+
+HighlightIcon.propTypes = {
+  highlight: React.PropTypes.shape({
+    set: React.PropTypes.bool,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired,
+  onChangeDo: React.PropTypes.func.isRequired
+}
+
+export default HighlightIcon;

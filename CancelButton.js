@@ -28,4 +28,9 @@ const CancelButton = ({
   );
 }
 
+CancelButton.propTypes = {
+  onClickDo: React.PropTypes.func.isRequired,
+  last: React.PropTypes.bool.isRequired
+}
+
 export default CancelButton;

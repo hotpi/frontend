@@ -30,7 +30,7 @@ import {
   changeNoteType,
 } from './actions/note';
 
-export default class Note extends React.Component {
+class Note extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -139,6 +139,11 @@ export default class Note extends React.Component {
   }
 };
 
+Note.propTypes = {
+  type: React.PropTypes.string,
+  title: React.PropTypes.string
+}
+
 Note.contextTypes = {
   store: React.PropTypes.object
 }
@@ -147,3 +152,5 @@ Note.defaultProps = {
   title: 'New note',
   type: 'New'
 } 
+
+export default Note;

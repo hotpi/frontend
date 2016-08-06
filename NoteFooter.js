@@ -36,4 +36,11 @@ const NoteFooter = ({
   );
 }
 
+NoteFooter.propTypes = {
+  show: React.PropTypes.bool.isRequired,
+  type: React.PropTypes.string.isRequired,
+  onChangeDo: React.PropTypes.func.isRequired,
+  onSaveDo: React.PropTypes.func //.isRequired
+}
+
 export default NoteFooter;

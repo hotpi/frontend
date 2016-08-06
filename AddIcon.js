@@ -11,4 +11,8 @@ const AddIcon = ({last}) => {
   );
 }
 
+AddIcon.propTypes = {
+  last: React.PropTypes.bool.isRequired
+}
+
 export default AddIcon;

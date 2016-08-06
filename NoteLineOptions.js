@@ -9,10 +9,10 @@ import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import { iconStyles, importantColors, highlightColors } from './Helpers'
 */
 
-import { ImportantIcon } from './ImportantIcon';
-import { HighlightIcon } from './HighlightIcon';
+import ImportantIcon from './ImportantIcon';
+import HighlightIcon from './HighlightIcon';
 
-export default class NoteLineOptions extends React.Component {
+class NoteLineOptions extends React.Component {
   /*
   showChips() {
     if (this.props.reminder.set) {
@@ -71,4 +71,22 @@ export default class NoteLineOptions extends React.Component {
       );
   }
 }
+
+NoteLineOptions.propTypes = {
+  onHighlight: React.PropTypes.func.isRequired,
+  onImportant: React.PropTypes.func.isRequired, 
+  highlight: React.PropTypes.shape({
+    set: React.PropTypes.bool.isRequired,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired, 
+  important: React.PropTypes.shape({
+    set: React.PropTypes.bool.isRequired,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired,
+  last: React.PropTypes.bool.isRequired
+}
+
+export default NoteLineOptions;
 

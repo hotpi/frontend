@@ -33,4 +33,15 @@ class LineText extends React.Component {
   }
 }
 
+LineText.propTypes = {
+  text: React.PropTypes.string.isRequired,
+  highlight: React.PropTypes.shape({
+    set: React.PropTypes.bool.isRequired,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string
+  }).isRequired,
+  onChangeDo: React.PropTypes.func.isRequired,
+  onKeyDownDo: React.PropTypes.func.isRequired
+}
+
 export default LineText;

@@ -16,7 +16,7 @@ import {
 import { iconStyles } from './Helpers'
 
 
-export const ImportantIcon = ({
+const ImportantIcon = ({
   onChangeDo,
   important
 }) => {
@@ -56,3 +56,14 @@ export const ImportantIcon = ({
     badgeStyle={{backgroundColor: important.color, left: 313, margin: 0, padding: 0}}
     >
 </Badge>  */
+
+ImportantIcon.propTypes = {
+  important: React.PropTypes.shape({
+    set: React.PropTypes.bool,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired,
+  onChangeDo: React.PropTypes.func.isRequired
+}
+
+export default ImportantIcon;

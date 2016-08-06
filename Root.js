@@ -15,15 +15,20 @@ import PatientDetailContainer from './PatientDetailContainer';
 
 export default class Root extends React.Component {
   render() {
-    const { store } = this.props;
+    const { store, history } = this.props;
 
     return (
       <Provider store={store}>
-        <Router history={browserHistory}>
+        <Router history={history}>
           <Route path="/" component={PatientContainer} />
           <Route path="/patient/:id(/:type)" component={PatientDetailContainer} />
         </Router>
       </Provider>
     	);
   }
+}
+
+Root.propTypes = {
+  store: React.PropTypes.object.isRequired,
+  history: React.PropTypes.object.isRequired
 }

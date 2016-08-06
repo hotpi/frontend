@@ -13,4 +13,9 @@ const NoteHeader = ({
   );
 }
 
+NoteHeader.propTypes = {
+  show: React.PropTypes.bool.isRequired,
+  title: React.PropTypes.string.isRequired
+}
+
 export default NoteHeader;

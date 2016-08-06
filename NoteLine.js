@@ -40,7 +40,7 @@ export default class NoteLine extends React.Component {
   componentDidMount() {
     const { appendNewLineEnd, type, last, isEmpty } = this.props;
     const { store } = this.context; 
-    console.log(type);
+
     this.setState({canGetFocus: false});  
     
     if (last && !isEmpty && type === "New") {
@@ -74,7 +74,7 @@ export default class NoteLine extends React.Component {
     const { ID, text, last, isEmpty } = this.props;
     const { store } = this.context; 
 
-    // TODO: Dispatch new line at the end action and
+    // TODO: Dispatch new line at the end action
     if (isEmpty && last) {
       this.props.appendNewLineEnd();
     } 
@@ -115,6 +115,26 @@ export default class NoteLine extends React.Component {
     );
   }
 }
+
+NoteLine.propTypes = {
+  ID: React.PropTypes.string.isRequired,
+  text: React.PropTypes.string.isRequired,
+  last: React.PropTypes.bool.isRequired,
+  canGetFocus: React.PropTypes.bool.isRequired,
+  important: React.PropTypes.shape({
+    set: React.PropTypes.bool.isRequired,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired,
+  highlight: React.PropTypes.shape({
+    set: React.PropTypes.bool.isRequired,
+    color: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string.isRequired
+  }).isRequired,
+  deleteLine: React.PropTypes.func.isRequired,
+}
+
+// TODO: Possible to set props via connect
 
 NoteLine.contextTypes = {
   store: React.PropTypes.object

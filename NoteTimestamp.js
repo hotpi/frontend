@@ -17,4 +17,9 @@ const NoteTimestamp = ({
   );
 }
 
+NoteTimestamp.propTypes = {
+  type: React.PropTypes.string.isRequired,
+  date: React.PropTypes.object
+}
+
 export default NoteTimestamp;

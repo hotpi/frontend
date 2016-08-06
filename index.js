@@ -4,22 +4,24 @@ import { render } from 'react-dom'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-//import { browserHistory } from 'react-router'
-//import { syncHistoryWithStore } from 'react-router-redux'
+import { browserHistory } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
 //import Root from './containers/Root'
 import Root from './Root'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import configureStore from './configureStore'
 
 const store = configureStore()
-//const history = syncHistoryWithStore(browserHistory, store)
+const history = syncHistoryWithStore(browserHistory, store)
 
 injectTapEventPlugin();
 
-  //<Root store={store} history={history} />,
 render(
 	<MuiThemeProvider style={{height: '100vh', width: '100%'}}>
-		<Root store={store} />
+		<Root 
+      history={history} 
+      store={store} 
+      />
 	</MuiThemeProvider>,
   document.getElementById('app')
 )
