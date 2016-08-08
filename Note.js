@@ -1,6 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { connect } from 'react-redux';
+
+import { get as _get } from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
@@ -30,6 +31,8 @@ import {
   changeNoteType,
 } from './actions/note';
 
+import * as fromNoteLines from './reducers/noteLines'
+
 class Note extends React.Component {
   constructor() {
     super();
@@ -41,42 +44,29 @@ class Note extends React.Component {
   }
 
   componentDidMount() {
-    const { store } = this.context; 
-
     this.setState({canAllocateFocus: true});
-    this._unsubscribe = store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this._unsubscribe();
   }
 
   isNoteLineEmpty() {
-    const { store } = this.context;
-
-    if (store.getState().noteLines.length < 1) {
+    if (this.props.noteLinesIds.length < 1) {
       return false;
     }
-
-    return store.getState().noteLines[0].isEmpty;
+    console.log(this.props.noteLines);
+    return this.props.noteLines[0].noteLine.text === '';
   }
 
   canShowHeaderAndFooter() {
-    const { store } = this.context;
-
-    return store.getState().noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || type !== "New"
+    return this.props.noteLinesIds.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "New"
   }
 
-  handleKeyDown(index, positionToInsert) {
-    const { store } = this.context; 
-
+  handleKeyDown(index, positionToInsert, id) {
     switch(positionToInsert) {
       case 'append_next': 
-        store.dispatch(createAndAppendNext(index));
+        this.props.createAndAppendNext(id, index);
         this.setState({canAllocateFocus: true});
         break;
       case 'append_end':
-        store.dispatch(createAndAppendLast());
+        this.props.createAndAppendLast(id);
         this.setState({canAllocateFocus: false});
         break;
       default:
@@ -86,7 +76,6 @@ class Note extends React.Component {
 
   render() {
     const { type, title } = this.props; // TODO: Title can be get from the type, no need to pass it down
-    const { store } = this.context; 
 
     return (
       <div style={{height: 532,  overflowY: 'auto'}}>
@@ -106,16 +95,20 @@ class Note extends React.Component {
             <Divider />
 
             <div style={{padding: '1em 0', margin: '0'}}>
-              {store.getState().noteLines.map((line, index) => {
+              {this.props.noteLines.map((noteLine, index) => {
+                const ID = noteLine.ID;
+                const line = noteLine.noteLine
+
                 return <NoteLine
-                  key={line.ID} 
-                  last={(index === (store.getState().noteLines.length - 1)) }
+                  key={ID} 
+                  last={(index === (this.props.noteLinesIds.length - 1)) }
                   isEmpty={line.text === ''}
                   type={type}
-                  appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end')} 
-                  appendNewLineNext={this.handleKeyDown.bind(this, index, 'append_next')} 
+                  ID={ID}
+                  appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end', ID)} 
+                  appendNewLineNext={this.handleKeyDown.bind(this, index, 'append_next', ID)} 
                   canGetFocus={this.state.canAllocateFocus} 
-                  deleteLine={() => store.dispatch(deleteLine(index))}
+                  deleteLine={() => this.props.deleteLine(ID, index)}
                   {...line}/>;
               })}
             </div>
@@ -144,13 +137,33 @@ Note.propTypes = {
   title: React.PropTypes.string
 }
 
-Note.contextTypes = {
-  store: React.PropTypes.object
-}
-
 Note.defaultProps = {
   title: 'New note',
   type: 'New'
 } 
 
-export default Note;
+const mapStateToProps = (state, ownProps) => {
+  const noteLinesIds = _get(state.noteLines, 'allIds');
+  const noteLinesObjs = _get(state.noteLines, 'byId');
+  const noteLines = noteLinesIds && noteLinesIds.map(noteLineId => ({
+    ID: noteLineId,
+    noteLine: noteLinesObjs[noteLineId]
+  }))
+
+  return {
+    ...ownProps,
+    noteLines,
+    noteLinesIds
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+
+  return {
+    createAndAppendNext: (id, index) => dispatch(createAndAppendNext(id, index)),
+    createAndAppendLast: (id) => dispatch(createAndAppendLast(id)),
+    deleteLine: (id, index) => dispatch(deleteLine(id, index)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Note);

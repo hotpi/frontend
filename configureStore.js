@@ -1,30 +1,40 @@
 
 import rootReducer from './reducers'
 
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+
+import thunk from 'redux-thunk'
+
+import createLogger from 'redux-logger'
 
 import { v4 } from 'node-uuid';
 import throttle from 'lodash/throttle';
 
 const configureStore = () => {
+  const ids = [v4()/*, v4(), v4()*/]
   const persistedState = {
     note: {
       type: 'New'
     },
-    noteLines: [{
-    ID: v4(),
-    text: '',
-    important: {
-      set: false,
-      color: "grey",
-      value: "0"
-    },
-    highlight: {
-      set: false,
-      color: "grey",
-      value: "0"
+    noteLines: {
+      byId: {
+        [ids[0]]: {
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+      },
+      allIds: ids
     }
-  }/*,
+  /*,
   {
     ID: v4(),
     text: '12312312',
@@ -56,14 +66,27 @@ const configureStore = () => {
     },
     last: true,
     isEmpty: false
-  }*/]
+  }*/
   };
 
   const store = createStore(
     rootReducer,
     persistedState,
-    window.devToolsExtension && window.devToolsExtension()
+    compose(
+      applyMiddleware(thunk, /*api, */createLogger()),
+      window.devToolsExtension && window.devToolsExtension()
+      //DevTools.instrument()
+    )
   );
+
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers').default
+      store.replaceReducer(nextRootReducer)
+    })
+  }
+
 
   // store.subscribe(throttle(() => {
   //   saveState({

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import _ from 'lodash';
 
@@ -34,24 +35,14 @@ export default class NoteLine extends React.Component {
     }
   }
 
-  componentWillMount() {
-  }
-
   componentDidMount() {
     const { appendNewLineEnd, type, last, isEmpty } = this.props;
-    const { store } = this.context; 
 
     this.setState({canGetFocus: false});  
     
     if (last && !isEmpty && type === "New") {
       appendNewLineEnd();
     }
-
-    this.unsubscribe = store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   handleKeyDown(e) {
@@ -71,15 +62,25 @@ export default class NoteLine extends React.Component {
   }
 
   handleChange(e) {
-    const { ID, text, last, isEmpty } = this.props;
-    const { store } = this.context; 
+    const { last, isEmpty } = this.props;
 
     // TODO: Dispatch new line at the end action
     if (isEmpty && last) {
       this.props.appendNewLineEnd();
     } 
 
-    store.dispatch(updateLineValue(ID, e.target.value))
+    this.props.updateLineValue(e);
+  }
+
+  handleOptions(type, e, value) {
+    console.log(type, e, value);
+
+    switch (type) {
+      case 'onImportant':
+        return this.props.onImportant(value);
+      case 'onHighlight':
+        return this.props.onHighlight(value);
+    }
   }
 
   render() {
@@ -108,8 +109,8 @@ export default class NoteLine extends React.Component {
           last={last}
           important={important}
           highlight={highlight}
-          onHighlight={(e, value) => store.dispatch(highlightLine(ID, value))}
-          onImportant={(e, value) => store.dispatch(importantLine(ID, value))}
+          onHighlight={this.handleOptions.bind(this, 'onHighlight')}
+          onImportant={this.handleOptions.bind(this, 'onImportant')}
           />        
       </div>
     );
@@ -123,13 +124,13 @@ NoteLine.propTypes = {
   canGetFocus: React.PropTypes.bool.isRequired,
   important: React.PropTypes.shape({
     set: React.PropTypes.bool.isRequired,
-    color: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired
+    color: React.PropTypes.any.isRequired,
+    value: React.PropTypes.any.isRequired
   }).isRequired,
   highlight: React.PropTypes.shape({
     set: React.PropTypes.bool.isRequired,
-    color: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired
+    color: React.PropTypes.any.isRequired,
+    value: React.PropTypes.any.isRequired
   }).isRequired,
   deleteLine: React.PropTypes.func.isRequired,
 }
@@ -140,3 +141,27 @@ NoteLine.contextTypes = {
   store: React.PropTypes.object
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const noteLine = state.noteLines.byId[ownProps.ID];
+  return {
+    ...ownProps,
+    ...noteLine
+  }
+
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onHighlight: (value) => {
+      dispatch(highlightLine(ownProps.ID, value))
+    },
+    onImportant: (value) => {
+      dispatch(importantLine(ownProps.ID, value))
+    },
+    updateLineValue: (e) => {
+      dispatch(updateLineValue(ownProps.ID, e.target.value))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteLine)

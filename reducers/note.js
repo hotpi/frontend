@@ -1,4 +1,4 @@
-export const note = (state = {
+const note = (state = {
   type: "New"
 }, action) => {
   console.log('dispatching in note: ', action.type, action, state)
@@ -12,3 +12,5 @@ export const note = (state = {
       return state
   }
 }
+
+export default note;

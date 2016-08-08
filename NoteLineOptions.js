@@ -77,13 +77,13 @@ NoteLineOptions.propTypes = {
   onImportant: React.PropTypes.func.isRequired, 
   highlight: React.PropTypes.shape({
     set: React.PropTypes.bool.isRequired,
-    color: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired
+    color: React.PropTypes.any.isRequired,
+    value: React.PropTypes.any.isRequired
   }).isRequired, 
   important: React.PropTypes.shape({
     set: React.PropTypes.bool.isRequired,
-    color: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired
+    color: React.PropTypes.any.isRequired,
+    value: React.PropTypes.any.isRequired
   }).isRequired,
   last: React.PropTypes.bool.isRequired
 }

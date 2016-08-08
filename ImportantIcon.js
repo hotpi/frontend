@@ -60,8 +60,8 @@ const ImportantIcon = ({
 ImportantIcon.propTypes = {
   important: React.PropTypes.shape({
     set: React.PropTypes.bool,
-    color: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired
+    color: React.PropTypes.any.isRequired,
+    value: React.PropTypes.any.isRequired
   }).isRequired,
   onChangeDo: React.PropTypes.func.isRequired
 }

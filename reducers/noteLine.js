@@ -1,7 +1,6 @@
 import { v4 } from 'node-uuid';
 
 const noteLine = (state = {
-  ID: v4(),
   text: '',
   important: {
     set: false,
@@ -14,26 +13,14 @@ const noteLine = (state = {
     value: 0
   }
 }, action ) => {
-  if (action.type === 'NOT_EMPTY_AND_NOT_LAST')
-    {console.log('dispatching in noteLine: ', action.type, action, state)}
+  console.log('dispatching in noteLine: ', action.type, action, state)
   switch (action.type) {
-    case 'CREATE_AND_APPEND_NEXT':
-    case 'CREATE_AND_APPEND_LAST':
-      return state;
     case 'UPDATE_LINE_VALUE':
-      if (state.ID !== action.ID) {
-        return state;
-      }
-
       return {
         ...state,
         text: action.text
       }
     case 'HIGHLIGHT_LINE':
-      if (state.ID !== action.ID) {
-        return state;
-      }
-
       return {
         ...state,
         highlight: {
@@ -43,10 +30,6 @@ const noteLine = (state = {
         }
       }
     case 'IMPORTANT_LINE':
-      if (state.ID !== action.ID) {
-        return state;
-      }
-
       return {
         ...state,
         important: {
