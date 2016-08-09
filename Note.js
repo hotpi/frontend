@@ -33,7 +33,11 @@ import {
   changeNoteType
 } from './actions/note';
 
+import { getAllNoteLines } from './reducers/index'
+
 import * as fromNoteLines from './reducers/noteLines'
+
+import { noteIds } from './configureStore' // Delete me when the time is right
 
 class Note extends React.Component {
   constructor() {
@@ -145,6 +149,7 @@ class Note extends React.Component {
 
         return (
           <NoteLine
+            noteId={this.props.noteId} // Delete me when the time is right
             key={ID} 
             last={last}
             isEmpty={isEmpty}
@@ -221,30 +226,29 @@ Note.defaultProps = {
 } 
 
 const mapStateToProps = (state, ownProps) => {
-  const noteLinesIds = _get(state.noteLines, 'allIds');
-  const noteLinesObjs = _get(state.noteLines, 'byId');
-  const noteLines = noteLinesIds && noteLinesIds.map(noteLineId => ({
-    ID: noteLineId,
-    noteLine: noteLinesObjs[noteLineId]
-  }))
+  const noteId = noteIds[0];
+  const noteLines = getAllNoteLines(state, noteId);
+  const noteLinesIds = noteLines.map(noteLineObj => noteLineObj.ID)
 
   return {
     ...ownProps,
     noteLines,
-    noteLinesIds
+    noteLinesIds,
+    noteId
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-
+  const noteId = noteIds[0];
+  
   return {
-    createAndAppendNext: (index) => dispatch(createAndAppendNext(index)),
-    createAndAppendLast: () => dispatch(createAndAppendLast()),
-    deleteLine: (id) => dispatch(deleteLine(id)),
-    changeNoteType: (index) => dispatch(changeNoteType(index)),
-    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
-    onImportant: (id, value) => dispatch(importantLine(id, value)),
-    onHighlight: (id, value) => dispatch(highlightLine(id, value)),
+    createAndAppendNext: (index) => dispatch(createAndAppendNext(index, noteId)),
+    createAndAppendLast: () => dispatch(createAndAppendLast(noteId)),
+    deleteLine: (id) => dispatch(deleteLine(id, noteId)),
+    changeNoteType: (index) => dispatch(changeNoteType(index, noteId)),
+    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value, noteId)),
+    onImportant: (id, value) => dispatch(importantLine(id, value, noteId)),
+    onHighlight: (id, value) => dispatch(highlightLine(id, value, noteId)),
   }
 }
 

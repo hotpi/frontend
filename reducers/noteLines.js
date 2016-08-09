@@ -24,6 +24,8 @@ export const allIds = (state = [], action) => {
 }
 
 export const byId = (state = {}, action) => {
+  console.log('dispatching in noteLine: ', action.type, action, state)
+  
   switch (action.type) {
     case 'NOT_EMPTY_AND_NOT_LAST':
     case 'HIGHLIGHT_LINE':
@@ -47,14 +49,14 @@ export const byId = (state = {}, action) => {
   }
 }
 
-export const getAllNoteLines = (state) => state.allIds.map(id => ({ID: id, noteLine: state.byId[id]}))
-
-export const getNoteLineById = (state, id) => state.byId[id]
-export const getNoteLineId = (state, id) => state.allIds.indexOf(id)
-
 const noteLines = combineReducers({
   byId,
   allIds
 })
 
 export default noteLines;
+
+
+export const getAllNoteLines = (state) => state.allIds.map(id => ({ID: id, noteLine: state.byId[id]}))
+
+export const getNoteLineById = (state, id) => ({ID: id, noteLine: state.byId[id]})

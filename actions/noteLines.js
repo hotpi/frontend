@@ -1,43 +1,50 @@
 import { highlightColors, importantColors } from '../Helpers'
 import { v4 } from 'node-uuid';
 
-export const createAndAppendNext = (index) => ({
+export const createAndAppendNext = (index, noteId) => ({
   type: 'CREATE_AND_APPEND_NEXT',
   ID: v4(),
+  noteId,
   index
 })
 
-export const createAndAppendLast = () => ({
+export const createAndAppendLast = (noteId) => ({
   type: 'CREATE_AND_APPEND_LAST',
-  ID: v4()
+  ID: v4(),
+  noteId,
 })
 
-export const deleteLine = (id, index) => ({
+export const deleteLine = (id, noteId) => ({
   type: 'DELETE_LINE',
-  ID: id
+  ID: id,
+  noteId,
 })
 
 export const notEmptyAndNotLast = (id) => ({
   type: 'NOT_EMPTY_AND_NOT_LAST',
-  ID: id
+  ID: id,
+  noteId,
 })
 
-export const importantLine = (id, value) => ({
+export const importantLine = (id, value, noteId) => ({
   type: 'IMPORTANT_LINE',
   color: importantColors[+value],
   ID: id,
-  value
+  value,
+  noteId,
 })
 
-export const highlightLine = (id, value) => ({
+export const highlightLine = (id, value, noteId) => ({
   type: 'HIGHLIGHT_LINE', 
   color: highlightColors[+value],
   ID: id,
-  value                    
+  value,
+  noteId,                    
 })
 
-export const updateLineValue = (id, value) => ({
+export const updateLineValue = (id, value, noteId) => ({
   type: 'UPDATE_LINE_VALUE',
   ID: id,
-  text: value
+  text: value,
+  noteId,
 })

@@ -10,31 +10,72 @@ import createLogger from 'redux-logger'
 import { v4 } from 'node-uuid';
 import throttle from 'lodash/throttle';
 
+export const noteIds = [v4()/*, v4(), v4()*/]
+
 const configureStore = () => {
-  const ids = [v4()/*, v4(), v4()*/]
+  const noteLineIds = [v4()/*, v4(), v4()*/]
   const persistedState = {
-    note: {
-      type: 'New'
-    },
-    noteLines: {
+    notes: {
       byId: {
-        [ids[0]]: {
-          text: '',
-          important: {
-            set: false,
-            color: "grey",
-            value: "0"
+        [noteIds[0]]: {
+          noteProperties: {
+            type: 'New'
           },
-          highlight: {
-            set: false,
-            color: "grey",
-            value: "0"
+          noteLines: {
+            byId: {
+              [noteLineIds[0]]: {
+                text: '',
+                important: {
+                  set: false,
+                  color: "grey",
+                  value: "0"
+                },
+                highlight: {
+                  set: false,
+                  color: "grey",
+                  value: "0"
+                }
+              },
+            },
+            allIds: noteLineIds
           }
-        },
+        }
       },
-      allIds: ids
+      allIds: noteIds
     }
-  /*,
+  };
+
+  const store = createStore(
+    rootReducer,
+    persistedState,
+    compose(
+      applyMiddleware(thunk, /*api, */createLogger()),
+      window.devToolsExtension && window.devToolsExtension()
+      //DevTools.instrument()
+    )
+  );
+
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers').default
+      store.replaceReducer(nextRootReducer)
+    })
+  }
+
+
+  // store.subscribe(throttle(() => {
+  //   saveState({
+  //     noteLines: store.getState().noteLines,
+  //   });
+  // }, 1000));
+
+  return store;
+}
+
+export default configureStore;
+
+/*,
   {
     ID: v4(),
     text: '12312312',
@@ -67,34 +108,3 @@ const configureStore = () => {
     last: true,
     isEmpty: false
   }*/
-  };
-
-  const store = createStore(
-    rootReducer,
-    persistedState,
-    compose(
-      applyMiddleware(thunk, /*api, */createLogger()),
-      window.devToolsExtension && window.devToolsExtension()
-      //DevTools.instrument()
-    )
-  );
-
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./reducers', () => {
-      const nextRootReducer = require('./reducers').default
-      store.replaceReducer(nextRootReducer)
-    })
-  }
-
-
-  // store.subscribe(throttle(() => {
-  //   saveState({
-  //     noteLines: store.getState().noteLines,
-  //   });
-  // }, 1000));
-
-  return store;
-}
-
-export default configureStore;

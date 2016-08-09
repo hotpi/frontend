@@ -20,8 +20,7 @@ import LineText from './LineText'
 
 import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
 
-import { 
-} from './actions/noteLines'
+import { getNoteLineById } from './reducers/index'
 
 export default class NoteLine extends React.Component {
   constructor(props) {
@@ -93,13 +92,16 @@ NoteLine.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const noteLine = state.noteLines.byId[ownProps.ID];
+  const noteLineObj = getNoteLineById(state, ownProps.noteId, ownProps.ID);
+  const { noteLine } = noteLineObj
+
+  console.log('noteLine: ', noteLine, 'noteId: ', ownProps.noteId, 'ID: ', ownProps.ID)
   return {
     ...ownProps,
     ...noteLine,
-    noteLine
+    noteLine    
   }
 
 }
 
-export default connect(mapStateToProps/*, mapDispatchToProps*/)(NoteLine)
+export default connect(mapStateToProps)(NoteLine)

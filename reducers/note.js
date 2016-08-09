@@ -1,7 +1,12 @@
-const note = (state = {
+import { combineReducers } from 'redux';
+import { v4 } from 'node-uuid';
+
+import noteLines, * as fromNoteLines from './noteLines'
+
+const noteProperties = (state = {
   type: "New"
 }, action) => {
-  console.log('dispatching in note: ', action.type, action, state)
+
   switch(action.type) {
     case 'CHANGE_NOTE_TYPE':
       return {
@@ -13,4 +18,12 @@ const note = (state = {
   }
 }
 
+const note = combineReducers({
+  noteProperties,
+  noteLines
+});
+
 export default note;
+
+export const getAllNoteLines = (state) => fromNoteLines.getAllNoteLines(state.noteLines)
+export const getNoteLineById = (state, id) => fromNoteLines.getNoteLineById(state.noteLines, id)

@@ -16,7 +16,8 @@ export const gainedFocus = () => ({
   type: 'GAINED_FOCUS'
 })
 
-export const changeNoteType = (index) => ({
+export const changeNoteType = (index, noteId) => ({
   type: 'CHANGE_NOTE_TYPE',
-  value: typeValues[index]
+  value: typeValues[index],
+  noteId,
 })
