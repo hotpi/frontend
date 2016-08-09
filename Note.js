@@ -24,11 +24,7 @@ import {
 } from './actions/noteLines';
 
 import {
-  canAllocateFocus,
-  cannotAllocateFocus,
-  gainedFocus,
-  lostFocus,
-  changeNoteType,
+  changeNoteType
 } from './actions/note';
 
 import * as fromNoteLines from './reducers/noteLines'
@@ -41,6 +37,8 @@ class Note extends React.Component {
       hasFocus: false,
       isInArea: false,
     }
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -74,6 +72,10 @@ class Note extends React.Component {
     }    
   }
 
+  handleClick(e) {
+    this.setState({hasFocus: true});
+  }
+
   render() {
     const { type, title } = this.props; // TODO: Title can be get from the type, no need to pass it down
 
@@ -85,7 +87,8 @@ class Note extends React.Component {
 
           <Paper
             zDepth={2}
-            style={{left: '19.2em', width: '470px', height: 'auto'}}>
+            style={{left: '19.2em', width: '470px', height: 'auto'}}
+            onClick={this.handleClick}>
             
             <NoteHeader 
               show={this.canShowHeaderAndFooter()}
@@ -118,7 +121,7 @@ class Note extends React.Component {
             <NoteFooter 
               show={this.canShowHeaderAndFooter()}
               type={type}
-              onChangeDo={(e, i, value) => store.dispatch(changeNoteType(i))}
+              onChangeDo={(e, index, value) => this.props.changeNoteType(index)}
               />     
 
           </Paper>
@@ -163,6 +166,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createAndAppendNext: (id, index) => dispatch(createAndAppendNext(id, index)),
     createAndAppendLast: (id) => dispatch(createAndAppendLast(id)),
     deleteLine: (id, index) => dispatch(deleteLine(id, index)),
+    changeNoteType: (index) => dispatch(changeNoteType(index))
   }
 }
 
