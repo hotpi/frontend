@@ -1,13 +1,13 @@
 import { highlightColors, importantColors } from '../Helpers'
 import { v4 } from 'node-uuid';
 
-export const createAndAppendNext = (id, index) => ({
+export const createAndAppendNext = (index) => ({
   type: 'CREATE_AND_APPEND_NEXT',
   ID: v4(),
   index
 })
 
-export const createAndAppendLast = (id) => ({
+export const createAndAppendLast = () => ({
   type: 'CREATE_AND_APPEND_LAST',
   ID: v4()
 })

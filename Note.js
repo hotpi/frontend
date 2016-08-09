@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { get as _get } from 'lodash';
+import { set as _set } from 'lodash';
+import { assignIn } from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
@@ -21,6 +23,10 @@ import {
   createAndAppendNext,
   createAndAppendLast,
   deleteLine,
+  updateLineValue, 
+  notEmptyAndNotLast, 
+  importantLine, 
+  highlightLine 
 } from './actions/noteLines';
 
 import {
@@ -39,17 +45,27 @@ class Note extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
+    const { type } = this.props;
     this.setState({canAllocateFocus: true});
+
+    if (!this.last.isEmpty && type === "New") {
+      this.createNewLine(null, 'append_end')
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return this.props.noteLinesIds.length !== nextProps.noteLinesIds.length || this.props.type !== nextProps.type
   }
 
   isNoteLineEmpty() {
     if (this.props.noteLinesIds.length < 1) {
       return false;
     }
-    console.log(this.props.noteLines);
+
     return this.props.noteLines[0].noteLine.text === '';
   }
 
@@ -57,14 +73,16 @@ class Note extends React.Component {
     return this.props.noteLinesIds.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "New"
   }
 
-  handleKeyDown(index, positionToInsert, id) {
+  createNewLine(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
-        this.props.createAndAppendNext(id, index);
+        console.log(index);
+
+        this.props.createAndAppendNext(index);
         this.setState({canAllocateFocus: true});
         break;
       case 'append_end':
-        this.props.createAndAppendLast(id);
+        this.props.createAndAppendLast();
         this.setState({canAllocateFocus: false});
         break;
       default:
@@ -74,6 +92,80 @@ class Note extends React.Component {
 
   handleClick(e) {
     this.setState({hasFocus: true});
+  }
+
+
+  handleKeyDown(id, index, last, e) {
+    console.log('handleKeyDown: ', this.props.noteLines, this.props.noteLines[id]);
+    if (e.keyCode === 13) {
+      e.preventDefault();  
+      console.log(index);
+      if (!last) {
+        this.createNewLine(index, 'append_next');
+      }
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.noteLines[index].noteLine.text.length === 0) {
+      e.preventDefault();
+
+      if (!last) {
+        this.props.deleteLine(id, index);
+      }
+    } 
+  }
+
+  handleChange(id, last, isEmpty, e) {
+    if (isEmpty && last) {
+      this.createNewLine(null, 'append_end');
+    } 
+
+    this.props.updateLineValue(id, e);
+  }
+
+  lineModifierHandler(id, type, e, value) {
+    console.log('lineModifierHandler')
+    switch (type) {
+      case 'onImportant':
+        return this.props.onImportant(id, value);
+      case 'onHighlight':
+        return this.props.onHighlight(id, value);
+    }
+  }
+
+  renderNoteLines() {
+    var noteLines = {};
+    const { type } = this.props; 
+
+    noteLines = this.props.noteLines.map((noteLine, index) => {
+      if (noteLine.noteLine) {
+        const ID = noteLine.ID;
+        const line = noteLine.noteLine
+        const last = (index === (this.props.noteLinesIds.length - 1))
+        const isEmpty = line.text === '';
+
+        if (last) {
+          _set(this, 'last.isEmpty', isEmpty); 
+        }
+
+        return (
+          <NoteLine
+            key={ID} 
+            last={last}
+            isEmpty={isEmpty}
+            type={type}
+            ID={ID}
+            keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
+            onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
+            canGetFocus={this.state.canAllocateFocus} 
+            deleteLine={this.props.deleteLine.bind(this, ID, index)}
+            onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
+            onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
+            {...line}/>
+        );  
+      } else {
+        return null;
+      }
+    })
+
+    return noteLines;    
   }
 
   render() {
@@ -98,22 +190,7 @@ class Note extends React.Component {
             <Divider />
 
             <div style={{padding: '1em 0', margin: '0'}}>
-              {this.props.noteLines.map((noteLine, index) => {
-                const ID = noteLine.ID;
-                const line = noteLine.noteLine
-
-                return <NoteLine
-                  key={ID} 
-                  last={(index === (this.props.noteLinesIds.length - 1)) }
-                  isEmpty={line.text === ''}
-                  type={type}
-                  ID={ID}
-                  appendNewLineEnd={this.handleKeyDown.bind(this, index, 'append_end', ID)} 
-                  appendNewLineNext={this.handleKeyDown.bind(this, index, 'append_next', ID)} 
-                  canGetFocus={this.state.canAllocateFocus} 
-                  deleteLine={() => this.props.deleteLine(ID, index)}
-                  {...line}/>;
-              })}
+              {this.renderNoteLines()}
             </div>
 
             <Divider />
@@ -163,10 +240,13 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
-    createAndAppendNext: (id, index) => dispatch(createAndAppendNext(id, index)),
-    createAndAppendLast: (id) => dispatch(createAndAppendLast(id)),
+    createAndAppendNext: (index) => dispatch(createAndAppendNext(index)),
+    createAndAppendLast: () => dispatch(createAndAppendLast()),
     deleteLine: (id, index) => dispatch(deleteLine(id, index)),
-    changeNoteType: (index) => dispatch(changeNoteType(index))
+    changeNoteType: (index) => dispatch(changeNoteType(index)),
+    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
+    onImportant: (id, value) => dispatch(importantLine(id, value)),
+    onHighlight: (id, value) => dispatch(highlightLine(id, value)),
   }
 }
 

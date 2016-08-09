@@ -21,10 +21,6 @@ import LineText from './LineText'
 import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
 
 import { 
-  updateLineValue, 
-  notEmptyAndNotLast, 
-  importantLine, 
-  highlightLine 
 } from './actions/noteLines'
 
 export default class NoteLine extends React.Component {
@@ -39,53 +35,14 @@ export default class NoteLine extends React.Component {
     const { appendNewLineEnd, type, last, isEmpty } = this.props;
 
     this.setState({canGetFocus: false});  
-    
-    if (last && !isEmpty && type === "New") {
-      appendNewLineEnd();
-    }
   }
 
-  handleKeyDown(e) {
-    if (e.keyCode === 13) {
-      e.preventDefault();  
-
-      if (!this.props.last) {
-        this.props.appendNewLineNext();
-      }
-    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.text.length === 0) {
-      e.preventDefault();
-
-      if (!this.props.last) {
-        this.props.deleteLine();
-      }
-    } 
-  }
-
-  handleChange(e) {
-    const { last, isEmpty } = this.props;
-
-    // TODO: Dispatch new line at the end action
-    if (isEmpty && last) {
-      this.props.appendNewLineEnd();
-    } 
-
-    this.props.updateLineValue(e);
-  }
-
-  handleOptions(type, e, value) {
-    console.log(type, e, value);
-
-    switch (type) {
-      case 'onImportant':
-        return this.props.onImportant(value);
-      case 'onHighlight':
-        return this.props.onHighlight(value);
-    }
+  shouldComponentUpdate(nextProps) {
+    return this.props.noteLine !== nextProps.noteLine
   }
 
   render() {
     const { deleteLine, last, important, highlight, ID, text, canGetFocus } = this.props
-    const { store } = this.context; 
 
     return (
       <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
@@ -94,8 +51,8 @@ export default class NoteLine extends React.Component {
             last={last} 
             />
           <LineText 
-            onChangeDo={this.handleChange.bind(this)}
-            onKeyDownDo={this.handleKeyDown.bind(this)}
+            onChangeDo={this.props.onChangeDo} // this.props.onChangeDo
+            onKeyDownDo={this.props.keyDownHandler} // this.props.onKeyDownDo
             text={text}
             highlight={highlight}
             canGetFocus={canGetFocus}
@@ -109,8 +66,8 @@ export default class NoteLine extends React.Component {
           last={last}
           important={important}
           highlight={highlight}
-          onHighlight={this.handleOptions.bind(this, 'onHighlight')}
-          onImportant={this.handleOptions.bind(this, 'onImportant')}
+          onHighlight={this.props.onHighlight} 
+          onImportant={this.props.onImportant} 
           />        
       </div>
     );
@@ -135,33 +92,14 @@ NoteLine.propTypes = {
   deleteLine: React.PropTypes.func.isRequired,
 }
 
-// TODO: Possible to set props via connect
-
-NoteLine.contextTypes = {
-  store: React.PropTypes.object
-}
-
 const mapStateToProps = (state, ownProps) => {
   const noteLine = state.noteLines.byId[ownProps.ID];
   return {
     ...ownProps,
-    ...noteLine
+    ...noteLine,
+    noteLine
   }
 
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onHighlight: (value) => {
-      dispatch(highlightLine(ownProps.ID, value))
-    },
-    onImportant: (value) => {
-      dispatch(importantLine(ownProps.ID, value))
-    },
-    updateLineValue: (e) => {
-      dispatch(updateLineValue(ownProps.ID, e.target.value))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NoteLine)
+export default connect(mapStateToProps/*, mapDispatchToProps*/)(NoteLine)

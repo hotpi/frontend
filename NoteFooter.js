@@ -14,7 +14,6 @@ const NoteFooter = ({
   onChangeDo,
   onSaveDo
 }) => {
-  //console.log("" + typeValues.indexOf(type))
   return (
     <div style={show ? actionsArea.visible : actionsArea.hidden}>
       <SelectField 
