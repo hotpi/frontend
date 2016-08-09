@@ -14,8 +14,7 @@ export const createAndAppendLast = () => ({
 
 export const deleteLine = (id, index) => ({
   type: 'DELETE_LINE',
-  ID: id,
-  index
+  ID: id
 })
 
 export const notEmptyAndNotLast = (id) => ({

@@ -57,8 +57,8 @@ class Note extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return this.props.noteLinesIds.length !== nextProps.noteLinesIds.length || this.props.type !== nextProps.type
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.noteLinesIds.length !== nextProps.noteLinesIds.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
   }
 
   isNoteLineEmpty() {
@@ -96,7 +96,6 @@ class Note extends React.Component {
 
 
   handleKeyDown(id, index, last, e) {
-    console.log('handleKeyDown: ', this.props.noteLines, this.props.noteLines[id]);
     if (e.keyCode === 13) {
       e.preventDefault();  
       console.log(index);
@@ -107,7 +106,7 @@ class Note extends React.Component {
       e.preventDefault();
 
       if (!last) {
-        this.props.deleteLine(id, index);
+        this.props.deleteLine(id);
       }
     } 
   }
@@ -121,7 +120,6 @@ class Note extends React.Component {
   }
 
   lineModifierHandler(id, type, e, value) {
-    console.log('lineModifierHandler')
     switch (type) {
       case 'onImportant':
         return this.props.onImportant(id, value);
@@ -155,7 +153,7 @@ class Note extends React.Component {
             keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
             onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
             canGetFocus={this.state.canAllocateFocus} 
-            deleteLine={this.props.deleteLine.bind(this, ID, index)}
+            deleteLine={this.props.deleteLine.bind(this, ID)}
             onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
             onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
             {...line}/>
@@ -242,7 +240,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     createAndAppendNext: (index) => dispatch(createAndAppendNext(index)),
     createAndAppendLast: () => dispatch(createAndAppendLast()),
-    deleteLine: (id, index) => dispatch(deleteLine(id, index)),
+    deleteLine: (id) => dispatch(deleteLine(id)),
     changeNoteType: (index) => dispatch(changeNoteType(index)),
     updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),

@@ -6,10 +6,7 @@ import noteLine from './noteLine';
 export const allIds = (state = [], action) => {
   switch (action.type) {
     case 'DELETE_LINE':
-      return [
-      ...state.slice(0, action.index), 
-      ...state.slice(action.index+1)
-        ];
+      return state.filter(noteLineId => noteLineId !== action.ID)
     case 'CREATE_AND_APPEND_NEXT':
       return [
           ...state.slice(0, action.index+1), 
