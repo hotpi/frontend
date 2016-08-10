@@ -40,27 +40,15 @@ export default class PatientOptionsList extends React.Component {
             <Divider />
 
             <Subheader inset={true}>Patient Information</Subheader>
-            <Link to="/patient/1/New" style={{textDecoration: 'none'}}>
-
+            <Link to="/patient/1/Diagnosis" style={{textDecoration: 'none'}}>
               <ListItem
-                primaryText="New note"
+                primaryText="Diagnosis"
                 leftIcon={
-                  <AvLibraryAdd
-                    color={green400} />
+                  <StethoscopeIcon
+                    style={{color: deepPurple600}} />
                 }
                 style={{padding: '5px 0'}}
               />
-            </Link>
-
-            <Link to="/patient/1/Diagnosis" style={{textDecoration: 'none'}}>
-            <ListItem
-              primaryText="Diagnosis"
-              leftIcon={
-                <StethoscopeIcon
-                  style={{color: deepPurple600}} />
-              }
-              style={{padding: '5px 0'}}
-            />
             </Link>
             <Link to="/patient/1/History" style={{textDecoration: 'none'}}>
               <ListItem
@@ -73,14 +61,14 @@ export default class PatientOptionsList extends React.Component {
               />
             </Link>
             <Link to="/patient/1/ToDo" style={{textDecoration: 'none'}}>
-            <ListItem
-              primaryText="ToDo"
-              leftIcon={
-                <ActionAssignment
-                  color={cyan500} />
-              }
-              style={{padding: '5px 0'}}
-            />  
+              <ListItem
+                primaryText="ToDo"
+                leftIcon={
+                  <ActionAssignment
+                    color={cyan500} />
+                }
+                style={{padding: '5px 0'}}
+              />  
             </Link>
             
           </div>  

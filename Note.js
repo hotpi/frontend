@@ -18,6 +18,7 @@ import { typeValues } from './NoteFooter';
 import NoteFooter from './NoteFooter';
 import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
+import NewNoteButton from './NewNoteButton';
 
 import { 
   createAndAppendNext,
@@ -175,7 +176,7 @@ class Note extends React.Component {
     const { type, title } = this.props; // TODO: Title can be get from the type, no need to pass it down
 
     return (
-      <div style={{height: 532,  overflowY: 'auto'}}>
+      <div style={{height: 532,  overflowY: 'auto', display: 'block'}}>
         <div
           style={{margin: '3em 0 3em 8em', display: 'inline-flex'}}
           >
@@ -210,6 +211,7 @@ class Note extends React.Component {
             // date={} // TODO: Don't forget to set the date
             />
         </div>
+        <NewNoteButton />
       </div>
     );
   }

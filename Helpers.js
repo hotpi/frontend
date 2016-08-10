@@ -92,6 +92,13 @@ export const iconStyles = {
   }
 };
 
+export const newNoteButtonStyle = {
+  margin: 20,
+  position: 'fixed',
+  left: '90%',
+  top: '85%'
+}
+
 export const inlineIconStyle = Object.assign({}, iconStyles, {
   iconArea: {
     padding: 0,
