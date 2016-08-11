@@ -1,11 +1,18 @@
+import React from 'react';
+
+import ActionLabel from 'material-ui/svg-icons/action/label';
+
 import {
   amber700,
   amber400,
+  amber300,
   amber100,
   yellowA100,
   blueA100,
   blue800,
   lightBlue50,
+  teal200,
+  lightGreen300,
   greenA100,
   orangeA100,
   cyanA100,
@@ -24,10 +31,39 @@ export const headerStylesDesktop = {
 };
 
 export const headerStylesMobile = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '70vw',
-  left: '19.2em'
+  area: {
+    height: '154px',
+    backgroundColor: blue800,
+    width: '70vw',
+    left: '19.2em'
+  },
+  header3: {
+    color: 'white', 
+    marginTop: '0',
+    marginBottom: '5px', 
+    padding: '18px 10px 0 30px', 
+    fontWeight: '200'
+  },
+  header2: {
+    color: 'white', 
+    marginTop: '10px', 
+    marginBottom: '10px', 
+    padding: '0 5px 0 30px', 
+    fontWeight: '400'
+  },
+  line: {
+    marginBottom: '0', 
+    color: 'white', 
+    border: '0', 
+    height: '1px', 
+    backgroundImage: 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0))'
+  },
+  space1: {
+    padding: '0 9vw'
+  },
+  space2: {
+    padding: '0 7vw'
+  }
 };
 
 export const listStyle = {
@@ -39,6 +75,26 @@ export const listStyle = {
     paddingTop: '0',
     borderBottom: 'none',
     boxShadow: '3px 0 2px #aeaeae'
+};
+
+export const labelStyles = {
+  infoItem: {
+    padding: '1em 2em 1em 2em',
+    display: 'inline-block',
+    backgroundColor: 'transparent'
+  },
+
+  info: {
+    color: 'white',
+    margin: '3px 0 0 0',
+    fontWeight: '600'
+  },
+
+  label: {
+    color: 'white',
+    margin: '0',
+    fontWeight: '200'
+  }
 };
 
 export const titleArea = {
@@ -108,3 +164,36 @@ export const inlineIconStyle = Object.assign({}, iconStyles, {
     height: 20
   }
 });
+
+
+export const clinic = (name) => {
+  let nameInLowerCase = name.toLowerCase();
+  switch(nameInLowerCase) {
+    case 'endo':
+      return {color: lightGreen300, name: 'Endo'}
+    case 'all':
+      return {color: teal200, name: 'All'}
+    case 'pneu':
+      return {color: amber300, name: 'Pneu'}
+    default: 
+      return {color: grey400, name: ''}
+  }
+};
+
+export const rightIconInfo = (clinicInfo) => 
+{
+  return (
+  <div style={{margin: '0 12px'}}>
+    <ActionLabel color={clinicInfo.color} />
+    <h6 style={{margin: '0', color: clinicInfo.color}}> {clinicInfo.name} </h6>
+  </div>
+  )
+};
+
+export const dateToString = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return day + '.' + month + '.' + year;
+}

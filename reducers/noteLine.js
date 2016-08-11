@@ -14,7 +14,6 @@ const noteLine = (state = {
     value: 0
   }
 }, action ) => {
-  console.log('dispatching in noteLine: ', action.type, action, state)
   switch (action.type) {
     case 'UPDATE_LINE_VALUE':
       return {

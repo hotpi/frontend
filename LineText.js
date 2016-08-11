@@ -10,6 +10,11 @@ class LineText extends React.Component {
     }
 
   }
+
+  shouldComponentUpdate(nextProps) {
+    console.log('should line text update: ', this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight)
+    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight
+  }
   
   render() {
     const { text, highlight, onChangeDo, onKeyDownDo } = this.props;

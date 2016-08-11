@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 
+import { keys } from 'lodash';
+
 import notes, * as fromNotes from './notes';
 import noteLines, * as fromNoteLines from './noteLines';
 import patients from './patients';
@@ -20,3 +22,7 @@ export const getAllNoteLines = (state, noteId) => {
 }
 
 export const getNoteLine = (state, noteLineId) => fromNoteLines.getNoteLine(state.noteLines, noteLineId)
+
+export const getAllPatients = (state) => keys(state.patients).map(patientId => state.patients[patientId])
+
+export const getPatientById = (state, patientId) => state.patients[patientId]

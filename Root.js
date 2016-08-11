@@ -14,6 +14,10 @@ import PatientContainer from './PatientContainer';
 import PatientDetailContainer from './PatientDetailContainer';
 
 export default class Root extends React.Component {
+  componentDidUpdate(nextProps) {
+    console.log('ROOT UPDATED: ', nextProps);
+  }
+
   render() {
     const { store, history } = this.props;
 

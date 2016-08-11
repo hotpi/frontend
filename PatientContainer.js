@@ -1,21 +1,18 @@
 import React from 'react';
 
-
-import {
-green400,
-cyan500,
-blue800
-} from 'material-ui/styles/colors';
-
 import PatientList from './PatientList';
 import PatientHeader from './PatientHeader';
 import Note from './Note';
 
-import { headerStylesDesktop, headerStylesMobile } from './Helpers'
+import { patientIds } from './configureStore';
 
 export default class PatientContainer extends React.Component {
   constructor() {
     super();
+  }
+
+  componentDidUpdate(nextProps) {
+    console.log('PATIENTCONTAINER UPDATED: ', nextProps);
   }
 
   render() {
@@ -24,7 +21,7 @@ export default class PatientContainer extends React.Component {
         <div style={{display: 'inline-flex'}}>
           <PatientList />
           <div style={{display: 'block', overflow: 'hidden'}}>
-        		<PatientHeader />
+        		<PatientHeader patientId={patientIds[0]}/>
             <Note />
           </div>
         </div>

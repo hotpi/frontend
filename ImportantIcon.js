@@ -16,46 +16,44 @@ import {
 import { iconStyles } from './Helpers'
 
 
-const ImportantIcon = ({
-  onChangeDo,
-  important
-}) => {
-  let iconStyle = {
-    ...iconStyles,
-    icon: {
-      ...iconStyles.icon,
-      color: important.color
-    }
-   }
-  return (
-    <IconMenu
-      onChange={onChangeDo}
-      value={important.value}
-      iconButtonElement={(
-            <IconButton
-              tooltip="Set as important"
-              tooltipPosition="top-right"
-              className="line-buttons"
-              style={iconStyle.iconArea}
-              iconStyle={iconStyle.icon}>
-                <ToggleStar />
-            </IconButton>
-      )}
-      anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-      targetOrigin={{horizontal: 'left', vertical: 'top'}}>
-        <MenuItem value="0" primaryText="Normal priority" />
-        <MenuItem value="1" leftIcon={<ToggleStar color={amber700}/>} primaryText="Priority 1" />
-        <MenuItem value="2" leftIcon={<ToggleStar color={amber400}/>} primaryText="Priority 2" />
-        <MenuItem value="3" leftIcon={<ToggleStar color={amber100}/>} primaryText="Priority 3" />
-    </IconMenu>
-  );
-}/*
-<Badge 
-    badgeContent={important.value}
-    style={{width: '94%', margin: 0, padding: 0}}
-    badgeStyle={{backgroundColor: important.color, left: 313, margin: 0, padding: 0}}
-    >
-</Badge>  */
+class ImportantIcon extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return this.props.important !== nextProps.important;
+  }
+
+  render() {
+    const { onChangeDo, important } = this.props;
+    let iconStyle = {
+      ...iconStyles,
+      icon: {
+        ...iconStyles.icon,
+        color: important.color
+      }
+     }
+    return (
+      <IconMenu
+        onChange={onChangeDo}
+        value={important.value}
+        iconButtonElement={(
+              <IconButton
+                tooltip="Set as important"
+                tooltipPosition="top-right"
+                className="line-buttons"
+                style={iconStyle.iconArea}
+                iconStyle={iconStyle.icon}>
+                  <ToggleStar />
+              </IconButton>
+        )}
+        anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+        targetOrigin={{horizontal: 'left', vertical: 'top'}}>
+          <MenuItem value="0" primaryText="Normal priority" />
+          <MenuItem value="1" leftIcon={<ToggleStar color={amber700}/>} primaryText="Priority 1" />
+          <MenuItem value="2" leftIcon={<ToggleStar color={amber400}/>} primaryText="Priority 2" />
+          <MenuItem value="3" leftIcon={<ToggleStar color={amber100}/>} primaryText="Priority 3" />
+      </IconMenu>
+    );
+  }
+}
 
 ImportantIcon.propTypes = {
   important: React.PropTypes.shape({

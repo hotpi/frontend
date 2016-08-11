@@ -37,11 +37,12 @@ export default class NoteLine extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.noteLine !== nextProps.noteLine
+    console.log('should noteline update: ', this.props.noteLine !== nextProps.noteLine)
+    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight || this.props.important !== nextProps.important
   }
 
   render() {
-    const { deleteLine, last, important, highlight, ID, text, canGetFocus } = this.props
+    const { deleteLine, last, important, highlight, text, canGetFocus } = this.props
 
     return (
       <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
@@ -95,9 +96,9 @@ const mapStateToProps = (state, ownProps) => {
   const noteLine = getNoteLine(state, ownProps.ID);
 
   return {
-    ...ownProps,
-    ...noteLine,
-    noteLine    
+    text: noteLine.text,
+    important: noteLine.important,
+    highlight: noteLine.highlight
   }
 
 }

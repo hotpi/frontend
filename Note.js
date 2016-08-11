@@ -61,6 +61,7 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log('should note update: ', this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus)
     return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
   }
 
@@ -159,7 +160,7 @@ class Note extends React.Component {
           deleteLine={this.props.deleteLine.bind(this, ID)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
           onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
-          {...line}/>
+          />
       );  
     })
 
@@ -224,7 +225,6 @@ Note.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const noteId = noteIds[0];
   const noteLines = getAllNoteLines(state, noteId);
-  console.log(noteLines);
 
   return {
     ...ownProps,

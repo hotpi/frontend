@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+
+import { keys } from 'lodash'
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -25,409 +28,99 @@ grey400
 
 import BaseList from './BaseList';
 
-const clinic = (name) => {
-  switch(name) {
-  case 'ENDO':
-    return {color: lightGreen300, name: 'Endo'}
-  case 'ALL':
-    return {color: teal200, name: 'All'}
-  case 'PNEU':
-    return {color: amber300, name: 'Pneu'}
-  default: 
-    return {color: grey400, name: ''}
+import { dateToString, clinic, rightIconInfo } from './Helpers';
+import { getAllPatients } from './reducers/index';
+
+
+class PatientList extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    console.log('should patient list update: ', keys(this.props.patients).length !== keys(nextProps.patients).length);
+
+    return keys(this.props.patients).length !== keys(nextProps.patients).length;
   }
-};
 
-const rightIconInfo = (clinicInfo) => 
-{
-  return (
-  <div style={{margin: '0 12px'}}>
-    <ActionLabel color={clinicInfo.color} />
-    <h6 style={{margin: '0', color: clinicInfo.color}}> {clinicInfo.name} </h6>
-  </div>
-  )
-};
+  componentDidUpdate(nextProps) {
+    console.log('PATIENT LIST UPDATED: ', nextProps);
+  }
 
-export default class Root extends React.Component {
-  render() {
+  renderPatientsFromStation(patients) {
+    return patients.map(patient => {
+      const clinicInfo = clinic(patient.clinic);
 
-    return (
-    		<BaseList>
-          <Tabs style={{marginTop: '0'}} tabItemContainerStyle={{borderRight: '1px #aeaeae solid'}}>
-            <Tab label='Station 28'>
-              <div style={{overflowY: 'hidden'}}>
-                <div style={{height: '535px', overflowY: 'auto', marginBottom: '0'}}>
+      return (
+          <Link 
+              key={patient.ID}
+              to="/patient/1"
+              style={{textDecoration: 'none'}}
+              >
 
-                  <Subheader inset={true}>Patients</Subheader>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 1"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={lightGreen300}>
-                          P1
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('ENDO'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 2"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={teal200}>
-                          P2
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('ALL'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 3"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={lightGreen300}>
-                          P3
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('ENDO'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 4"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={amber300}>
-                          P4
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('PNEU'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 5"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={teal200}>
-                          P5
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('ALL'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 6"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={amber300}>
-                          P6
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('PNEU'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 7"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={amber300}>
-                          P7
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('PNEU'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 8"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={lightGreen300}>
-                          P8
-                        </Avatar>
-                      }
-                      rightIcon={rightIconInfo(clinic('ENDO'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 9"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={lightGreen300}>
-                          P9
-                        </Avatar>}
-                      rightIcon={rightIconInfo(clinic('ENDO'))}
-                    />
-                  </Link>
-                  <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                    <ListItem
-                      primaryText="Patient 10"
-                      secondaryText={
-                        <p>
-                          <i className="mdi mdi-cake"></i> 
-                          <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                        </p>  
-                      }
-                      leftAvatar={
-                        <Avatar
-                          backgroundColor={amber300}>
-                          P10
-                        </Avatar>}
-                      rightIcon={rightIconInfo(clinic('PNEU'))}
-                    />
-                  </Link>
-                  </div> 
-              </div> 
-           </Tab> 
-            <Tab label='Station 29'>
-              <div style={{overflow: 'hidden'}}>
-              <div style={{overflowY: 'auto'}}>
+            <ListItem
+              primaryText={patient.firstName + ' ' + patient.lastName}
+              secondaryText={
+                <p>
+                  <i className="mdi mdi-cake"></i> 
+                  <span style={{paddingLeft: '5px'}}>{dateToString(patient.birthday)}</span>
+                </p>  
+              }
+              leftAvatar={
+                <Avatar
+                  backgroundColor={clinicInfo.color}>
+                  {patient.bedNumber}
+                </Avatar>
+              }
+              rightIcon={rightIconInfo(clinicInfo)}
+            />
+          </Link>
+        );
+    })
+  }
 
+  renderTabs() {
+    console.log(this.props.patientsByStation)
+    return this.props.patientsByStation.map(patientsInStation => {
+      return (
+          <Tab 
+            key={patientsInStation.station}
+            label={"Station: " + patientsInStation.station}>
+            <div style={{overflowY: 'hidden'}}>
+              <div style={{height: '535px', overflowY: 'auto', marginBottom: '0'}}>
+    
                 <Subheader inset={true}>Patients</Subheader>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-        		      <ListItem
-                    primaryText="Patient 1"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={lightGreen300}>
-                        P1
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('ENDO'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 2"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={teal200}>
-                        P2
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('ALL'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 3"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={lightGreen300}>
-                        P3
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('ENDO'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 4"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={amber300}>
-                        P4
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('PNEU'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 5"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={teal200}>
-                        P5
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('ALL'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 6"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={amber300}>
-                        P6
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('PNEU'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-                    primaryText="Patient 7"
-                    secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-                      <Avatar
-                        backgroundColor={amber300}>
-                        P7
-                      </Avatar>
-                    }
-                    rightIcon={rightIconInfo(clinic('PNEU'))}
-                  />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-                  <ListItem
-        		        primaryText="Patient 8"
-        		        secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-        		        	<Avatar
-        		        		backgroundColor={lightGreen300}>
-        		        		P8
-        		        	</Avatar>
-        		        }
-                    rightIcon={rightIconInfo(clinic('ENDO'))}
-        		      />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-        		      <ListItem
-        		        primaryText="Patient 9"
-        		        secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-        		        	<Avatar
-        		        		backgroundColor={lightGreen300}>
-        		        		P9
-        		        	</Avatar>}
-                    rightIcon={rightIconInfo(clinic('ENDO'))}
-        		      />
-                </Link>
-                <Link to="/patient/1" style={{textDecoration: 'none'}}>
-        		      <ListItem
-        		        primaryText="Patient 10"
-        		        secondaryText={
-                      <p>
-                        <i className="mdi mdi-cake"></i> 
-                        <span style={{paddingLeft: '5px'}}>21.12.1991</span>
-                      </p>  
-                    }
-                    leftAvatar={
-        		        	<Avatar
-        		        		backgroundColor={amber300}>
-        		        		P10
-        		        	</Avatar>}
-                    rightIcon={rightIconInfo(clinic('PNEU'))}
-        		      />
-                </Link>
-              </div> 
-              </div> 
-           </Tab> 
-          </Tabs>
-		    </BaseList>
-    	)
+                {this.renderPatientsFromStation(patientsInStation.patients)}
+                </div> 
+            </div> 
+         </Tab> 
+      );
+    })
+  }
+
+  render() {
+    return (
+  		<BaseList>
+        <Tabs style={{marginTop: '0'}} tabItemContainerStyle={{borderRight: '1px #aeaeae solid'}}>
+          
+          {this.renderTabs()}
+        </Tabs>
+	    </BaseList>
+  	)
   }
 }
+
+const mapStateToProps = (state) => {
+  const patients = getAllPatients(state);
+  console.log(typeof patients)
+  const stations = patients.reduce((prev, current) => {
+    if (!prev.includes(current.station)) {
+      prev = [...prev, current.station]
+    }
+
+    return prev;
+  }, []);
+  const patientsByStation = stations.map(station => ({station: station, patients: patients.filter(patient => station === patient.station)}))
+  return {
+    patientsByStation,
+    patients
+  }
+}
+
+export default connect(mapStateToProps)(PatientList)

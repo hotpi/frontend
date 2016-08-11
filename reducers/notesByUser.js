@@ -1,4 +1,4 @@
-const notesByUser = (state = {
+const notesByPatient = (state = {
   type: '',
   isFetching: false,
   didInvalidate: false,
@@ -8,4 +8,4 @@ const notesByUser = (state = {
   
 } 
 
-export default notesByType;
+export default notesByPatient;

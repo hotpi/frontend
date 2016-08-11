@@ -3,9 +3,7 @@ import { v4 } from 'node-uuid';
 
 import noteLine from './noteLine';
 
-export const noteLines = (state = {}, action) => {
-  console.log('dispatching in noteLine: ', action.type, action, state)
-  
+export const noteLines = (state = {}, action) => {  
   switch (action.type) {
     case 'NOT_EMPTY_AND_NOT_LAST':
     case 'HIGHLIGHT_LINE':

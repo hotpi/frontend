@@ -1,75 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
 
-import {
-blue800
-} from 'material-ui/styles/colors';
+import { getPatientById } from './reducers/index';
 
-import PatientList from './PatientList';
-
-const headerStylesDesktop = {
-  height: '154px',
-  backgroundColor: blue800,
-  width: '76vw',
-  left: '19.2em'
-};
-
-const headerStylesMobile = {
-  area: {
-    height: '154px',
-    backgroundColor: blue800,
-    width: '70vw',
-    left: '19.2em'
-  },
-  header3: {
-    color: 'white', 
-    marginTop: '0',
-    marginBottom: '5px', 
-    padding: '18px 10px 0 30px', 
-    fontWeight: '200'
-  },
-  header2: {
-    color: 'white', 
-    marginTop: '10px', 
-    marginBottom: '10px', 
-    padding: '0 5px 0 30px', 
-    fontWeight: '400'
-  },
-  line: {
-    marginBottom: '0', 
-    color: 'white', 
-    border: '0', 
-    height: '1px', 
-    backgroundImage: 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0))'
-  },
-  space1: {
-    padding: '0 9vw'
-  },
-  space2: {
-    padding: '0 7vw'
-  }
-};
-
-const labelStyles = {
-  infoItem: {
-    padding: '1em 2em 1em 2em',
-    display: 'inline-block',
-    backgroundColor: 'transparent'
-  },
-
-  info: {
-    color: 'white',
-    margin: '3px 0 0 0',
-    fontWeight: '600'
-  },
-
-  label: {
-    color: 'white',
-    margin: '0',
-    fontWeight: '200'
-  }
-};
+import { dateToString, headerStylesMobile, labelStyles } from './Helpers';
 
 const InfoLabels = (props) => {
   return (
@@ -80,7 +16,16 @@ const InfoLabels = (props) => {
   )
 };
 
-export default class Root extends React.Component {
+class PatientHeader extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    console.log('should patient header update: ', this.props.patient !== nextProps.patient)
+    return this.props.patient !== nextProps.patient;
+  }
+
+  componentDidUpdate(nextProps) {
+    console.log('PATIENT HEADER UPDATED: ', nextProps);
+  }
+
   render() {
 
     return (        
@@ -88,20 +33,30 @@ export default class Root extends React.Component {
           zDepth={0} 
           style={headerStylesMobile.area}>
           <h3 style={headerStylesMobile.header3}>Patient </h3>
-          <h2 style={headerStylesMobile.header2}>Max Mustermann </h2>
+          <h2 style={headerStylesMobile.header2}>{this.props.patient.firstName + ' ' + this.props.patient.lastName}  </h2>
           <hr style={headerStylesMobile.line}/>
           <InfoLabels 
             label="Clinic"
-            info="Endo" />
+            info={this.props.patient.clinic} />
           <span style={headerStylesMobile.space1}></span>
           <InfoLabels 
             label="Admission date"
-            info="12/6/2016" />
+            info={dateToString(this.props.patient.admissionDate)} />
           <span style={headerStylesMobile.space2}></span>
           <InfoLabels 
             label="Discharge date"
-            info="21/6/2016" />
+            info={dateToString(this.props.patient.dischargeDate)} />
         </Paper>
     	)
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const patient = getPatientById(state, ownProps.patientId);
+
+  return {
+    patient
+  }
+}
+
+export default connect(mapStateToProps)(PatientHeader);
