@@ -11,37 +11,59 @@ import { v4 } from 'node-uuid';
 import throttle from 'lodash/throttle';
 
 export const noteIds = [v4()/*, v4(), v4()*/]
+const noteLineIds = [v4()/*, v4(), v4()*/]
+const patientIds = [v4()]
+/*
+  {
+    byId: {
+      [noteLineIds[0]]: {
+        
+      },
+    },
+    allIds: noteLineIds
+  }
+*/
 
 const configureStore = () => {
-  const noteLineIds = [v4()/*, v4(), v4()*/]
   const persistedState = {
-    notes: {
-      byId: {
-        [noteIds[0]]: {
-          noteProperties: {
-            type: 'New'
-          },
-          noteLines: {
-            byId: {
-              [noteLineIds[0]]: {
-                text: '',
-                important: {
-                  set: false,
-                  color: "grey",
-                  value: "0"
-                },
-                highlight: {
-                  set: false,
-                  color: "grey",
-                  value: "0"
-                }
-              },
-            },
-            allIds: noteLineIds
-          }
+    entities: {
+      patients: {
+        [patientIds[0]]: {
+          ID: patientIds[0],
+          lastName: 'Mustermann',
+          firstName: 'Max',
+          bedNumber: 10,
+          clinic: 'Endo',
+          station: '28',
+          admissionDate: new Date(2016, 6, 12),
+          dischargeDate: new Date(2016, 6, 12),
+          birthday: new Date(1991, 12, 1991),
+          notes: noteIds
         }
       },
-      allIds: noteIds
+      notes: {
+        [noteIds[0]]: {
+          ID: noteIds[0],
+          type: 'New',
+          noteLines: noteLineIds
+        }
+      },
+      noteLines: {
+        [noteLineIds[0]]: {
+          ID: noteLineIds[0],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        }
+      }
     }
   };
 

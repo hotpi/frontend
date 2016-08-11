@@ -1,6 +1,7 @@
 import { v4 } from 'node-uuid';
 
 const noteLine = (state = {
+  ID: '',
   text: '',
   important: {
     set: false,
@@ -37,6 +38,12 @@ const noteLine = (state = {
           color: action.color,
           value: action.value
         }
+      }
+    case 'CREATE_AND_APPEND_LAST':
+    case 'CREATE_AND_APPEND_NEXT':
+      return {
+        ...state,
+        ID: action.NoteLineID
       }
     default:
       return state

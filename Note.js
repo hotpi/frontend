@@ -36,8 +36,6 @@ import {
 
 import { getAllNoteLines } from './reducers/index'
 
-import * as fromNoteLines from './reducers/noteLines'
-
 import { noteIds } from './configureStore' // Delete me when the time is right
 
 class Note extends React.Component {
@@ -63,19 +61,19 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.noteLinesIds.length !== nextProps.noteLinesIds.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
+    return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
   }
 
   isNoteLineEmpty() {
-    if (this.props.noteLinesIds.length < 1) {
+    if (this.props.noteLines.length < 1) {
       return false;
     }
 
-    return this.props.noteLines[0].noteLine.text === '';
+    return this.props.noteLines[0].text === '';
   }
 
   canShowHeaderAndFooter() {
-    return this.props.noteLinesIds.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "New"
+    return this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "New"
   }
 
   createNewLine(index, positionToInsert) {
@@ -107,7 +105,7 @@ class Note extends React.Component {
       if (!last) {
         this.createNewLine(index, 'append_next');
       }
-    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.noteLines[index].noteLine.text.length === 0) {
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.noteLines[index].text.length === 0) {
       e.preventDefault();
 
       if (!last) {
@@ -136,37 +134,33 @@ class Note extends React.Component {
   renderNoteLines() {
     var noteLines = {};
     const { type } = this.props; 
-
+    const noteLinesTotal = this.props.noteLines.length
     noteLines = this.props.noteLines.map((noteLine, index) => {
-      if (noteLine.noteLine) {
-        const ID = noteLine.ID;
-        const line = noteLine.noteLine
-        const last = (index === (this.props.noteLinesIds.length - 1))
-        const isEmpty = line.text === '';
+      const ID = noteLine.ID;
+      const line = noteLine;
+      const last = (index === (noteLinesTotal - 1))
+      const isEmpty = line.text === '';
 
-        if (last) {
-          _set(this, 'last.isEmpty', isEmpty); 
-        }
-
-        return (
-          <NoteLine
-            noteId={this.props.noteId} // Delete me when the time is right
-            key={ID} 
-            last={last}
-            isEmpty={isEmpty}
-            type={type}
-            ID={ID}
-            keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
-            onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
-            canGetFocus={this.state.canAllocateFocus} 
-            deleteLine={this.props.deleteLine.bind(this, ID)}
-            onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
-            onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
-            {...line}/>
-        );  
-      } else {
-        return null;
+      if (last) {
+        _set(this, 'last.isEmpty', isEmpty); 
       }
+
+      return (
+        <NoteLine
+          noteId={this.props.noteId} // Delete me when the time is right
+          key={ID} 
+          last={last}
+          isEmpty={isEmpty}
+          type={type}
+          ID={ID}
+          keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
+          onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
+          canGetFocus={this.state.canAllocateFocus} 
+          deleteLine={this.props.deleteLine.bind(this, ID)}
+          onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
+          onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
+          {...line}/>
+      );  
     })
 
     return noteLines;    
@@ -230,12 +224,11 @@ Note.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const noteId = noteIds[0];
   const noteLines = getAllNoteLines(state, noteId);
-  const noteLinesIds = noteLines.map(noteLineObj => noteLineObj.ID)
+  console.log(noteLines);
 
   return {
     ...ownProps,
     noteLines,
-    noteLinesIds,
     noteId
   }
 }
@@ -248,9 +241,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createAndAppendLast: () => dispatch(createAndAppendLast(noteId)),
     deleteLine: (id) => dispatch(deleteLine(id, noteId)),
     changeNoteType: (index) => dispatch(changeNoteType(index, noteId)),
-    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value, noteId)),
-    onImportant: (id, value) => dispatch(importantLine(id, value, noteId)),
-    onHighlight: (id, value) => dispatch(highlightLine(id, value, noteId)),
+    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
+    onImportant: (id, value) => dispatch(importantLine(id, value)),
+    onHighlight: (id, value) => dispatch(highlightLine(id, value)),
   }
 }
 

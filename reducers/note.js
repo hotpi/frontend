@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
 
-import noteLines, * as fromNoteLines from './noteLines'
+import { allIds as noteLines } from './noteLines'
+import  * as fromNoteLines from './noteLines'
 
-const noteProperties = (state = {
-  type: "New"
+const note = (state = {
+  ID: '',
+  type: "New",
+  noteLines: []
 }, action) => {
 
   switch(action.type) {
@@ -13,17 +16,28 @@ const noteProperties = (state = {
         ...state,
         type: action.value
       }
+    case 'DELETE_LINE':
+      return {
+        ...state,
+        noteLines: state.noteLines.filter(noteLineId => noteLineId !== action.NoteLineID)
+      }
+    case 'CREATE_AND_APPEND_NEXT':
+      return {
+        ...state,
+        noteLines: [
+          ...state.noteLines.slice(0, action.index+1), 
+          action.NoteLineID,
+          ...state.noteLines.slice(action.index+1)
+        ]
+      }
+    case 'CREATE_AND_APPEND_LAST':
+      return {
+        ...state,
+        noteLines: [...state.noteLines, action.NoteLineID]
+      }
     default: 
       return state
   }
 }
 
-const note = combineReducers({
-  noteProperties,
-  noteLines
-});
-
 export default note;
-
-export const getAllNoteLines = (state) => fromNoteLines.getAllNoteLines(state.noteLines)
-export const getNoteLineById = (state, id) => fromNoteLines.getNoteLineById(state.noteLines, id)
