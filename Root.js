@@ -14,10 +14,6 @@ import PatientContainer from './PatientContainer';
 import PatientDetailContainer from './PatientDetailContainer';
 
 export default class Root extends React.Component {
-  componentDidUpdate(nextProps) {
-    console.log('ROOT UPDATED: ', nextProps);
-  }
-
   render() {
     const { store, history } = this.props;
 
@@ -25,7 +21,8 @@ export default class Root extends React.Component {
       <Provider store={store}>
         <Router history={history}>
           <Route path="/" component={PatientContainer} />
-          <Route path="/patient/:id(/:type)" component={PatientDetailContainer} />
+          <Route path="/patients" component={PatientContainer} />
+          <Route path="/patient/:patientId(/:type)" component={PatientDetailContainer} />
         </Router>
       </Provider>
     	);

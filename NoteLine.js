@@ -37,7 +37,6 @@ export default class NoteLine extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    console.log('should noteline update: ', this.props.noteLine !== nextProps.noteLine)
     return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight || this.props.important !== nextProps.important
   }
 

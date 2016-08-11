@@ -34,13 +34,7 @@ import { getAllPatients } from './reducers/index';
 
 class PatientList extends React.Component {
   shouldComponentUpdate(nextProps) {
-    console.log('should patient list update: ', keys(this.props.patients).length !== keys(nextProps.patients).length);
-
     return keys(this.props.patients).length !== keys(nextProps.patients).length;
-  }
-
-  componentDidUpdate(nextProps) {
-    console.log('PATIENT LIST UPDATED: ', nextProps);
   }
 
   renderPatientsFromStation(patients) {
@@ -50,7 +44,7 @@ class PatientList extends React.Component {
       return (
           <Link 
               key={patient.ID}
-              to="/patient/1"
+              to={"/patient/" + patient.ID}
               style={{textDecoration: 'none'}}
               >
 
@@ -76,7 +70,6 @@ class PatientList extends React.Component {
   }
 
   renderTabs() {
-    console.log(this.props.patientsByStation)
     return this.props.patientsByStation.map(patientsInStation => {
       return (
           <Tab 
@@ -108,7 +101,6 @@ class PatientList extends React.Component {
 
 const mapStateToProps = (state) => {
   const patients = getAllPatients(state);
-  console.log(typeof patients)
   const stations = patients.reduce((prev, current) => {
     if (!prev.includes(current.station)) {
       prev = [...prev, current.station]

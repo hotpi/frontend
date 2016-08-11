@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
@@ -6,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import { getPatientById } from './reducers/index';
 
 import { dateToString, headerStylesMobile, labelStyles } from './Helpers';
+import { patientIds } from './configureStore';
 
 const InfoLabels = (props) => {
   return (
@@ -18,12 +20,7 @@ const InfoLabels = (props) => {
 
 class PatientHeader extends React.Component {
   shouldComponentUpdate(nextProps) {
-    console.log('should patient header update: ', this.props.patient !== nextProps.patient)
     return this.props.patient !== nextProps.patient;
-  }
-
-  componentDidUpdate(nextProps) {
-    console.log('PATIENT HEADER UPDATED: ', nextProps);
   }
 
   render() {
@@ -51,12 +48,15 @@ class PatientHeader extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const patient = getPatientById(state, ownProps.patientId);
+const mapStateToProps = (state, { params }) => {
+  console.log(params);
+  const patientId = (params && params.patientId) || patientIds[0];
+  console.log(patientId, typeof patientId);
+  const patient = getPatientById(state, patientId);
 
   return {
     patient
   }
 }
 
-export default connect(mapStateToProps)(PatientHeader);
+export default withRouter(connect(mapStateToProps)(PatientHeader));

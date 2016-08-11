@@ -19,7 +19,7 @@ import {
 
 import { iconStyles } from './Helpers'
 
-class HighlightIcon extends React.Compnent {
+class HighlightIcon extends React.Component {
   shouldComponentUpdate(nextProps) {
     return this.props.highlight !== nextProps.highlight;
   }

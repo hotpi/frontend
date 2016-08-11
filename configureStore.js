@@ -43,7 +43,7 @@ const configureStore = () => {
         [patientIds[1]]: {
           ID: patientIds[1],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Robert',
           bedNumber: 17,
           clinic: 'Endo',
           station: '28',
@@ -55,7 +55,7 @@ const configureStore = () => {
         [patientIds[2]]: {
           ID: patientIds[2],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Samuel',
           bedNumber: 3,
           clinic: 'Pneu',
           station: '28',
@@ -67,7 +67,7 @@ const configureStore = () => {
         [patientIds[3]]: {
           ID: patientIds[3],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Jürgen',
           bedNumber: 5,
           clinic: 'Endo',
           station: '29',
@@ -79,7 +79,7 @@ const configureStore = () => {
         [patientIds[4]]: {
           ID: patientIds[4],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'George',
           bedNumber: 21,
           clinic: 'All',
           station: '28',
@@ -91,7 +91,7 @@ const configureStore = () => {
         [patientIds[5]]: {
           ID: patientIds[5],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Pablo',
           bedNumber: 12,
           clinic: 'Pneu',
           station: '29',
@@ -103,7 +103,7 @@ const configureStore = () => {
         [patientIds[6]]: {
           ID: patientIds[6],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Ramón',
           bedNumber: 19,
           clinic: 'All',
           station: '29',
@@ -115,7 +115,7 @@ const configureStore = () => {
         [patientIds[7]]: {
           ID: patientIds[7],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Johnny',
           bedNumber: 9,
           clinic: 'Pneu',
           station: '28',
@@ -127,7 +127,7 @@ const configureStore = () => {
         [patientIds[8]]: {
           ID: patientIds[8],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Johannes',
           bedNumber: 1,
           clinic: 'Endo',
           station: '28',
@@ -139,7 +139,7 @@ const configureStore = () => {
         [patientIds[9]]: {
           ID: patientIds[9],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Julian',
           bedNumber: 3,
           clinic: 'Pneu',
           station: '28',
@@ -151,7 +151,7 @@ const configureStore = () => {
         [patientIds[10]]: {
           ID: patientIds[10],
           lastName: 'Mustermann',
-          firstName: 'Max',
+          firstName: 'Johan',
           bedNumber: 24,
           clinic: 'Pneu',
           station: '28',

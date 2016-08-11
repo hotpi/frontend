@@ -11,10 +11,6 @@ export default class PatientContainer extends React.Component {
     super();
   }
 
-  componentDidUpdate(nextProps) {
-    console.log('PATIENTCONTAINER UPDATED: ', nextProps);
-  }
-
   render() {
 
     return (

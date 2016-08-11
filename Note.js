@@ -61,7 +61,6 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('should note update: ', this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus)
     return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
   }
 
