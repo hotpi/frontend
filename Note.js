@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter, browserHistory } from 'react-router';
 
 import { get as _get } from 'lodash';
 import { set as _set } from 'lodash';
@@ -31,10 +32,11 @@ import {
 } from './actions/noteLines';
 
 import {
-  changeNoteType
+  changeNoteType,
+  newNote
 } from './actions/note';
 
-import { getAllNoteLines } from './reducers/index'
+import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId } from './reducers/index'
 
 import { noteIds } from './configureStore' // Delete me when the time is right
 
@@ -48,14 +50,19 @@ class Note extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleNewButton = this.handleNewButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillMount(){
+    this.props.type === 'new' ? this.props.newNote() : null;
   }
 
   componentDidMount() {
     const { type } = this.props;
     this.setState({canAllocateFocus: true});
 
-    if (!this.last.isEmpty && type === "New") {
+    if (!this.last.isEmpty && type === "new") {
       this.createNewLine(null, 'append_end')
     }
   }
@@ -73,7 +80,7 @@ class Note extends React.Component {
   }
 
   canShowHeaderAndFooter() {
-    return this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "New"
+    return this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== "new"
   }
 
   createNewLine(index, positionToInsert) {
@@ -120,6 +127,11 @@ class Note extends React.Component {
     } 
 
     this.props.updateLineValue(id, e);
+  }
+
+  handleNewButton() {
+    this.props.newNote(this.props.patientId)
+    browserHistory.push('/patient/' + this.props.patientId + '/new')
   }
 
   lineModifierHandler(id, type, e, value) {
@@ -197,6 +209,7 @@ class Note extends React.Component {
               show={this.canShowHeaderAndFooter()}
               type={type}
               onChangeDo={(e, index, value) => this.props.changeNoteType(index)}
+              onSaveDo={() => this.props.saveNote()}
               />     
 
           </Paper>
@@ -205,7 +218,9 @@ class Note extends React.Component {
             // date={} // TODO: Don't forget to set the date
             />
         </div>
-        <NewNoteButton />
+        <NewNoteButton
+          onClickDo={this.handleNewButton}
+         />
       </div>
     );
   }
@@ -221,18 +236,20 @@ Note.defaultProps = {
   type: 'New'
 } 
 
-const mapStateToProps = (state, ownProps) => {
-  const noteId = noteIds[0];
-  const noteLines = getAllNoteLines(state, noteId);
+const mapStateToProps = (state, { params }) => {
+  const patientId = params.patientId || getFirstPatientId(state);
+  const typeFilter = params.type || 'new';
+  const patientNotes = getNotesByTypeFromPatient(state, patientId, typeFilter);
+  const noteLines = patientNotes[0] && getAllNoteLines(state, patientNotes[0].ID) || [];
 
   return {
-    ...ownProps,
     noteLines,
-    noteId
+    noteId: patientNotes[0] || null,
+    patientId
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   const noteId = noteIds[0];
   
   return {
@@ -243,7 +260,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
+    saveNote: () => dispatch({type: 'NOT_FOUND'/*saveNote()*/}),
+    newNote: (patientId) => dispatch(newNote(patientId))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Note);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Note));

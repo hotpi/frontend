@@ -10,8 +10,8 @@ import createLogger from 'redux-logger'
 import { v4 } from 'node-uuid';
 import throttle from 'lodash/throttle';
 
-export const noteIds = [v4()/*, v4(), v4()*/]
-const noteLineIds = [v4()]
+export const noteIds = [v4(), v4(), v4(), v4(), v4(), v4()]
+const noteLineIds = [v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4()]
 export const patientIds = [v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4()]
 /*
   {
@@ -38,7 +38,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: noteIds
+          notes: noteIds.slice(0, 3)
         },
         [patientIds[1]]: {
           ID: patientIds[1],
@@ -50,7 +50,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
+          notes: noteIds.slice(1, 2)
         },
         [patientIds[2]]: {
           ID: patientIds[2],
@@ -62,7 +62,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
+          notes: noteIds.slice(2, 3)
         },
         [patientIds[3]]: {
           ID: patientIds[3],
@@ -74,7 +74,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
+          notes: noteIds.slice(3, 4)
         },
         [patientIds[4]]: {
           ID: patientIds[4],
@@ -86,7 +86,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
+          notes: noteIds.slice(5, 6)
         },
         [patientIds[5]]: {
           ID: patientIds[5],
@@ -98,7 +98,7 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
+          notes: noteIds.slice(7, 8)
         },
         [patientIds[6]]: {
           ID: patientIds[6],
@@ -110,8 +110,8 @@ const configureStore = () => {
           admissionDate: new Date(2016, 5, 12),
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
-          notes: []
-        },
+          notes: noteIds.slice(8, 9)
+        }/*,
         [patientIds[7]]: {
           ID: patientIds[7],
           lastName: 'Mustermann',
@@ -159,18 +159,99 @@ const configureStore = () => {
           dischargeDate: new Date(2016, 5, 12),
           birthday: new Date(1991, 11, 21),
           notes: []
-        }
+        }*/
       },
       notes: {
         [noteIds[0]]: {
           ID: noteIds[0],
-          type: 'New',
-          noteLines: noteLineIds
+          type: 'diagnosis',
+          noteLines: noteLineIds.slice(0,1)
+        },
+        [noteIds[1]]: {
+          ID: noteIds[1],
+          type: 'history',
+          noteLines: noteLineIds.slice(1,3)
+        },
+        [noteIds[2]]: {
+          ID: noteIds[2],
+          type: 'todo',
+          noteLines: noteLineIds.slice(3,6)
+        },
+        [noteIds[3]]: {
+          ID: noteIds[3],
+          type: 'diagnosis',
+          noteLines: noteLineIds.slice(6,7)
+        },
+        [noteIds[4]]: {
+          ID: noteIds[4],
+          type: 'diagnosis',
+          noteLines: noteLineIds.slice(7,8)
+        },
+        [noteIds[5]]: {
+          ID: noteIds[5],
+          type: 'diagnosis',
+          noteLines: noteLineIds.slice(8,9)
         }
       },
       noteLines: {
         [noteLineIds[0]]: {
           ID: noteLineIds[0],
+          text: 'something from note 1',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[1]]: {
+          ID: noteLineIds[1],
+          text: 'something from note 1',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[2]]: {
+          ID: noteLineIds[2],
+          text: 'something from note 2',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[3]]: {
+          ID: noteLineIds[3],
+          text: 'something from note 2',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[4]]: {
+          ID: noteLineIds[4],
           text: '',
           important: {
             set: false,
@@ -182,7 +263,77 @@ const configureStore = () => {
             color: "grey",
             value: "0"
           }
-        }
+        },
+        [noteLineIds[5]]: {
+          ID: noteLineIds[5],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[6]]: {
+          ID: noteLineIds[6],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[7]]: {
+          ID: noteLineIds[7],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[8]]: {
+          ID: noteLineIds[8],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
+        [noteLineIds[9]]: {
+          ID: noteLineIds[9],
+          text: '',
+          important: {
+            set: false,
+            color: "grey",
+            value: "0"
+          },
+          highlight: {
+            set: false,
+            color: "grey",
+            value: "0"
+          }
+        },
       }
     }
   };

@@ -1,4 +1,6 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -6,14 +8,24 @@ import { Link } from 'react-router';
 
 import { newNoteButtonStyle } from './Helpers'
 
-const NewNoteButton = () => {
+import { getFirstPatientId } from './reducers/index'
+
+const NewNoteButton = ({
+  patientId,
+  onClickDo
+}) => {
   return (
-    <Link to="/patient/1/New">
-      <FloatingActionButton style={newNoteButtonStyle}>
-        <ContentAdd />
-      </FloatingActionButton>
-    </Link>
+    <FloatingActionButton onClick={onClickDo} style={newNoteButtonStyle}>
+      <ContentAdd />
+    </FloatingActionButton>
   );
 }
 
-export default NewNoteButton;
+const mapStateToProps = (state, { params }) => {
+  const patientId = params.patientId || getFirstPatientId(state);
+  return {
+    patientId
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(NewNoteButton));

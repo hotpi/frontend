@@ -1,4 +1,5 @@
 import { typeValues } from '../Helpers'
+import { v4 } from 'node-uuid';
 
 export const changeNoteType = (index, NoteID) => ({
   type: 'CHANGE_NOTE_TYPE',
@@ -8,5 +9,7 @@ export const changeNoteType = (index, NoteID) => ({
 
 export const newNote = (PatientID) => ({
   type: 'NEW_NOTE',
+  NoteID: v4(),
+  NoteLineID: v4(),
   PatientID
 })

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, withRouter, browserHistory } from 'react-router';
+import { connect } from 'react-redux';
 
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -20,59 +21,78 @@ pink500
 
 import BaseList from './BaseList';
 
+import { getFirstPatientId } from './reducers/index'
+
 const StethoscopeIcon = (props) => (
   <FontIcon {...props}
     className="mdi mdi-stethoscope" />
 );
 
-export default class PatientOptionsList extends React.Component {
+const handleBrowserHistory = (patientId, type) => {
+  if (type !== 'back') {
+    browserHistory.push("/patient/" + patientId + "/" + type);
+  } else {
+    browserHistory.push("/patients");
+  }
+}
+
+class PatientOptionsList extends React.Component {
   render() {
+    const { patientId } = this.props;
+    const patientUri = "/patient/" + patientId;
 
     return (
     		<BaseList>
           <div style={{overflowY: 'auto', border: 'none'}}>
-            <Link to="/" style={{textDecoration: 'none'}}>
-              <ListItem 
-                primaryText="Back"
-                leftIcon={<NavigationChevronLeft />} >
-              </ListItem>
-            </Link>
+            <ListItem 
+              onClick={() => handleBrowserHistory(patientId, 'back')}
+              primaryText="Back"
+              leftIcon={<NavigationChevronLeft />} >
+            </ListItem>
             <Divider />
 
             <Subheader inset={true}>Patient Information</Subheader>
-            <Link to="/patient/1/Diagnosis" style={{textDecoration: 'none'}}>
-              <ListItem
-                primaryText="Diagnosis"
-                leftIcon={
-                  <StethoscopeIcon
-                    style={{color: deepPurple600}} />
-                }
-                style={{padding: '5px 0'}}
-              />
-            </Link>
-            <Link to="/patient/1/History" style={{textDecoration: 'none'}}>
-              <ListItem
-                primaryText="History"
-                leftIcon={
-                  <ActionHistory
-                    color={pink500} />
-                }
-                style={{padding: '5px 0'}}
-              />
-            </Link>
-            <Link to="/patient/1/ToDo" style={{textDecoration: 'none'}}>
-              <ListItem
-                primaryText="ToDo"
-                leftIcon={
-                  <ActionAssignment
-                    color={cyan500} />
-                }
-                style={{padding: '5px 0'}}
-              />  
-            </Link>
-            
+            <ListItem
+              onClick={() => handleBrowserHistory(patientId, 'diagnosis')}
+              primaryText="Diagnosis"
+              leftIcon={
+                <StethoscopeIcon
+                  style={{color: deepPurple600}} />
+              }
+              style={{padding: '5px 0'}}
+            />
+          <ListItem
+              onClick={() => handleBrowserHistory(patientId, 'history')}
+              primaryText="History"
+              leftIcon={
+                <ActionHistory
+                  color={pink500} />
+              }
+              style={{padding: '5px 0'}}
+            />
+            <ListItem
+              onClick={() => handleBrowserHistory(patientId, 'todo')}
+              primaryText="ToDo"
+              leftIcon={
+                <ActionAssignment
+                  color={cyan500} />
+              }
+              style={{padding: '5px 0'}}
+            />  
+          
           </div>  
 		    </BaseList>
     	)
   }
 }
+
+const mapStateToProps = (state, { params }) => {
+  const patientId = params.patientId || getFirstPatientId(state);
+  console.log(params);
+
+  return {
+    patientId
+  }
+} 
+
+export default withRouter(connect(mapStateToProps)(PatientOptionsList));

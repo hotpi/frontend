@@ -40,6 +40,7 @@ const noteLine = (state = {
       }
     case 'CREATE_AND_APPEND_LAST':
     case 'CREATE_AND_APPEND_NEXT':
+    case 'NEW_NOTE':
       return {
         ...state,
         ID: action.NoteLineID

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
 
-import { getPatientById } from './reducers/index';
+import { getPatientById, getFirstPatientId } from './reducers/index';
 
 import { dateToString, headerStylesMobile, labelStyles } from './Helpers';
 import { patientIds } from './configureStore';
@@ -50,7 +50,7 @@ class PatientHeader extends React.Component {
 
 const mapStateToProps = (state, { params }) => {
   console.log(params);
-  const patientId = (params && params.patientId) || patientIds[0];
+  const patientId = (params && params.patientId) || getFirstPatientId(state);
   console.log(patientId, typeof patientId);
   const patient = getPatientById(state, patientId);
 

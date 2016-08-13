@@ -1,16 +1,14 @@
-import { allIds as noteLines } from './noteLines';
-
-const patientInfo = (state = {
+const patient = (state = {
   ID: '',
   lastName: '',
   firstName: '',
   bedNumber: 0,
   clinic: '',
-  station: ''
+  station: '',
   admissionDate: new Date(),
   dischargeDate: new Date(),
   birthday: new Date(),
-}, action) {
+}, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
       return {
@@ -21,16 +19,18 @@ const patientInfo = (state = {
       return {
         ...state,
         ID: action.PatientID,
-        action.lastName,
-        action.firstName,
-        action.bedNumber,
-        action.clinic,
-        action.station,
-        action.admissionDate,
-        action.dischargeDate,
-        action.birthday,
+        lastName: action.lastName,
+        firstName: action.firstName,
+        bedNumber: action.bedNumber,
+        clinic: action.clinic,
+        station: action.station,
+        admissionDate: action.admissionDate,
+        dischargeDate: action.dischargeDate,
+        birthday: action.birthday
       }
     default:
       return state;
   }
 }
+
+export default patient;

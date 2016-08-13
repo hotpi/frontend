@@ -28,6 +28,7 @@ const NoteFooter = ({
       </SelectField>
       <RaisedButton
         style={{position: 'relative', marginTop: 15, marginBottom: 15, marginLeft: type !== "New" ? 300 : 0}}
+        onClick={onSaveDo}
         label="Save"
         primary={true}
         icon={<ActionDone />} />

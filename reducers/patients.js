@@ -1,4 +1,4 @@
-import { allIds as notes } from './notes'
+import patient from './patient'
 
 export const patients = (state = {}, action) => {
   switch(action.type) {
