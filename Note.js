@@ -42,17 +42,18 @@ import { typeValues } from './Helpers';
 import { noteIds } from './configureStore' // Delete me when the time is right
 
 class Note extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       canAllocateFocus: false,
       hasFocus: false,
-      isInArea: false,
+      type: "" + typeValues.map(typeObj => typeObj.type).indexOf(props.type)
     }
 
     this.handleClick = this.handleClick.bind(this);
     this.handleNewButton = this.handleNewButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSelectField = this.handleSelectField.bind(this);
   }
 
   componentWillMount(){
@@ -69,7 +70,7 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus
+    return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type
   }
 
   isNoteLineEmpty() {
@@ -97,6 +98,21 @@ class Note extends React.Component {
       default:
         console.log('error')
     }    
+  }
+
+  saveNote() {
+    if (this.state.type === "0") {
+      return alert("Type must me set"); // TODO: Deliver a prettier alert
+    }
+
+    this.setState({type: "0", canAllocateFocus: true, hasFocus: false})    
+    this.props.changeNoteType(+this.state.type, this.props.noteId)
+    this.props.newNote(this.props.patientId);
+  }
+
+  handleSelectField(e, index, value) {
+    console.log(e, index, value);
+    this.setState({type: value}) 
   }
 
   handleClick(e) {
@@ -213,8 +229,9 @@ class Note extends React.Component {
             <NoteFooter 
               show={this.canShowHeaderAndFooter()}
               type={type}
-              onChangeDo={(e, index, value) => this.props.changeNoteType(index, this.props.noteId)}
-              onSaveDo={() => this.props.saveNote()}
+              value={this.state.type}
+              onChangeDo={this.handleSelectField}
+              onSaveDo={() => this.saveNote()}
               />     
 
           </Paper>

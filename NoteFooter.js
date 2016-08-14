@@ -11,15 +11,16 @@ import { actionsArea, typeValues } from './Helpers'
 const NoteFooter = ({
   show,
   type,
+  value,
   onChangeDo,
   onSaveDo
 }) => {
   return (
     <div style={show ? actionsArea.visible : actionsArea.hidden}>
       <SelectField 
-        value={"" + typeValues.map(typeObj => typeObj.type).indexOf(type)}
+        value={value}
         onChange={onChangeDo} 
-        errorText={typeValues.map(typeObj => typeObj.type).indexOf(type) === 0 && 'Please select one'}
+        errorText={+value === 0 && 'Please select one'}
         style={{width: 210, paddingTop: 3, marginRight: 100, display: type !== "new" ? 'none' : 'block' }}>
           <MenuItem value="0" primaryText="Select the note's type" />
           <MenuItem value="1" primaryText="Diagnosis" />
