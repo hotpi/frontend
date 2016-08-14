@@ -28,6 +28,8 @@ const StethoscopeIcon = (props) => (
     className="mdi mdi-stethoscope" />
 );
 
+
+// TODO: Refactor to a cleaner order
 const handleBrowserHistory = (patientId, type) => {
   if (type !== 'back') {
     browserHistory.push("/patient/" + patientId + "/" + type);
@@ -88,7 +90,6 @@ class PatientOptionsList extends React.Component {
 
 const mapStateToProps = (state, { params }) => {
   const patientId = params.patientId || getFirstPatientId(state);
-  console.log(params);
 
   return {
     patientId

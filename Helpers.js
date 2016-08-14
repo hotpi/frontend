@@ -21,7 +21,7 @@ import {
 
 export const importantColors = ["grey", amber700, amber400, amber100];
 export const highlightColors = ["grey", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
-export const typeValues = ["New", "Diagnosis", "History", "ToDo"];
+export const typeValues = [{type: "new", title: "New note"}, {type: "diagnosis", title: "Diagnosis"}, {type: "history", title: "History"}, {type: "todo", title: "ToDo"}];
 
 export const headerStylesDesktop = {
   height: '154px',

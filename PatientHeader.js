@@ -49,9 +49,7 @@ class PatientHeader extends React.Component {
 }
 
 const mapStateToProps = (state, { params }) => {
-  console.log(params);
   const patientId = (params && params.patientId) || getFirstPatientId(state);
-  console.log(patientId, typeof patientId);
   const patient = getPatientById(state, patientId);
 
   return {

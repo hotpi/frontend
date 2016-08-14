@@ -25,14 +25,13 @@ import { getNoteLine } from './reducers/index'
 export default class NoteLine extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
       canGetFocus: props.canGetFocus
     }
   }
 
   componentDidMount() {
-    const { appendNewLineEnd, type, last, isEmpty } = this.props;
-
     this.setState({canGetFocus: false});  
   }
 
@@ -93,7 +92,7 @@ NoteLine.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const noteLine = getNoteLine(state, ownProps.ID);
-
+  
   return {
     text: noteLine.text,
     important: noteLine.important,

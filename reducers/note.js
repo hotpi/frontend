@@ -20,7 +20,7 @@ const note = (state = {
     case 'CHANGE_NOTE_TYPE':
       return {
         ...state,
-        type: action.value
+        type: action.newType
       }
     case 'DELETE_LINE':
       return {

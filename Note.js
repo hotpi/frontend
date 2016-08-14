@@ -15,7 +15,6 @@ import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 import NoteLine from './NoteLine';
 import { iconStyles } from './NoteLine';
-import { typeValues } from './NoteFooter';
 import NoteFooter from './NoteFooter';
 import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
@@ -36,7 +35,9 @@ import {
   newNote
 } from './actions/note';
 
-import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId } from './reducers/index'
+import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId } from './reducers/index';
+
+import { typeValues } from './Helpers';
 
 import { noteIds } from './configureStore' // Delete me when the time is right
 
@@ -55,14 +56,14 @@ class Note extends React.Component {
   }
 
   componentWillMount(){
-    this.props.type === 'new' ? this.props.newNote() : null;
+    this.props.type === 'new' ? this.props.newNote(this.props.patientId) : null;
   }
 
   componentDidMount() {
     const { type } = this.props;
-    this.setState({canAllocateFocus: true});
+    this.setState({ canAllocateFocus: true });
 
-    if (!this.last.isEmpty && type === "new") {
+    if (this.last && !this.last.isEmpty && type === "new") {
       this.createNewLine(null, 'append_end')
     }
   }
@@ -86,13 +87,11 @@ class Note extends React.Component {
   createNewLine(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
-        console.log(index);
-
-        this.props.createAndAppendNext(index);
+        this.props.createAndAppendNext(index, this.props.noteId);
         this.setState({canAllocateFocus: true});
         break;
       case 'append_end':
-        this.props.createAndAppendLast();
+        this.props.createAndAppendLast(this.props.noteId);
         this.setState({canAllocateFocus: false});
         break;
       default:
@@ -108,7 +107,7 @@ class Note extends React.Component {
   handleKeyDown(id, index, last, e) {
     if (e.keyCode === 13) {
       e.preventDefault();  
-      console.log(index);
+
       if (!last) {
         this.createNewLine(index, 'append_next');
       }
@@ -116,7 +115,7 @@ class Note extends React.Component {
       e.preventDefault();
 
       if (!last) {
-        this.props.deleteLine(id);
+        this.props.deleteLine(id, this.props.noteId);
       }
     } 
   }
@@ -168,7 +167,7 @@ class Note extends React.Component {
           keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
           onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
           canGetFocus={this.state.canAllocateFocus} 
-          deleteLine={this.props.deleteLine.bind(this, ID)}
+          deleteLine={this.props.deleteLine.bind(this, ID, this.props.noteId)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
           onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
           />
@@ -179,7 +178,13 @@ class Note extends React.Component {
   }
 
   render() {
-    const { type, title } = this.props; // TODO: Title can be get from the type, no need to pass it down
+    const { type } = this.props; // TODO: Title can be get from the type, no need to pass it down
+    const title = typeValues.reduce((prev, curr) => {
+      if (curr.type === type) {
+        prev = curr.title
+      }
+      return prev;
+    }, '')
 
     return (
       <div style={{height: 532,  overflowY: 'auto', display: 'block'}}>
@@ -208,7 +213,7 @@ class Note extends React.Component {
             <NoteFooter 
               show={this.canShowHeaderAndFooter()}
               type={type}
-              onChangeDo={(e, index, value) => this.props.changeNoteType(index)}
+              onChangeDo={(e, index, value) => this.props.changeNoteType(index, this.props.noteId)}
               onSaveDo={() => this.props.saveNote()}
               />     
 
@@ -233,7 +238,7 @@ Note.propTypes = {
 
 Note.defaultProps = {
   title: 'New note',
-  type: 'New'
+  type: 'new'
 } 
 
 const mapStateToProps = (state, { params }) => {
@@ -244,19 +249,17 @@ const mapStateToProps = (state, { params }) => {
 
   return {
     noteLines,
-    noteId: patientNotes[0] || null,
+    noteId: patientNotes[0] && patientNotes[0].ID || null,
     patientId
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  const noteId = noteIds[0];
-  
+const mapDispatchToProps = (dispatch) => { 
   return {
-    createAndAppendNext: (index) => dispatch(createAndAppendNext(index, noteId)),
-    createAndAppendLast: () => dispatch(createAndAppendLast(noteId)),
-    deleteLine: (id) => dispatch(deleteLine(id, noteId)),
-    changeNoteType: (index) => dispatch(changeNoteType(index, noteId)),
+    createAndAppendNext: (index, noteId) => dispatch(createAndAppendNext(index, noteId)),
+    createAndAppendLast: (noteId) => dispatch(createAndAppendLast(noteId)),
+    deleteLine: (id, noteId) => dispatch(deleteLine(id, noteId)),
+    changeNoteType: (index, noteId) => dispatch(changeNoteType(index, noteId)),
     updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),

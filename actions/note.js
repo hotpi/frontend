@@ -3,7 +3,7 @@ import { v4 } from 'node-uuid';
 
 export const changeNoteType = (index, NoteID) => ({
   type: 'CHANGE_NOTE_TYPE',
-  value: typeValues[index],
+  newType: typeValues[index].type,
   NoteID
 })
 
