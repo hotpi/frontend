@@ -31,5 +31,3 @@ export const noteLines = (state = {}, action) => {
 export default noteLines;
 
 export const getAllNoteLines = (state, ids) => ids.map(noteLineId => state[noteLineId])
-
-export const getNoteLine = (state, noteLineId) => state[noteLineId]

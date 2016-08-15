@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router';
 
-import { get as _get } from 'lodash';
-import { set as _set } from 'lodash';
-import { assignIn } from 'lodash';
+import { get as _get , set as _set, forOwn as _forOwn, merge as _merge, assignIn } from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
@@ -32,12 +30,14 @@ import {
 
 import {
   changeNoteType,
-  newNote
+  newNote,
+  deleteNote,
+  mergeNotes
 } from './actions/note';
 
-import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId } from './reducers/index';
+import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine } from './reducers/index';
 
-import { typeValues } from './Helpers';
+import { typeValues, dateToString } from './Helpers';
 
 import { noteIds } from './configureStore' // Delete me when the time is right
 
@@ -88,11 +88,11 @@ class Note extends React.Component {
   createNewLine(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
-        this.props.createAndAppendNext(index, this.props.noteId);
+        this.props.createAndAppendNext(index, this.props.note.ID);
         this.setState({canAllocateFocus: true});
         break;
       case 'append_end':
-        this.props.createAndAppendLast(this.props.noteId);
+        this.props.createAndAppendLast(this.props.note.ID);
         this.setState({canAllocateFocus: false});
         break;
       default:
@@ -105,13 +105,58 @@ class Note extends React.Component {
       return alert("Type must me set"); // TODO: Deliver a prettier alert
     }
 
-    this.setState({type: "0", canAllocateFocus: true, hasFocus: false})    
-    this.props.changeNoteType(+this.state.type, this.props.noteId)
+    
+    _forOwn(this.props.noteLines, (value, key) => {
+      if (value.text === '') {
+        this.props.deleteLine(value.ID, this.props.note.ID)
+      }
+    })
+
+    const notesFromSelectedType = this.props.patientNotes().filter(note => note.type === typeValues[+this.state.type].type)
+
+    switch (+this.state.type) {
+      case 1:
+      case 3:
+        notesFromSelectedType[0].noteLines = [...notesFromSelectedType[0].noteLines, ...this.props.noteLines.filter(noteLine => noteLine.text !== '').map(noteLine => noteLine.ID)]
+        this.props.mergeNotes(notesFromSelectedType[0].ID, notesFromSelectedType[0].noteLines)
+        this.props.deleteNote(this.props.patientId, this.props.note.ID)
+        break;
+      case 2:
+        this.props.changeNoteType(this.props.note.ID, +this.state.type)
+        const sortedNotes = notesFromSelectedType.sort((a, b) => {
+          if (a.createdAt < b.createdAt) {
+            return -1;
+          } else if (a.createdAt > b.createdAt) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+        const lastSavedNote = sortedNotes[sortedNotes.length-1];
+        const lastDate = new Date(lastSavedNote.createdAt)
+        const currentDate = new Date()
+
+        // if it's from the same day -> merge
+        if (lastDate.getDate() === currentDate.getDate() && lastDate.getMonth() === currentDate.getMonth() && lastDate.getFullYear() === currentDate.getFullYear()) {
+          lastSavedNote.noteLines = [...lastSavedNote.noteLines, ...this.props.noteLines.filter(noteLine => noteLine.text !== '').map(noteLine => noteLine.ID)]
+          this.props.mergeNotes(lastSavedNote.ID, lastSavedNote.noteLines)
+          this.props.deleteNote(this.props.patientId, this.props.note.ID)
+        }
+        // if it's not from the same day -> get important lines, add them to this note and do nothing 
+        else {
+          this.props.note.noteLines = [...lastSavedNote.noteLines.map(noteLineId => this.props.getNoteLineObj(noteLineId)).filter(noteLine => noteLine.important.set).map(noteLine => noteLine.ID), ...this.props.note.noteLines]
+          this.props.mergeNotes(this.props.note.ID, this.props.note.noteLines)
+        }
+      default:
+        break;
+    }
+//    this.props.mergeNotes(this.props.patientId, this.props.note.ID, +this.state.type)
+
+    this.setState({type: "0", canAllocateFocus: true, hasFocus: false})
     this.props.newNote(this.props.patientId);
   }
 
   handleSelectField(e, index, value) {
-    console.log(e, index, value);
     this.setState({type: value}) 
   }
 
@@ -131,7 +176,7 @@ class Note extends React.Component {
       e.preventDefault();
 
       if (!last) {
-        this.props.deleteLine(id, this.props.noteId);
+        this.props.deleteLine(id, this.props.note.ID);
       }
     } 
   }
@@ -165,7 +210,7 @@ class Note extends React.Component {
     noteLines = this.props.noteLines.map((noteLine, index) => {
       const ID = noteLine.ID;
       const line = noteLine;
-      const last = (index === (noteLinesTotal - 1))
+      const last = (index === (noteLinesTotal - 1)) && type === "new"
       const isEmpty = line.text === '';
 
       if (last) {
@@ -174,7 +219,7 @@ class Note extends React.Component {
 
       return (
         <NoteLine
-          noteId={this.props.noteId} // Delete me when the time is right
+          noteId={this.props.note.ID} // Delete me when the time is right
           key={ID} 
           last={last}
           isEmpty={isEmpty}
@@ -183,7 +228,7 @@ class Note extends React.Component {
           keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
           onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
           canGetFocus={this.state.canAllocateFocus} 
-          deleteLine={this.props.deleteLine.bind(this, ID, this.props.noteId)}
+          deleteLine={this.props.deleteLine.bind(this, ID, this.props.note.ID)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
           onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
           />
@@ -237,7 +282,7 @@ class Note extends React.Component {
           </Paper>
           <NoteTimestamp 
             type={type}
-            // date={} // TODO: Don't forget to set the date
+            date={this.props.note && new Date(this.props.note.createdAt) || new Date()} // TODO: Don't forget to set the date
             />
         </div>
         <NewNoteButton
@@ -261,13 +306,29 @@ Note.defaultProps = {
 const mapStateToProps = (state, { params }) => {
   const patientId = params.patientId || getFirstPatientId(state);
   const typeFilter = params.type || 'new';
-  const patientNotes = getNotesByTypeFromPatient(state, patientId, typeFilter);
-  const noteLines = patientNotes[0] && getAllNoteLines(state, patientNotes[0].ID) || [];
+  const patientNotesFromType = getNotesByTypeFromPatient(state, patientId, typeFilter);
+  var sortedNotes = patientNotesFromType;
+
+  if (patientNotesFromType.length > 1) {
+    sortedNotes = patientNotesFromType.sort((a, b) => {
+      if (a.createdAt < b.createdAt) {
+        return -1;
+      } else if (a.createdAt > b.createdAt) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+  }
+  // const allPatientNotes = getAllPatientNotes(state, patientId);
+  const noteLines = sortedNotes[0] && getAllNoteLines(state, sortedNotes[0].ID) || [];
 
   return {
     noteLines,
-    noteId: patientNotes[0] && patientNotes[0].ID || null,
-    patientId
+    note: sortedNotes[0] || null,
+    patientId,
+    patientNotes: () => getAllPatientNotes(state, patientId),
+    getNoteLineObj: (noteLineId) => getNoteLine(state, noteLineId)
   }
 }
 
@@ -276,12 +337,14 @@ const mapDispatchToProps = (dispatch) => {
     createAndAppendNext: (index, noteId) => dispatch(createAndAppendNext(index, noteId)),
     createAndAppendLast: (noteId) => dispatch(createAndAppendLast(noteId)),
     deleteLine: (id, noteId) => dispatch(deleteLine(id, noteId)),
-    changeNoteType: (index, noteId) => dispatch(changeNoteType(index, noteId)),
+    changeNoteType: (noteId, index) => dispatch(changeNoteType(noteId, index)),
     updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
     saveNote: () => dispatch({type: 'NOT_FOUND'/*saveNote()*/}),
-    newNote: (patientId) => dispatch(newNote(patientId))
+    newNote: (patientId) => dispatch(newNote(patientId)),
+    deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
+    mergeNotes: (patientId, noteId, type) => dispatch(mergeNotes(patientId, noteId, type))
   }
 }
 

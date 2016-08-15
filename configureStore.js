@@ -30,6 +30,8 @@ const configureStore = () => {
       patients: {
         [patientIds[0]]: {
           ID: patientIds[0],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Max',
           bedNumber: 10,
@@ -42,6 +44,8 @@ const configureStore = () => {
         },
         [patientIds[1]]: {
           ID: patientIds[1],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Robert',
           bedNumber: 17,
@@ -54,6 +58,10 @@ const configureStore = () => {
         },
         [patientIds[2]]: {
           ID: patientIds[2],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Samuel',
           bedNumber: 3,
@@ -66,6 +74,8 @@ const configureStore = () => {
         },
         [patientIds[3]]: {
           ID: patientIds[3],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Jürgen',
           bedNumber: 5,
@@ -78,6 +88,8 @@ const configureStore = () => {
         },
         [patientIds[4]]: {
           ID: patientIds[4],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'George',
           bedNumber: 21,
@@ -90,6 +102,8 @@ const configureStore = () => {
         },
         [patientIds[5]]: {
           ID: patientIds[5],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Pablo',
           bedNumber: 12,
@@ -102,6 +116,8 @@ const configureStore = () => {
         },
         [patientIds[6]]: {
           ID: patientIds[6],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           lastName: 'Mustermann',
           firstName: 'Ramón',
           bedNumber: 19,
@@ -164,31 +180,43 @@ const configureStore = () => {
       notes: {
         [noteIds[0]]: {
           ID: noteIds[0],
+          createdAt: new Date(2016, 7, 14).valueOf(),
+          updatedAt: Date.now(),
           type: 'diagnosis',
           noteLines: noteLineIds.slice(0,1)
         },
         [noteIds[1]]: {
           ID: noteIds[1],
+          createdAt: new Date(2016, 7, 10).valueOf(),
+          updatedAt: Date.now(),
           type: 'history',
           noteLines: noteLineIds.slice(1,3)
         },
         [noteIds[2]]: {
           ID: noteIds[2],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           type: 'todo',
           noteLines: noteLineIds.slice(3,6)
         },
         [noteIds[3]]: {
           ID: noteIds[3],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           type: 'diagnosis',
           noteLines: noteLineIds.slice(6,7)
         },
         [noteIds[4]]: {
           ID: noteIds[4],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           type: 'diagnosis',
           noteLines: noteLineIds.slice(7,8)
         },
         [noteIds[5]]: {
           ID: noteIds[5],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           type: 'diagnosis',
           noteLines: noteLineIds.slice(8,9)
         }
@@ -196,6 +224,8 @@ const configureStore = () => {
       noteLines: {
         [noteLineIds[0]]: {
           ID: noteLineIds[0],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: 'something from note 1',
           important: {
             set: false,
@@ -210,9 +240,11 @@ const configureStore = () => {
         },
         [noteLineIds[1]]: {
           ID: noteLineIds[1],
-          text: 'something from note 1',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          text: 'vibe 1 something from note 2',
           important: {
-            set: false,
+            set: true,
             color: "grey",
             value: "0"
           },
@@ -224,9 +256,11 @@ const configureStore = () => {
         },
         [noteLineIds[2]]: {
           ID: noteLineIds[2],
-          text: 'something from note 2',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          text: 'vibe 2 something from note 2',
           important: {
-            set: false,
+            set: true,
             color: "grey",
             value: "0"
           },
@@ -238,7 +272,9 @@ const configureStore = () => {
         },
         [noteLineIds[3]]: {
           ID: noteLineIds[3],
-          text: 'something from note 2',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          text: 'vibe 3 something from note 3',
           important: {
             set: false,
             color: "grey",
@@ -252,7 +288,9 @@ const configureStore = () => {
         },
         [noteLineIds[4]]: {
           ID: noteLineIds[4],
-          text: '',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          text: 'vibe 3 something from note 3',
           important: {
             set: false,
             color: "grey",
@@ -266,6 +304,8 @@ const configureStore = () => {
         },
         [noteLineIds[5]]: {
           ID: noteLineIds[5],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: '',
           important: {
             set: false,
@@ -280,6 +320,8 @@ const configureStore = () => {
         },
         [noteLineIds[6]]: {
           ID: noteLineIds[6],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: '',
           important: {
             set: false,
@@ -294,6 +336,8 @@ const configureStore = () => {
         },
         [noteLineIds[7]]: {
           ID: noteLineIds[7],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: '',
           important: {
             set: false,
@@ -308,6 +352,8 @@ const configureStore = () => {
         },
         [noteLineIds[8]]: {
           ID: noteLineIds[8],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: '',
           important: {
             set: false,
@@ -322,6 +368,8 @@ const configureStore = () => {
         },
         [noteLineIds[9]]: {
           ID: noteLineIds[9],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           text: '',
           important: {
             set: false,

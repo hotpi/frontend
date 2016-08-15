@@ -2,6 +2,8 @@ import { v4 } from 'node-uuid';
 
 const noteLine = (state = {
   ID: '',
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
   text: '',
   important: {
     set: false,

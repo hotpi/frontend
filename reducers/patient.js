@@ -1,5 +1,7 @@
 const patient = (state = {
   ID: '',
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
   lastName: '',
   firstName: '',
   bedNumber: 0,
@@ -15,6 +17,11 @@ const patient = (state = {
         ...state,
         notes: [...state.notes, action.NoteID]
       };
+    case 'DELETE_NOTE': 
+      return {
+        ...state,
+        notes: state.notes.filter(noteID => noteID !== action.NoteID)
+      }
     case 'NEW_PATIENT':
       return {
         ...state,

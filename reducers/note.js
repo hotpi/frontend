@@ -6,11 +6,18 @@ import  * as fromNoteLines from './noteLines'
 
 const note = (state = {
   ID: '',
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
   type: "new",
   noteLines: []
 }, action) => {
 
   switch(action.type) {
+    case 'MERGE_NOTES':
+      return {
+        ...state,
+        noteLines: action.noteLines
+      }
     case 'NEW_NOTE':
       return {
         ...state, 
