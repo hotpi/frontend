@@ -64,7 +64,7 @@ class PatientOptionsList extends React.Component {
               style={{padding: '5px 0'}}
             />
           <ListItem
-              onClick={() => handleBrowserHistory(patientId, 'history')}
+              onClick={() => handleBrowserHistory(patientId, 'history/0')}
               primaryText="History"
               leftIcon={
                 <ActionHistory

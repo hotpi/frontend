@@ -22,7 +22,7 @@ export default class Root extends React.Component {
         <Router history={history}>
           <Route path="/" component={PatientContainer} />
           <Route path="/patients" component={PatientContainer} />
-          <Route path="/patient/:patientId(/:type)" component={PatientDetailContainer} />
+          <Route path="/patient/:patientId(/:type(/:noteNumber))" component={PatientDetailContainer} />
         </Router>
       </Provider>
     	);

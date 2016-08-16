@@ -17,6 +17,7 @@ import NoteFooter from './NoteFooter';
 import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
 import NewNoteButton from './NewNoteButton';
+import HistoryNavigation from './HistoryNavigation'
 
 import { 
   createAndAppendNext,
@@ -144,7 +145,7 @@ class Note extends React.Component {
         }
         // if it's not from the same day -> get important lines, add them to this note and do nothing 
         else {
-          this.props.note.noteLines = [...lastSavedNote.noteLines.map(noteLineId => this.props.getNoteLineObj(noteLineId)).filter(noteLine => noteLine.important.set).map(noteLine => noteLine.ID), ...this.props.note.noteLines]
+          this.props.note.noteLines = [...lastSavedNote.noteLines.map(noteLineId => this.props.getNoteLineObj(noteLineId)).filter(noteLine => noteLine.important.set).map(noteLine => noteLine.ID), ...this.props.noteLines.filter(noteLine => noteLine.text !== '').map(noteLine => noteLine.ID)]
           this.props.mergeNotes(this.props.note.ID, this.props.note.noteLines)
         }
       default:
@@ -187,6 +188,12 @@ class Note extends React.Component {
     } 
 
     this.props.updateLineValue(id, e);
+  }
+
+  handleNavigation(navigateTo) {
+    const { noteNumber } = this.props;
+    const nextNote = navigateTo === 'left' ? +noteNumber-1 : +noteNumber+1;
+    browserHistory.push('/patient/' + this.props.patientId + '/history/' + nextNote)
   }
 
   handleNewButton() {
@@ -239,7 +246,7 @@ class Note extends React.Component {
   }
 
   render() {
-    const { type } = this.props; // TODO: Title can be get from the type, no need to pass it down
+    const { type, noteNumber } = this.props; // TODO: Title can be get from the type, no need to pass it down
     const title = typeValues.reduce((prev, curr) => {
       if (curr.type === type) {
         prev = curr.title
@@ -249,8 +256,13 @@ class Note extends React.Component {
 
     return (
       <div style={{height: 532,  overflowY: 'auto', display: 'block'}}>
+        <HistoryNavigation 
+          show={type === "history"}
+          handleNavigation={(navigateTo) => this.handleNavigation.bind(this, navigateTo)}
+          first={+noteNumber === 0}
+          last={+noteNumber === this.props.numberOfNotesOfCurrentType-1}/>
         <div
-          style={{margin: '3em 0 3em 8em', display: 'inline-flex'}}
+          style={{margin: type === "history" ? "1em 0 3em 8em": '3em 0 3em 8em', display: 'inline-flex'}}
           >
 
           <Paper
@@ -304,6 +316,7 @@ Note.defaultProps = {
 } 
 
 const mapStateToProps = (state, { params }) => {
+  const noteNumber = params.noteNumber || 0;
   const patientId = params.patientId || getFirstPatientId(state);
   const typeFilter = params.type || 'new';
   const patientNotesFromType = getNotesByTypeFromPatient(state, patientId, typeFilter);
@@ -312,21 +325,23 @@ const mapStateToProps = (state, { params }) => {
   if (patientNotesFromType.length > 1) {
     sortedNotes = patientNotesFromType.sort((a, b) => {
       if (a.createdAt < b.createdAt) {
-        return -1;
-      } else if (a.createdAt > b.createdAt) {
         return 1;
+      } else if (a.createdAt > b.createdAt) {
+        return -1;
       } else {
         return 0;
       }
     })
   }
-  // const allPatientNotes = getAllPatientNotes(state, patientId);
-  const noteLines = sortedNotes[0] && getAllNoteLines(state, sortedNotes[0].ID) || [];
+  
+  const noteLines = sortedNotes[noteNumber] && getAllNoteLines(state, sortedNotes[noteNumber].ID) || [];
 
   return {
     noteLines,
-    note: sortedNotes[0] || null,
+    note: sortedNotes[noteNumber] || null,
     patientId,
+    noteNumber,
+    numberOfNotesOfCurrentType: patientNotesFromType.length,
     patientNotes: () => getAllPatientNotes(state, patientId),
     getNoteLineObj: (noteLineId) => getNoteLine(state, noteLineId)
   }
