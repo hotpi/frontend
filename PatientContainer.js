@@ -6,11 +6,7 @@ import Note from './Note';
 
 import { patientIds } from './configureStore';
 
-export default class PatientContainer extends React.Component {
-  constructor() {
-    super();
-  }
-
+class PatientContainer extends React.Component {
   render() {
 
     return (
@@ -30,3 +26,5 @@ PatientContainer.defaultProps = {
     id: 1
   }
 }
+
+export default PatientContainer;

@@ -17,7 +17,7 @@ import {
   orangeA100,
   cyanA100,
   grey400
-} from 'material-ui/styles/colors'
+} from 'material-ui/styles/colors';
 
 export const importantColors = ["grey", amber700, amber400, amber100];
 export const highlightColors = ["grey", yellowA100, blueA100, greenA100, orangeA100, cyanA100];
@@ -35,7 +35,9 @@ export const headerStylesMobile = {
     height: '154px',
     backgroundColor: blue800,
     width: '70vw',
-    left: '19.2em'
+    left: '19.2em',
+    margin: 0,
+    padding: 0
   },
   header3: {
     color: 'white', 
@@ -128,7 +130,7 @@ export const lineOutHover = {
   last: {
     padding: '0 1.5em 0 1em'
   }
-}
+};
 
 export const iconStyles = {
   icon: {
@@ -153,7 +155,7 @@ export const newNoteButtonStyle = {
   position: 'fixed',
   left: '90%',
   top: '85%'
-}
+};
 
 export const inlineIconStyle = Object.assign({}, iconStyles, {
   iconArea: {
@@ -170,13 +172,13 @@ export const clinic = (name) => {
   let nameInLowerCase = name.toLowerCase();
   switch(nameInLowerCase) {
     case 'endo':
-      return {color: lightGreen300, name: 'Endo'}
+      return {color: lightGreen300, name: 'Endo'};
     case 'all':
-      return {color: teal200, name: 'All'}
+      return {color: teal200, name: 'All'};
     case 'pneu':
-      return {color: amber300, name: 'Pneu'}
+      return {color: amber300, name: 'Pneu'};
     default: 
-      return {color: grey400, name: ''}
+      return {color: grey400, name: ''};
   }
 };
 
@@ -187,7 +189,7 @@ export const rightIconInfo = (clinicInfo) =>
     <ActionLabel color={clinicInfo.color} />
     <h6 style={{margin: '0', color: clinicInfo.color}}> {clinicInfo.name} </h6>
   </div>
-  )
+  );
 };
 
 export const dateToString = (date) => {
@@ -196,4 +198,4 @@ export const dateToString = (date) => {
   const year = date.getFullYear();
 
   return day + '.' + month + '.' + year;
-}
+};

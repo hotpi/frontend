@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { titleArea } from './Helpers'
+import { titleArea } from './Helpers';
 
 const NoteHeader = ({
   show,

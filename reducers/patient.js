@@ -21,7 +21,7 @@ const patient = (state = {
       return {
         ...state,
         notes: state.notes.filter(noteID => noteID !== action.NoteID)
-      }
+      };
     case 'NEW_PATIENT':
       return {
         ...state,
@@ -34,7 +34,7 @@ const patient = (state = {
         admissionDate: action.admissionDate,
         dischargeDate: action.dischargeDate,
         birthday: action.birthday
-      }
+      };
     default:
       return state;
   }

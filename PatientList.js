@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { keys } from 'lodash'
+import { keys } from 'lodash';
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
@@ -39,7 +39,7 @@ class PatientList extends React.Component {
 
   renderPatientsFromStation(patients) {
     return patients.map(patient => {
-      const clinicInfo = clinic(patient.clinic);
+      const clinicInfo = clinic(patient.clinic)
 
       return (
           <Link 
@@ -66,7 +66,7 @@ class PatientList extends React.Component {
             />
           </Link>
         );
-    })
+    });
   }
 
   renderTabs() {
@@ -84,7 +84,7 @@ class PatientList extends React.Component {
             </div> 
          </Tab> 
       );
-    })
+    });
   }
 
   render() {
@@ -95,24 +95,27 @@ class PatientList extends React.Component {
           {this.renderTabs()}
         </Tabs>
 	    </BaseList>
-  	)
+  	);
   }
 }
 
 const mapStateToProps = (state) => {
-  const patients = getAllPatients(state);
+  const patients = getAllPatients(state)
+
   const stations = patients.reduce((prev, current) => {
     if (!prev.includes(current.station)) {
       prev = [...prev, current.station]
     }
 
     return prev;
-  }, []);
+  }, [])
+
   const patientsByStation = stations.map(station => ({station: station, patients: patients.filter(patient => station === patient.station)}))
+
   return {
     patientsByStation,
     patients
-  }
+  };
 }
 
-export default connect(mapStateToProps)(PatientList)
+export default connect(mapStateToProps)(PatientList);

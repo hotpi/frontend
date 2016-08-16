@@ -13,16 +13,6 @@ import throttle from 'lodash/throttle';
 export const noteIds = [v4(), v4(), v4(), v4(), v4(), v4()]
 const noteLineIds = [v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4()]
 export const patientIds = [v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4(), v4()]
-/*
-  {
-    byId: {
-      [noteLineIds[0]]: {
-        
-      },
-    },
-    allIds: noteLineIds
-  }
-*/
 
 const configureStore = () => {
   const persistedState = {
@@ -415,37 +405,3 @@ const configureStore = () => {
 }
 
 export default configureStore;
-
-/*,
-  {
-    ID: v4(),
-    text: '12312312',
-    important: {
-      set: false,
-      color: "transparent",
-      value: "0"
-    },
-    highlight: {
-      set: false,
-      color: "transparent",
-      value: "0"
-    },
-    last: false,
-    isEmpty: false
-  },
-  {
-    ID: v4(),
-    text: '',
-    important: {
-      set: false,
-      color: "transparent",
-      value: "0"
-    },
-    highlight: {
-      set: false,
-      color: "transparent",
-      value: "0"
-    },
-    last: true,
-    isEmpty: false
-  }*/

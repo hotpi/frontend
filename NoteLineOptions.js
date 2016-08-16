@@ -6,7 +6,7 @@ import Chip from 'material-ui/Chip';
 import ActionTouchApp from 'material-ui/svg-icons/action/touch-app';
 import ContentMoveToInbox from 'material-ui/svg-icons/content/move-to-inbox';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
-import { iconStyles, importantColors, highlightColors } from './Helpers'
+import { iconStyles, importantColors, highlightColors } from './Helpers';
 */
 
 import ImportantIcon from './ImportantIcon';
@@ -26,6 +26,7 @@ class NoteLineOptions extends React.Component {
 
   render() {
     const { onHighlight, onImportant, highlight, important, last } = this.props
+    
     if (!last) {
       return (
           <div style={{width: '100%', margin: 0, height: 30, display: 'inline-flex'}}>

@@ -14,7 +14,7 @@ import { grey400, blue700 } from 'material-ui/styles/colors';
 
 import { listStyle } from './Helpers';
 
-export default class BaseList extends React.Component {
+class BaseList extends React.Component {
   render() {
     return (
         <List style={listStyle}>
@@ -40,3 +40,5 @@ export default class BaseList extends React.Component {
       );
   }
 }
+
+export default BaseList;

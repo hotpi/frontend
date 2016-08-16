@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 
-import { inlineIconStyle } from './Helpers'
+import { inlineIconStyle } from './Helpers';
 
 const CancelButton = ({
   onClickDo,
@@ -20,7 +20,7 @@ const CancelButton = ({
         onClick={onClickDo} >
         <NavigationCancel />
       </IconButton>
-    )
+    );
   }
 
   return (

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
 
-import note from './note' ;
+import note from './note';
 
 export const notes = (state = {}, action) => {
   switch(action.type) {
@@ -25,4 +25,4 @@ export const notes = (state = {}, action) => {
 
 export default notes;
 
-export const getNoteLineIds = (state, noteId) => state[noteId].noteLines
+export const getNoteLineIds = (state, noteId) => state[noteId].noteLines;

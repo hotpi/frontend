@@ -21,7 +21,7 @@ const noteLine = (state = {
       return {
         ...state,
         text: action.text
-      }
+      };
     case 'HIGHLIGHT_LINE':
       return {
         ...state,
@@ -30,7 +30,7 @@ const noteLine = (state = {
           color: action.color,
           value: action.value
         }
-      }
+      };
     case 'IMPORTANT_LINE':
       return {
         ...state,
@@ -39,16 +39,16 @@ const noteLine = (state = {
           color: action.color,
           value: action.value
         }
-      }
+      };
     case 'CREATE_AND_APPEND_LAST':
     case 'CREATE_AND_APPEND_NEXT':
     case 'NEW_NOTE':
       return {
         ...state,
         ID: action.NoteLineID
-      }
+      };
     default:
-      return state
+      return state;
   }
 }
 

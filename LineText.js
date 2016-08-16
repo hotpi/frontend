@@ -8,15 +8,14 @@ class LineText extends React.Component {
     if (canGetFocus) {
       this._input.focus()
     }
-
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight
+    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight;
   }
   
   render() {
-    const { text, highlight, onChangeDo, onKeyDownDo } = this.props;
+    const { text, highlight, onChangeDo, onKeyDownDo } = this.props
 
     return (
       <TextField 

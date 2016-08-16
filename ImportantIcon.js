@@ -22,14 +22,15 @@ class ImportantIcon extends React.Component {
   }
 
   render() {
-    const { onChangeDo, important } = this.props;
+    const { onChangeDo, important } = this.props
     let iconStyle = {
       ...iconStyles,
       icon: {
         ...iconStyles.icon,
         color: important.color
       }
-     }
+    }
+    
     return (
       <IconMenu
         onChange={onChangeDo}

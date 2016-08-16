@@ -10,7 +10,7 @@ import PatientOptionsList from './PatientOptionsList';
 import PatientHeader from './PatientHeader';
 import Note from './Note';
 
-export default class PatientDetailContainer extends React.Component {
+class PatientDetailContainer extends React.Component {
   render() {
     
     return (
@@ -25,3 +25,5 @@ export default class PatientDetailContainer extends React.Component {
     	);
   }
 }
+
+export default PatientDetailContainer;

@@ -26,14 +26,14 @@ class HighlightIcon extends React.Component {
 
 
   render() {
-    const { onChangeDo, highlight } = this.props;
+    const { onChangeDo, highlight } = this.props
     let iconStyle = {
       ...iconStyles,
       icon: {
         ...iconStyles.icon,
         color: highlight.color
       }
-     }
+    }
 
     return (
       <IconMenu

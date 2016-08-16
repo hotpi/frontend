@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import ActionDone from 'material-ui/svg-icons/action/done';
 
-import { actionsArea, typeValues } from './Helpers'
+import { actionsArea, typeValues } from './Helpers';
 
 const NoteFooter = ({
   show,
@@ -21,16 +21,16 @@ const NoteFooter = ({
         value={value}
         onChange={onChangeDo} 
         errorText={+value === 0 && 'Please select one'}
-        style={{width: 210, paddingTop: 3, marginRight: 100, display: type !== "new" ? 'none' : 'block' }}>
-          <MenuItem value="0" primaryText="Select the note's type" />
-          <MenuItem value="1" primaryText="Diagnosis" />
-          <MenuItem value="2" primaryText="History entry" />
-          <MenuItem value="3" primaryText="ToDo entry" />
+        style={{width: 210, paddingTop: 3, marginRight: 100, display: type !== 'new' ? 'none' : 'block' }}>
+          <MenuItem value='0' primaryText="Select the note's type" />
+          <MenuItem value='1' primaryText='Diagnosis' />
+          <MenuItem value='2' primaryText='History' />
+          <MenuItem value='3' primaryText='ToDo' />
       </SelectField>
       <RaisedButton
-        style={{position: 'relative', marginTop: 15, marginBottom: 15, marginLeft: type !== "new" ? 300 : 0}}
+        style={{position: 'relative', marginTop: 15, marginBottom: 15, marginLeft: type !== 'new' ? 300 : 0}}
         onClick={onSaveDo}
-        label="Save"
+        label='Save'
         primary={true}
         icon={<ActionDone />} />
     </div>

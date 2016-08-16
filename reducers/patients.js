@@ -1,4 +1,4 @@
-import patient from './patient'
+import patient from './patient';
 
 export const patients = (state = {}, action) => {
   switch(action.type) {

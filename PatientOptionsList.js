@@ -21,27 +21,27 @@ pink500
 
 import BaseList from './BaseList';
 
-import { getFirstPatientId } from './reducers/index'
+import { getFirstPatientId } from './reducers/index';
 
 const StethoscopeIcon = (props) => (
   <FontIcon {...props}
     className="mdi mdi-stethoscope" />
-);
+)
 
 
 // TODO: Refactor to a cleaner order
 const handleBrowserHistory = (patientId, type) => {
   if (type !== 'back') {
-    browserHistory.push("/patient/" + patientId + "/" + type);
+    browserHistory.push("/patient/" + patientId + "/" + type)
   } else {
-    browserHistory.push("/patients");
+    browserHistory.push("/patients")
   }
 }
 
 class PatientOptionsList extends React.Component {
   render() {
-    const { patientId } = this.props;
-    const patientUri = "/patient/" + patientId;
+    const { patientId } = this.props
+    const patientUri = "/patient/" + patientId
 
     return (
     		<BaseList>
@@ -84,16 +84,16 @@ class PatientOptionsList extends React.Component {
           
           </div>  
 		    </BaseList>
-    	)
+    	);
   }
 }
 
 const mapStateToProps = (state, { params }) => {
-  const patientId = params.patientId || getFirstPatientId(state);
+  const patientId = params.patientId || getFirstPatientId(state)
 
   return {
     patientId
-  }
+  };
 } 
 
 export default withRouter(connect(mapStateToProps)(PatientOptionsList));

@@ -21,7 +21,7 @@ const getFormattedDate = (date) => {
     return 'Yesterday';
   } 
   
-  return dateToString(date)
+  return dateToString(date);
 }
 
 const NoteTimestamp = ({

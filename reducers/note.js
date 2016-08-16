@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
 
-import { allIds as noteLines } from './noteLines'
-import  * as fromNoteLines from './noteLines'
+import { allIds as noteLines } from './noteLines';
+import  * as fromNoteLines from './noteLines';
 
 const note = (state = {
   ID: '',
@@ -17,23 +17,23 @@ const note = (state = {
       return {
         ...state,
         noteLines: action.noteLines
-      }
+      };
     case 'NEW_NOTE':
       return {
         ...state, 
         ID: action.NoteID,
         noteLines: [...state.noteLines, action.NoteLineID]
-      }
+      };
     case 'CHANGE_NOTE_TYPE':
       return {
         ...state,
         type: action.newType
-      }
+      };
     case 'DELETE_LINE':
       return {
         ...state,
         noteLines: state.noteLines.filter(noteLineId => noteLineId !== action.NoteLineID)
-      }
+      };
     case 'CREATE_AND_APPEND_NEXT':
       return {
         ...state,
@@ -42,14 +42,14 @@ const note = (state = {
           action.NoteLineID,
           ...state.noteLines.slice(action.index+1)
         ]
-      }
+      };
     case 'CREATE_AND_APPEND_LAST':
       return {
         ...state,
         noteLines: [...state.noteLines, action.NoteLineID]
-      }
+      };
     default: 
-      return state
+      return state;
   }
 }
 

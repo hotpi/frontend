@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-
 import { Provider } from 'react-redux';
 
 import {
@@ -13,9 +11,9 @@ import {
 import PatientContainer from './PatientContainer';
 import PatientDetailContainer from './PatientDetailContainer';
 
-export default class Root extends React.Component {
+class Root extends React.Component {
   render() {
-    const { store, history } = this.props;
+    const { store, history } = this.props
 
     return (
       <Provider store={store}>
@@ -33,3 +31,5 @@ Root.propTypes = {
   store: React.PropTypes.object.isRequired,
   history: React.PropTypes.object.isRequired
 }
+
+export default Root;

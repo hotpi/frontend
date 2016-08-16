@@ -13,18 +13,18 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 
-import NoteLineOptions from './NoteLineOptions'
-import CancelButton from './CancelButton'
-import AddIcon from './AddIcon'
-import LineText from './LineText'
+import NoteLineOptions from './NoteLineOptions';
+import CancelButton from './CancelButton';
+import AddIcon from './AddIcon';
+import LineText from './LineText';
 
 import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
 
-import { getNoteLine } from './reducers/index'
+import { getNoteLine } from './reducers/index';
 
-export default class NoteLine extends React.Component {
+class NoteLine extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     
     this.state = {
       canGetFocus: props.canGetFocus
@@ -32,11 +32,11 @@ export default class NoteLine extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({canGetFocus: false});  
+    this.setState({canGetFocus: false})
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight || this.props.important !== nextProps.important
+    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight || this.props.important !== nextProps.important;
   }
 
   render() {
@@ -97,8 +97,8 @@ const mapStateToProps = (state, ownProps) => {
     text: noteLine.text,
     important: noteLine.important,
     highlight: noteLine.highlight
-  }
+  };
 
 }
 
-export default connect(mapStateToProps)(NoteLine)
+export default connect(mapStateToProps)(NoteLine);
