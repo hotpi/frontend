@@ -11,7 +11,6 @@ const note = (state = {
   type: "new",
   noteLines: []
 }, action) => {
-
   switch(action.type) {
     case 'MERGE_NOTES':
       return {
