@@ -1,10 +1,18 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
+import { forOwn as _forOwn } from 'lodash';
 
 import noteLine from './noteLine';
 
 export const noteLines = (state = {}, action) => {  
   switch (action.type) {
+    case 'SYNC_COMPLETED':
+      const nextState = { ...state };
+      _forOwn(action.response.noteLines, (noteLine, id) => {
+        nextState[noteLine.id] = noteLine
+      })
+
+      return nextState;
     case 'NOT_EMPTY_AND_NOT_LAST':
     case 'HIGHLIGHT_LINE':
     case 'IMPORTANT_LINE':

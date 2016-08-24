@@ -1,27 +1,43 @@
-import 'babel-polyfill'
-import React from 'react'
-import { render } from 'react-dom'
-
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import Dexie from 'dexie';
 
-import { browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
-//import Root from './containers/Root'
-import Root from './Root'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import configureStore from './configureStore'
+import Root from './Root';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import configureStore from './configureStore';
 
-const store = configureStore()
-const history = syncHistoryWithStore(browserHistory, store)
+import syncer from './syncer'
 
-injectTapEventPlugin();
 
-render(
-	<MuiThemeProvider style={{height: '100vh', width: '100%'}}>
-		<Root 
-      history={history} 
-      store={store} 
-      />
-	</MuiThemeProvider>,
-  document.getElementById('app')
-)
+export const db = new Dexie('hotpi')
+
+db.version(1).stores({
+  actions: '++id, executionTime, action',
+  state: '++id, state'
+});
+
+export const middleware = new syncer();
+
+middleware.initialLoad().then(state => {
+  console.log('state on promise: ', state)
+  const store = configureStore(state)
+  const history = syncHistoryWithStore(browserHistory, store)
+
+  middleware.setStore(store)
+
+  injectTapEventPlugin()
+
+  render(
+    <MuiThemeProvider style={{height: '100vh', width: '100%'}}>
+      <Root 
+        history={history} 
+        store={store} 
+        />
+    </MuiThemeProvider>,
+    document.getElementById('app')
+  )
+}).catch(console.log.bind(console))

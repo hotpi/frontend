@@ -11,10 +11,11 @@ import {
 import PatientContainer from './PatientContainer';
 import PatientDetailContainer from './PatientDetailContainer';
 
+import { fetchData } from './actions/sync';
+
 class Root extends React.Component {
   render() {
     const { store, history } = this.props
-
     return (
       <Provider store={store}>
         <Router history={history}>

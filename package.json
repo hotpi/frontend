@@ -24,10 +24,12 @@
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.9.1",
+    "dexie": "^1.4.1",
     "lodash": "^4.13.1",
     "material-ui": "^0.15.2",
     "mdi": "^1.6.50",
     "node-uuid": "^1.4.7",
+    "offline-js": "^0.7.18",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-redux": "^4.4.5",

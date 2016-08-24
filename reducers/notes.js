@@ -1,10 +1,19 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
+import { forOwn as _forOwn } from 'lodash';
 
 import note from './note';
 
+
 export const notes = (state = {}, action) => {
   switch(action.type) {
+    case 'SYNC_COMPLETED':
+      const nextState = { ...state };
+      _forOwn(action.response.notes, (note, id) => {
+        nextState[note.id] = note
+      })
+
+      return nextState;
     case 'DELETE_NOTE':
       delete state[action.NoteID]
       return state;

@@ -2,9 +2,11 @@ import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
 
 import entities, * as fromEntities from './entities';
+import sync, * as fromSync from './sync';
 
 const rootReducer = combineReducers({
   entities,
+  sync,
   routing
 })
 
@@ -17,3 +19,4 @@ export const getAllPatients = (state) => fromEntities.getAllPatients(state.entit
 export const getPatientById = (state, patientId) => fromEntities.getPatientById(state.entities, patientId);
 export const getFirstPatientId = (state) => fromEntities.getFirstPatientId(state.entities);
 export const getAllPatientNotes = (state, patientId) => fromEntities.getAllPatientNotes(state.entities, patientId);
+export const getIsFetching = (state) => fromSync.getIsFetching(state.sync);
