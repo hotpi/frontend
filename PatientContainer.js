@@ -1,30 +1,46 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import PatientList from './PatientList';
 import PatientHeader from './PatientHeader';
 import Note from './Note';
+import Loading from './Loading';
+import EmptySelection from './EmptySelection';
 
-import { patientIds } from './configureStore';
+import { getIsFetching } from './reducers/index';
+import { fetchData } from './actions/sync';
 
 class PatientContainer extends React.Component {
+  componentDidMount() {
+    const { fetchData } = this.props
+
+    fetchData()
+  }
+
   render() {
+    if (this.props.isLoading) {
+      return <Loading />
+    }
 
     return (
         <div style={{display: 'inline-flex'}}>
           <PatientList />
-          <div style={{display: 'block', overflow: 'hidden'}}>
-        		<PatientHeader patientId={patientIds[0]}/>
-            <Note />
+          <div style={{display: 'block', overflow: 'hidden', marginTop: '5em'}}>
+            <EmptySelection text={"Please select a patient"} />
+        		{/*<PatientHeader />
+            <Note type={this.props.type}/>*/}
           </div>
         </div>
     	);
   }
 }
 
-PatientContainer.defaultProps = {
-  params: {
-    id: 1
+const mapStateToProps = (state, { params }) => {
+  return {
+    isLoading: getIsFetching(state),
+    type: params.type
   }
 }
 
-export default PatientContainer;
+export default withRouter(connect(mapStateToProps, { fetchData })(PatientContainer));

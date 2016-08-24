@@ -18,6 +18,7 @@ import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
 import NewNoteButton from './NewNoteButton';
 import HistoryNavigation from './HistoryNavigation';
+import EmptySelection from './EmptySelection';
 
 import { 
   createAndAppendNext,
@@ -260,9 +261,7 @@ class Note extends React.Component {
     if (type !== 'new' && noteLines.length === 0) {
       return (
           <div style={{height: 532, display: 'block'}}>
-            <div style={{margin: '8em 0 3em 10.3em', width: '50%', display: 'inline-flex'}}>
-              <h3 style={{fontWeight: 100, fontSize: 40, color: 'grey', margin: 0, textAlign: 'center', width: 470, height: 'auto'}}> There are no notes of type {title} </h3>
-            </div>
+            <EmptySelection text={`There are no notes of type ${title}`} />
             <NewNoteButton
               onClickDo={this.handleNewButton}
              />
