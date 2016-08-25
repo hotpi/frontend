@@ -8,14 +8,13 @@ export const loadState = () => {
 }
 
 export const saveState = (state) => {
-  console.log('state saved!')
   db.state.put({id: 1, state}).then(
     null, 
     (message) => console.log('saveState failed: ', message)
   )
-  db.state.where('id').equals(1).first().then(
+  /*db.state.where('id').equals(1).first().then(
     (response) => console.log('saved ', response, ' at ', new Date())
-  )
+  )*/
 }
 
 export const saveActionIntoQueue = (action) => {

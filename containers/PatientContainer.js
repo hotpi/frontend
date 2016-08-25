@@ -8,16 +8,18 @@ import Note from '../components/content/note/Note';
 import Loading from '../components/helpers/Loading';
 import EmptySelection from '../components/helpers/EmptySelection';
 
-import { getIsFetching } from '../reducers';
+import { getIsFetching, getIsSynced } from '../reducers';
 import { fetchData } from '../actions/sync';
 
 class PatientContainer extends React.Component {
   componentDidMount() {
-    const { fetchData } = this.props
+    const { fetchData, isSynced } = this.props
 
-    fetchData()
+    if (!isSynced) {
+      fetchData()
+    }
   }
-
+    
   render() {
     if (this.props.isLoading) {
       return <Loading />
@@ -36,6 +38,7 @@ class PatientContainer extends React.Component {
 
 const mapStateToProps = (state, { params }) => {
   return {
+    isSynced: getIsSynced(state),
     isLoading: getIsFetching(state),
     type: params.type
   }

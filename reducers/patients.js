@@ -1,4 +1,4 @@
-import { forOwn as _forOwn } from 'lodash';
+ import { forOwn as _forOwn } from 'lodash';
 
 import patient from './patient';
 
@@ -18,10 +18,12 @@ export const patients = (state = {}, action) => {
       return nextState;
     case 'NEW_NOTE':
     case 'DELETE_NOTE':
+    case 'ADD_PATIENT':
       return {
         ...state,
         [action.PatientID]: patient(state[action.PatientID], action)
       };
+
     default: 
       return state;
   }

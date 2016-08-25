@@ -13,18 +13,18 @@ import PatientHeader from '../components/content/top-view/PatientHeader';
 import Note from '../components/content/note/Note';
 import Loading from '../components/helpers/Loading';
 
-import { getIsFetching } from '../reducers/index';
+import { getIsFetching, getIsSynced } from '../reducers/index';
 import { fetchData } from '../actions/sync';
 
 class PatientDetailContainer extends React.Component {
   componentDidMount() {
-    const { fetchData } = this.props
-
-    fetchData()
+    const { fetchData, isSynced } = this.props
+    if (!isSynced) {
+      fetchData()
+    }
   }
   
-  render() {
-    console.log(this.props.isLoading)
+  render() { 
     if (this.props.isLoading) {
       return <Loading />
     }
@@ -43,6 +43,7 @@ class PatientDetailContainer extends React.Component {
 
 const mapStateToProps = (state, { params }) => {
   return {
+    isSynced: getIsSynced(state),
     isLoading: getIsFetching(state),
     type: params.type
   }

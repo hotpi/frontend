@@ -1,5 +1,6 @@
 const sync = (state = {
   version: 1,
+  stateStatus: 'synced',
   isLoading: false,
 }, action) => {
   switch (action.type) {
@@ -22,3 +23,4 @@ const sync = (state = {
 export default sync;
 
 export const getIsFetching = (state) => state.isLoading;
+export const getIsSynced = (state) => state.stateStatus

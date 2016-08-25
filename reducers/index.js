@@ -20,3 +20,4 @@ export const getPatientById = (state, patientId) => fromEntities.getPatientById(
 export const getFirstPatientId = (state) => fromEntities.getFirstPatientId(state.entities);
 export const getAllPatientNotes = (state, patientId) => fromEntities.getAllPatientNotes(state.entities, patientId);
 export const getIsFetching = (state) => fromSync.getIsFetching(state.sync);
+export const getIsSynced = (state) => fromSync.getIsSynced(state.sync);
