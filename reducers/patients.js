@@ -5,10 +5,15 @@ import patient from './patient';
 export const patients = (state = {}, action) => {
   switch(action.type) {
     case 'SYNC_COMPLETED':
-      const nextState = { ...state };
+      const nextState = Object.assign({}, state);
+      
       _forOwn(action.response.patients, (patient, id) => {
         nextState[patient.id] = patient
       })
+      
+      if (nextState.undefined) {
+        delete nextState['undefined']
+      }
 
       return nextState;
     case 'NEW_NOTE':

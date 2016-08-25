@@ -9,9 +9,14 @@ export const notes = (state = {}, action) => {
   switch(action.type) {
     case 'SYNC_COMPLETED':
       const nextState = { ...state };
+      
       _forOwn(action.response.notes, (note, id) => {
         nextState[note.id] = note
       })
+
+      if (nextState.undefined) {
+        delete nextState['undefined']
+      }
 
       return nextState;
     case 'DELETE_NOTE':

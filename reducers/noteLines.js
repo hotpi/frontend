@@ -8,9 +8,14 @@ export const noteLines = (state = {}, action) => {
   switch (action.type) {
     case 'SYNC_COMPLETED':
       const nextState = { ...state };
+      
       _forOwn(action.response.noteLines, (noteLine, id) => {
         nextState[noteLine.id] = noteLine
       })
+
+      if (nextState.undefined) {
+        delete nextState['undefined']
+      }
 
       return nextState;
     case 'NOT_EMPTY_AND_NOT_LAST':
