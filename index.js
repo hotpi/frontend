@@ -8,10 +8,9 @@ import Dexie from 'dexie';
 
 import Root from './containers/main/Root';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import configureStore from './configureStore';
+import configureStore from './store/configureStore';
 
-import syncer from './syncer'
-
+import syncer from './syncer';
 
 export const db = new Dexie('hotpi')
 

@@ -1,7 +1,7 @@
 import 'offline-js';
 import { throttle } from 'lodash';
 
-import * as fromDatabase from './databaseStorage';
+import * as fromDatabase from './helpers/databaseStorage';
 
 class syncer {
   constructor() {

@@ -1,4 +1,4 @@
-import { db } from './index'
+import { db } from '../index'
 
 export const loadState = () => {
   return db.state.where('id').equals(1).first().then(
