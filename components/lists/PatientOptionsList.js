@@ -47,7 +47,7 @@ class PatientOptionsList extends React.Component {
     		<BaseList>
           <div style={{overflowY: 'auto', border: 'none'}}>
             <ListItem 
-              onClick={() => handleBrowserHistory(patientId, 'back')}
+              onTouchTap={() => handleBrowserHistory(patientId, 'back')}
               primaryText="Back"
               leftIcon={<NavigationChevronLeft />} >
             </ListItem>
@@ -55,7 +55,7 @@ class PatientOptionsList extends React.Component {
 
             <Subheader inset={true}>Patient Information</Subheader>
             <ListItem
-              onClick={() => handleBrowserHistory(patientId, 'diagnosis')}
+              onTouchTap={() => handleBrowserHistory(patientId, 'diagnosis')}
               primaryText="Diagnosis"
               leftIcon={
                 <StethoscopeIcon
@@ -64,7 +64,7 @@ class PatientOptionsList extends React.Component {
               style={{padding: '5px 0'}}
             />
           <ListItem
-              onClick={() => handleBrowserHistory(patientId, 'history/0')}
+              onTouchTap={() => handleBrowserHistory(patientId, 'history/0')}
               primaryText="History"
               leftIcon={
                 <ActionHistory
@@ -73,7 +73,7 @@ class PatientOptionsList extends React.Component {
               style={{padding: '5px 0'}}
             />
             <ListItem
-              onClick={() => handleBrowserHistory(patientId, 'todo')}
+              onTouchTap={() => handleBrowserHistory(patientId, 'todo')}
               primaryText="ToDo"
               leftIcon={
                 <ActionAssignment

@@ -82,8 +82,12 @@ class Note extends React.Component {
     return this.props.noteLines[0].text === '';
   }
 
-  canShowHeaderAndFooter() {
-    return this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== 'new';
+  canShowHeaderAndFooter(part) {
+    if (part === 'header') {
+      return this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty() || this.props.type !== 'new';
+    } 
+
+    return (this.props.noteLines.length > 1 || this.state.hasFocus || !this.isNoteLineEmpty()) && this.props.type === 'new';
   }
 
   createNewLine(index, positionToInsert) {
@@ -282,10 +286,10 @@ class Note extends React.Component {
           <Paper
             zDepth={2}
             style={{left: '19.2em', width: '470px', height: 'auto'}}
-            onClick={this.handleClick}>
+            onTouchTap={this.handleClick}>
             
             <NoteHeader 
-              show={this.canShowHeaderAndFooter()}
+              show={this.canShowHeaderAndFooter('header')}
               title={title}
               />
 
@@ -298,7 +302,7 @@ class Note extends React.Component {
             <Divider />
 
             <NoteFooter 
-              show={this.canShowHeaderAndFooter()}
+              show={this.canShowHeaderAndFooter('footer')}
               type={type}
               value={this.state.type}
               onChangeDo={this.handleSelectField}
