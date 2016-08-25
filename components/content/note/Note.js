@@ -11,14 +11,13 @@ import IconButton from 'material-ui/IconButton';
 
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
-import NoteLine from './NoteLine';
-import { iconStyles } from './NoteLine';
+import NoteLine from '../noteline/NoteLine';
 import NoteFooter from './NoteFooter';
 import NoteHeader from './NoteHeader';
 import NoteTimestamp from './NoteTimestamp';
-import NewNoteButton from './NewNoteButton';
+import NewNoteButton from '../top-view/NewNoteButton';
 import HistoryNavigation from './HistoryNavigation';
-import EmptySelection from './EmptySelection';
+import EmptySelection from '../../helpers/EmptySelection';
 
 import { 
   createAndAppendNext,
@@ -28,18 +27,18 @@ import {
   notEmptyAndNotLast, 
   importantLine, 
   highlightLine 
-} from './actions/noteLines';
+} from '../../../actions/noteLines';
 
 import {
   changeNoteType,
   newNote,
   deleteNote,
   mergeNotes
-} from './actions/note';
+} from '../../../actions/note';
 
-import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine } from './reducers/index';
+import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine } from '../../../reducers';
 
-import { typeValues, dateToString } from './Helpers';
+import { typeValues, dateToString } from '../../helpers/Helpers';
 
 class Note extends React.Component {
 

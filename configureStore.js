@@ -4,6 +4,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
+
+import DevTools from './containers/DevTools';
 import actionQueue from './middleware/actionQueue';
 
 const configureStore = (state) => {
@@ -12,8 +14,8 @@ const configureStore = (state) => {
     state,
     compose(
       applyMiddleware(thunk, actionQueue, /*api, */createLogger()),
-      window.devToolsExtension && window.devToolsExtension()
-      //DevTools.instrument()
+      //window.devToolsExtension && window.devToolsExtension()
+      DevTools.instrument()
     )
   )
 

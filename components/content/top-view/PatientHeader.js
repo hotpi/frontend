@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import Paper from 'material-ui/Paper';
 
-import { getPatientById, getFirstPatientId } from './reducers/index';
+import { getPatientById, getFirstPatientId } from '../../../reducers';
 
-import { dateToString, headerStylesMobile, labelStyles } from './Helpers';
-import { patientIds } from './configureStore';
+import { dateToString, headerStylesMobile, labelStyles } from '../../helpers/Helpers';
 
 const InfoLabels = (props) => {
   return (

@@ -8,10 +8,10 @@ import {
   blue800
 } from 'material-ui/styles/colors';
 
-import PatientContainer from './PatientContainer';
-import PatientDetailContainer from './PatientDetailContainer';
+import PatientContainer from '../PatientContainer';
+import PatientDetailContainer from '../PatientDetailContainer';
 
-import { fetchData } from './actions/sync';
+import { fetchData } from '../../actions/sync';
 
 class Root extends React.Component {
   render() {

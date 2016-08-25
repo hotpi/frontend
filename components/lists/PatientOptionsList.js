@@ -21,7 +21,7 @@ pink500
 
 import BaseList from './BaseList';
 
-import { getFirstPatientId } from './reducers/index';
+import { getFirstPatientId } from '../../reducers';
 
 const StethoscopeIcon = (props) => (
   <FontIcon {...props}

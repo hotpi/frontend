@@ -18,9 +18,9 @@ import CancelButton from './CancelButton';
 import AddIcon from './AddIcon';
 import LineText from './LineText';
 
-import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from './Helpers';
+import { lineOutHover, iconStyles, inlineIconStyle, importantColors, highlightColors } from '../../helpers/Helpers';
 
-import { getNoteLine } from './reducers/index';
+import { getNoteLine } from '../../../reducers';
 
 class NoteLine extends React.Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 
 import DeviceAccessTime from 'material-ui/svg-icons/device/access-time';
 
-import { dateToString } from './Helpers'
+import { dateToString } from '../../helpers/Helpers'
 
 const getFormattedDate = (date) => {
 

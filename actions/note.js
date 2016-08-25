@@ -1,6 +1,6 @@
 import { v4 } from 'node-uuid';
 
-import { typeValues } from '../Helpers';
+import { typeValues } from '../components/helpers/Helpers';
 
 export const changeNoteType = (NoteID, index) => ({
   type: 'CHANGE_NOTE_TYPE',

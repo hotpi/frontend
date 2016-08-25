@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import Dexie from 'dexie';
 
-import Root from './Root';
+import Root from './containers/main/Root';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import configureStore from './configureStore';
 

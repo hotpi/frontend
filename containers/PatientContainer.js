@@ -2,14 +2,14 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import PatientList from './PatientList';
-import PatientHeader from './PatientHeader';
-import Note from './Note';
-import Loading from './Loading';
-import EmptySelection from './EmptySelection';
+import PatientList from '../components/lists/PatientList';
+import PatientHeader from '../components/content/top-view/PatientHeader';
+import Note from '../components/content/note/Note';
+import Loading from '../components/helpers/Loading';
+import EmptySelection from '../components/helpers/EmptySelection';
 
-import { getIsFetching } from './reducers/index';
-import { fetchData } from './actions/sync';
+import { getIsFetching } from '../reducers';
+import { fetchData } from '../actions/sync';
 
 class PatientContainer extends React.Component {
   componentDidMount() {

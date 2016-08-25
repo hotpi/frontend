@@ -1,6 +1,6 @@
 import { v4 } from 'node-uuid';
 
-import { highlightColors, importantColors } from '../Helpers';
+import { highlightColors, importantColors } from '../components/helpers/Helpers';
 
 export const createAndAppendNext = (index, NoteID) => ({
   type: 'CREATE_AND_APPEND_NEXT',

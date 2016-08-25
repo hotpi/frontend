@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import ActionDone from 'material-ui/svg-icons/action/done';
 
-import { actionsArea, typeValues } from './Helpers';
+import { actionsArea, typeValues } from '../../helpers/Helpers';
 
 const NoteFooter = ({
   show,

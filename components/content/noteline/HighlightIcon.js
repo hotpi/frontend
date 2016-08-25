@@ -17,7 +17,7 @@ import {
   cyanA100
 } from 'material-ui/styles/colors'
 
-import { iconStyles } from './Helpers'
+import { iconStyles } from '../../helpers/Helpers'
 
 class HighlightIcon extends React.Component {
   shouldComponentUpdate(nextProps) {

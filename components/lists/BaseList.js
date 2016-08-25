@@ -12,7 +12,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import { grey400, blue700 } from 'material-ui/styles/colors';
 
-import { listStyle } from './Helpers';
+import { listStyle } from '../helpers/Helpers';
 
 class BaseList extends React.Component {
   render() {

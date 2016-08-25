@@ -6,9 +6,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { Link } from 'react-router';
 
-import { newNoteButtonStyle } from './Helpers';
+import { newNoteButtonStyle } from '../../helpers/Helpers';
 
-import { getFirstPatientId } from './reducers/index';
+import { getFirstPatientId } from '../../../reducers';
 
 const NewNoteButton = ({
   patientId,

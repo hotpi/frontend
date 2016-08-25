@@ -28,8 +28,8 @@ grey400
 
 import BaseList from './BaseList';
 
-import { dateToString, clinic, rightIconInfo } from './Helpers';
-import { getAllPatients } from './reducers/index';
+import { dateToString, clinic, rightIconInfo } from '../helpers/Helpers';
+import { getAllPatients } from '../../reducers';
 
 
 class PatientList extends React.Component {

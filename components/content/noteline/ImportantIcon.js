@@ -13,7 +13,7 @@ import {
   amber100 
 } from 'material-ui/styles/colors'
 
-import { iconStyles } from './Helpers'
+import { iconStyles } from '../../helpers/Helpers'
 
 
 class ImportantIcon extends React.Component {

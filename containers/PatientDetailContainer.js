@@ -8,13 +8,13 @@ cyan500,
 blue800
 } from 'material-ui/styles/colors';
 
-import PatientOptionsList from './PatientOptionsList';
-import PatientHeader from './PatientHeader';
-import Note from './Note';
-import Loading from './Loading';
+import PatientOptionsList from '../components/lists/PatientOptionsList';
+import PatientHeader from '../components/content/top-view/PatientHeader';
+import Note from '../components/content/note/Note';
+import Loading from '../components/helpers/Loading';
 
-import { getIsFetching } from './reducers/index';
-import { fetchData } from './actions/sync';
+import { getIsFetching } from '../reducers/index';
+import { fetchData } from '../actions/sync';
 
 class PatientDetailContainer extends React.Component {
   componentDidMount() {
