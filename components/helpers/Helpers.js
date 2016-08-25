@@ -193,6 +193,16 @@ export const rightIconInfo = (clinicInfo) =>
 };
 
 export const dateToString = (date) => {
+  if (typeof date !== 'object') {
+    try {
+      date = typeof date === 'string' ? 
+        Date.parse(date) :
+        new Date(date)
+    } catch (error) {
+      throw 'TypeError: Date was expected to be either string, object or number'
+      console.log('TypeError: Date was expected to be either string, object or number')
+    }
+  }
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();

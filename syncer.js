@@ -2,6 +2,7 @@ import 'offline-js';
 import { throttle } from 'lodash';
 
 import * as fromDatabase from './helpers/databaseStorage';
+import * as fromFakeBackend from './fakeBackend';
 
 class syncer {
   constructor() {
@@ -19,6 +20,10 @@ class syncer {
 
   initializeSynchronization(timeOfReconnection) {
     fromDatabase.loadActionsFromQueue([this._lastConnectionAt, timeOfReconnection]).then(response => console.log(response))
+    // send to server actions
+    // wait for them to be received
+    // synchronize
+    // send back version
   }
 
   setStore(store) {
@@ -34,6 +39,13 @@ class syncer {
 
   initialLoad() {
     // if connection === up get the initialLoad from server
+    if (Offline.state === 'up') {
+      return this.delay(500).then(() => {
+        console.log(fromFakeBackend.fakeBackend)
+        return fromFakeBackend.fakeBackend      
+      });
+    }
+
     return this.delay(500).then(
       () => {
         return fromDatabase.loadState().then(
@@ -58,12 +70,13 @@ class syncer {
 
   fetchState() {
     if (this._connectionStatus === 'up') {
-      // get from server
-      // on error log it and get it from indexeddb
+      return this.delay(500).then(() => {
+        return fromFakeBackend.fakeBackend      
+      }).catch(console.log.bind(console, 'Error getting state from server: '));
     }
     return this.delay(5000).then(() => {
       return fromDatabase.loadState().then(state => state)
-    });
+    }).catch(console.log.bind(console, 'Error getting state from indexed db: '));
   } 
 
 }
