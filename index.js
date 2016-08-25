@@ -22,7 +22,6 @@ db.version(1).stores({
 export const middleware = new syncer();
 
 middleware.initialLoad().then(state => {
-  console.log('state on promise: ', state)
   const store = configureStore(state)
   const history = syncHistoryWithStore(browserHistory, store)
 

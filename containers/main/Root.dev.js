@@ -11,7 +11,7 @@ import {
 import PatientContainer from '../PatientContainer';
 import PatientDetailContainer from '../PatientDetailContainer';
 import DevTools from '../DevTools'
-
+import EmergencyCallButton from '../../components/content/top-view/EmergencyCallButton';
 import { fetchData } from '../../actions/sync';
 
 class Root extends React.Component {
@@ -25,6 +25,7 @@ class Root extends React.Component {
             <Route path="/patients" component={PatientContainer} />
             <Route path="/patient/:patientId(/:type(/:noteNumber))" component={PatientDetailContainer} />
           </Router>
+          <EmergencyCallButton />
           <DevTools />
         </div>
       </Provider>

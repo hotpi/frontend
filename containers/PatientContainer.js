@@ -28,8 +28,6 @@ class PatientContainer extends React.Component {
           <PatientList />
           <div style={{display: 'block', overflow: 'hidden', marginTop: '5em'}}>
             <EmptySelection text={"Please select a patient"} />
-        		{/*<PatientHeader />
-            <Note type={this.props.type}/>*/}
           </div>
         </div>
     	);
