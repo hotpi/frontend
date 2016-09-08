@@ -16,6 +16,96 @@ class syncer {
     Offline.on('up', () => {
       this.initializeSynchronization(Date.now())
     })
+
+    this.inflightOp = null
+    this.inFlight = false
+    this.buffer = []
+    this.revisionNr = 0
+  }
+
+  generateOperation(newOp) {
+    if (this.inFlight) {
+      buffer.push(newOp)
+    } else {
+      this.inflightOp = newOp
+      //sendToServer(this.inflightOp, this.revisionNr)
+    }
+
+    //apply
+  }
+
+  transform(operations, receivedOp) {
+    receivedOp = operations.reduce( (prev, curr) => {
+      return xformT(prev[0], curr);
+    }, [receivedOp, {}])
+
+    return receivedOp;
+  }
+
+  apply(operationFunction) {
+    if (typeof operationFunction !== 'function') {
+      return 'Error: first argument of apply must be a function';
+    }
+
+    return operationFunction(receivedOp); 
+  }
+
+  insertNode(receivedOp) {
+    const { accessPath, node } = receivedOp 
+    let insertAt = jumpToAccessPath(accessPath)
+    let applied = [
+      ...insertAt.slice(0, accessPath[receivedOp.accessPath.length-1] + 1),
+      node,
+      ...insertAt.slice(accessPath[receivedOp.accessPath.length-1] + 1),
+    ]
+    // translate back to the type of collection
+    saveChanges(accessPath, applied, 'insert', node)
+    // save to database
+    return true; 
+  } 
+
+  deleteNode(receivedOp) {
+    const { accessPath } = receivedOp 
+    let deleteAt = jumpToAccessPath(accessPath)
+    let deletedNode = deleteAt[accessPath[accessPath.length-1]]
+    let applied = [
+      ...deleteAt.slice(0, accessPath[accessPath.length-1]),
+      ...deleteAt.slice(accessPath[accessPath.length-1] + 1)
+      ]
+    // translate back to the type of collection
+    // save to database
+    saveChanges(accessPath, applied, 'delete', deletedNode)
+
+    return true;
+  }
+
+  // Fetch from server localhost:3001/sendOp
+
+  // Fetch uid 
+
+  // Fetch current status
+
+  opReceived(receivedOp) {
+    this.revisionNr++
+
+    if (receivedOp.acknowledge !== 'undefined') {
+      if ( this.buffer.length > 0) {
+        this.inflightOp = buffer.shift()
+        // sendToServer(this.inflightOp, this.revisionNr)
+      } else {
+        this.inflightOp = null
+        this.inFlight = false
+      }
+    } else {
+      if (!this.inFlight) {
+        let transformFirst = xformT(receivedOp, this.inflightOp)
+        receivedOp = transformFirst[0]
+        this.inflightOp = transformFirst[1]
+
+        this.transform(this.buffer, receivedOp)
+      }
+    }
+    apply(receivedOp.type === 'insert' ? insertNode : deleteNode)(receivedOp)
   }
 
   initializeSynchronization(timeOfReconnection) {
