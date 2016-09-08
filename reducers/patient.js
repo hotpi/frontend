@@ -10,6 +10,7 @@ const patient = (state = {
   admissionDate: new Date(),
   dischargeDate: new Date(),
   birthday: new Date(),
+  notes: []
 }, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
