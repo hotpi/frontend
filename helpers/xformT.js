@@ -154,3 +154,5 @@ function effectIndependent(accessPath1, accessPath2) {
 
   return false;
 }
+
+export default xformT;

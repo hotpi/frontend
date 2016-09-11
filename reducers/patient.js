@@ -14,10 +14,22 @@ const patient = (state = {
 }, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
+      if (typeof action.index === 'undefined') {
+        return {
+          ...state,
+          notes: [...state.notes, action.NoteID] 
+        };
+      }
+      
       return {
         ...state,
-        notes: [...state.notes, action.NoteID]
+        notes: [
+          ...state.notes.slice(0, index+1),
+          action.NoteID,
+          ...state.notes.slice(index+1)  
+        ]
       };
+
     case 'DELETE_NOTE': 
       return {
         ...state,

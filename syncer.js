@@ -1,8 +1,29 @@
 import 'offline-js';
 import { throttle } from 'lodash';
+import 'isomorphic-fetch';
+import Promise from 'bluebird';
 
 import * as fromDatabase from './helpers/databaseStorage';
 import * as fromFakeBackend from './fakeBackend';
+import xformT from './helpers/xformT';
+import { translateActionToOperation, translateOperationToAction } from './helpers/actionTranslator'
+
+const BROADCAST_URL = 'http://localhost:3001/sync/status/'
+const SEND_OP_URL = 'http://localhost:3001/sync/sendOp'
+const SUBSCRIBE_URL = 'http://localhost:3001/sync/subscribe'
+
+const POST_FETCH_CONF = (body) => {
+  console.log( body )
+  return {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify(body)  
+  }
+}
 
 class syncer {
   constructor() {
@@ -21,20 +42,51 @@ class syncer {
     this.inFlight = false
     this.buffer = []
     this.revisionNr = 0
+    this.uid = 0
+
+    if (!this.subscribe()) {
+      throw new Error('Unable to fetch uid')
+    }
+
+    this.listen()
+  }
+
+  getUid() {
+    return this.uid;
+  }
+
+  newAction(action) {
+    let translatedOperation = translateActionToOperation(action, this._store)
+
+    if (typeof translatedOperation !== 'undefined') {
+      const operation = {
+        origin: this.uid, //import uid
+        type: translatedOperation[0],
+        accessPath: translatedOperation[1],
+        node: translatedOperation[2],
+        action: translatedOperation[3]
+      }
+
+      this.generateOperation(operation)
+    }
+
   }
 
   generateOperation(newOp) {
+    console.log('generateOperation')
     if (this.inFlight) {
       buffer.push(newOp)
     } else {
       this.inflightOp = newOp
-      //sendToServer(this.inflightOp, this.revisionNr)
+      this.sendToServer()
     }
 
-    //apply
+    //this.apply(this._store.dispatch)(translateOperationToAction(newOp, this._store))
   }
 
   transform(operations, receivedOp) {
+    console.log('transform')
+
     receivedOp = operations.reduce( (prev, curr) => {
       return xformT(prev[0], curr);
     }, [receivedOp, {}])
@@ -43,55 +95,116 @@ class syncer {
   }
 
   apply(operationFunction) {
+    console.log('apply')
+
     if (typeof operationFunction !== 'function') {
       return 'Error: first argument of apply must be a function';
     }
 
-    return operationFunction(receivedOp); 
-  }
-
-  insertNode(receivedOp) {
-    const { accessPath, node } = receivedOp 
-    let insertAt = jumpToAccessPath(accessPath)
-    let applied = [
-      ...insertAt.slice(0, accessPath[receivedOp.accessPath.length-1] + 1),
-      node,
-      ...insertAt.slice(accessPath[receivedOp.accessPath.length-1] + 1),
-    ]
-    // translate back to the type of collection
-    saveChanges(accessPath, applied, 'insert', node)
-    // save to database
-    return true; 
-  } 
-
-  deleteNode(receivedOp) {
-    const { accessPath } = receivedOp 
-    let deleteAt = jumpToAccessPath(accessPath)
-    let deletedNode = deleteAt[accessPath[accessPath.length-1]]
-    let applied = [
-      ...deleteAt.slice(0, accessPath[accessPath.length-1]),
-      ...deleteAt.slice(accessPath[accessPath.length-1] + 1)
-      ]
-    // translate back to the type of collection
-    // save to database
-    saveChanges(accessPath, applied, 'delete', deletedNode)
-
-    return true;
+    return operationFunction; 
   }
 
   // Fetch from server localhost:3001/sendOp
+  sendToServer() {
+    console.log('sendToServer')
+
+    return fetch(SEND_OP_URL, POST_FETCH_CONF({
+      operation: this.inflightOp,
+      revisionNr: this.revisionNr
+    }))
+      .then(response =>
+        response.json().then(body => ({ body, response }))
+      ).then(({ body, response }) => {
+        if (!response.ok) {
+          throw new Error(body)
+        }
+
+        if (response.ok) {
+            console.log(body)
+          //this.opReceived(response)
+        }
+
+        return true;
+      })
+
+  }
 
   // Fetch uid 
+  subscribe() {
+    console.log('subscribe')
+    return fetch(SUBSCRIBE_URL)
+      .then(response => 
+        response.json().then(body => ({ body, response }))
+        ).then(({ body, response }) => {
+          if (!response.ok) {
+            throw new Error(body)
+          }
+
+          console.log(body)
+          this.uid = body.uid
+
+          return true;
+        })
+  }
+
+  timeout(ms, promise) {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        resolve(new Response(JSON.stringify({empty: 'true'}), {ok: true}))
+      }, ms)
+      promise.then(resolve, reject)
+    })
+  }
+
+
+  *poll() {
+    while(true) {
+      yield this.timeout(10000, fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr))
+        .then(response => {
+          console.log(response)
+          return response.json().then(body => ({ body, response }))
+        }
+        ).then(({ body, response }) => {
+          if (!response.ok) {
+            throw new Error(body)
+          }
+
+          console.log(body)
+          if (typeof body.empty === 'undefined') {
+            this.opReceived(body)
+          }
+
+          return body;
+        })
+    }
+  }
 
   // Fetch current status
+  listen(generator) {
+    if (this.uid === 0) {
+      return setTimeout(() => this.listen(), 10000)
+    }
+
+    console.log('listen')
+
+    if (!generator) {
+      generator = this.poll()
+    }
+
+    var nextIteration = generator.next()
+
+    nextIteration.value.then( (response) => {
+      this.listen(generator)
+    })
+  }
 
   opReceived(receivedOp) {
     this.revisionNr++
 
-    if (receivedOp.acknowledge !== 'undefined') {
+    if (typeof receivedOp.acknowledge !== 'undefined') {
       if ( this.buffer.length > 0) {
         this.inflightOp = buffer.shift()
-        // sendToServer(this.inflightOp, this.revisionNr)
+        this.sendToServer()
       } else {
         this.inflightOp = null
         this.inFlight = false
@@ -102,9 +215,10 @@ class syncer {
         receivedOp = transformFirst[0]
         this.inflightOp = transformFirst[1]
 
-        this.transform(this.buffer, receivedOp)
+        receivedOp = this.transform(this.buffer, receivedOp)[0]
       }
     }
+
     apply(receivedOp.type === 'insert' ? insertNode : deleteNode)(receivedOp)
   }
 
