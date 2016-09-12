@@ -20,8 +20,7 @@ const note = (state = {
     case 'NEW_NOTE':
       return {
         ...state, 
-        ID: action.NoteID,
-        noteLines: [...state.noteLines, action.NoteLineID]
+        ID: action.NoteID
       };
     case 'CHANGE_NOTE_TYPE':
       return {

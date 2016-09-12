@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router';
 
-import { get as _get , set as _set, forOwn as _forOwn, merge as _merge, assignIn } from 'lodash';
+import { get as _get , has as _has, set as _set, forOwn as _forOwn, merge as _merge, assignIn } from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
@@ -57,12 +57,15 @@ class Note extends React.Component {
     this.handleSelectField = this.handleSelectField.bind(this)
   }
 
-  componentWillMount(){
-    this.props.type === 'new' ? this.props.newNote(this.props.patientId) : null
+  componentWillMount() {
+    if (this.props.type === 'new') {
+      this.props.newNote(this.props.patientId) 
+    }
   }
 
   componentDidMount() {
     const { type } = this.props;
+
     this.setState({ canAllocateFocus: true })
 
     if (this.last && !this.last.isEmpty && type === 'new') {
@@ -71,11 +74,17 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type;
+    return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type;
+  }
+
+  componentWillUpdate(nextProps) {
+    if (!_has(this.props, 'note.ID') && _has(nextProps, 'note.ID')) {
+      this.props.createAndAppendLast(nextProps.note.ID)
+    }
   }
 
   isNoteLineEmpty() {
-    if (this.props.noteLines.length < 1) {
+    if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
       return false;
     }
 
@@ -220,6 +229,11 @@ class Note extends React.Component {
     var noteLines = {}
     const { type } = this.props;
     const noteLinesTotal = this.props.noteLines.length
+
+    console.log(this.props.noteLines.length)
+    if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
+      return (<div></div>)
+    } 
 
     noteLines = this.props.noteLines.map((noteLine, index) => {
       const ID = noteLine.ID

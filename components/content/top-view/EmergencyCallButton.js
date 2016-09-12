@@ -29,9 +29,9 @@ class EmergencyCallButton extends React.Component {
     return (
       <div>
         <FloatingActionButton 
-          style={{position: 'fixed', left: '90%', top: 20}} 
-          backgroundColor={red800} 
+          backgroundColor="#c83030" 
           onTouchTap={this.handleOpen.bind(this)}
+          style={{position: 'fixed', left: '90%', top: 20}} 
           >
           <CommunicationPhone />
         </FloatingActionButton>

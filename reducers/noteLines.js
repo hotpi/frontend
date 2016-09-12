@@ -28,7 +28,6 @@ export const noteLines = (state = {}, action) => {
       };
     case 'CREATE_AND_APPEND_LAST':
     case 'CREATE_AND_APPEND_NEXT':
-    case 'NEW_NOTE':
       return {
         ...state,
         [action.NoteLineID]: noteLine(undefined, action)

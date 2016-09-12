@@ -13,7 +13,6 @@ export const NEW_NOTE = 'NEW_NOTE'
 export const newNote = (PatientID) => ({
   type: NEW_NOTE,
   NoteID: v4(),
-  NoteLineID: v4(),
   PatientID
 });
 

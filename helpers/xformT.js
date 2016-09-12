@@ -27,34 +27,34 @@ function xformTii(op1, op2, isServer) {
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] > op2.accessPath[tpt]) {
-    op1.accessPath[tpt]++;
+  if (op1.accessPath[tpt][''+tpt] > op2.accessPath[tpt][''+tpt]) {
+    op1.accessPath[tpt][''+tpt]++;
     return [op1, op2]; 
   }
 
-  if (op1.accessPath[tpt] < op2.accessPath[tpt]) {
-    op2.accessPath[tpt]++;
+  if (op1.accessPath[tpt][''+tpt] < op2.accessPath[tpt][''+tpt]) {
+    op2.accessPath[tpt][''+tpt]++;
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] == op2.accessPath[tpt]) {
+  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
-      op1.accessPath[tpt]++;
+      op1.accessPath[tpt][''+tpt]++;
       return [op1, op2];
     }
 
     if (op1.accessPath.length < op2.accessPath.length) {
-      op2.accessPath[tpt]++;
+      op2.accessPath[tpt][''+tpt]++;
       return [op1, op2];
     }
 
     if (op1.accessPath.length == op2.accessPath.length) {
       //application depndent priorities
       if(isServer) {
-        op1.accessPath[tpt]++;
+        op1.accessPath[tpt][''+tpt]++;
         return [op1, op2];
       } else {
-        op2.accessPath[tpt]++;
+        op2.accessPath[tpt][''+tpt]++;
         return [op1, op2];
       }
     }
@@ -68,23 +68,23 @@ function xformTid(op1, op2) {
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] > op2.accessPath[tpt]) {
-    op1.accessPath[tpt]--;
+  if (op1.accessPath[tpt][''+tpt] > op2.accessPath[tpt][''+tpt]) {
+    op1.accessPath[tpt][''+tpt]--;
     return [op1, op2]; 
   }
 
-  if (op1.accessPath[tpt] < op2.accessPath[tpt]) {
-    op2.accessPath[tpt]++;
+  if (op1.accessPath[tpt][''+tpt] < op2.accessPath[tpt][''+tpt]) {
+    op2.accessPath[tpt][''+tpt]++;
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] == op2.accessPath[tpt]) {
+  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
       op1.type = 'no-op';
       return [op1, op2];
     }
 
-    op2.accessPath[tpt]++;
+    op2.accessPath[tpt][''+tpt]++;
     return [op1, op2];
   }
 
@@ -97,17 +97,17 @@ function xformTdd(op1, op2, isServer) {
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] > op2.accessPath[tpt]) {
-    op1.accessPath[tpt]--;
+  if (op1.accessPath[tpt][''+tpt] > op2.accessPath[tpt][''+tpt]) {
+    op1.accessPath[tpt][''+tpt]--;
     return [op1, op2]; 
   }
 
-  if (op1.accessPath[tpt] < op2.accessPath[tpt]) {
-    op2.accessPath[tpt]--;
+  if (op1.accessPath[tpt][''+tpt] < op2.accessPath[tpt][''+tpt]) {
+    op2.accessPath[tpt][''+tpt]--;
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt] == op2.accessPath[tpt]) {
+  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
       op1.type = 'no-op';
       return [op1, op2];
@@ -131,7 +131,7 @@ function transformationPoint(accessPath1, accessPath2) {
   var smallLength = accessPath1.length > accessPath2.length ? accessPath2.length : accessPath1.length;
 
   for (var i = 0; i < smallLength; i++) {
-    if (accessPath1[i] != accessPath2[i]) {
+    if (accessPath1[i][''+i] !== accessPath2[i][''+i]) {
       return i;
     }
   }
@@ -145,10 +145,10 @@ function effectIndependent(accessPath1, accessPath2) {
   if ((accessPath1.length > tpt+1) && (accessPath2.length > tpt+1)) {
     return true;
   }
-  if ((accessPath1[tpt] > accessPath2[tpt]) && (accessPath1.length < accessPath2.length)) {
+  if ((accessPath1[tpt][''+tpt] > accessPath2[tpt][''+tpt]) && (accessPath1.length < accessPath2.length)) {
     return true;
   }
-  if ((accessPath1[tpt] < accessPath2[tpt]) && (accessPath1.length > accessPath2.length)) {
+  if ((accessPath1[tpt][''+tpt] < accessPath2[tpt][''+tpt]) && (accessPath1.length > accessPath2.length)) {
     return true;
   }
 

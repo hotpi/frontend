@@ -11,18 +11,22 @@ import { translateActionToOperation, translateOperationToAction } from './helper
 const BROADCAST_URL = 'http://localhost:3001/sync/status/'
 const SEND_OP_URL = 'http://localhost:3001/sync/sendOp'
 const SUBSCRIBE_URL = 'http://localhost:3001/sync/subscribe'
+const INITAL_STATE_URL = 'http://localhost:3001/sync/initialState'
 
 const POST_FETCH_CONF = (body) => {
   console.log( body )
-  return {
+  const POST_CONF = {
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json; charset=utf-8',
     },
     method: 'POST',
     mode: 'cors',
     body: JSON.stringify(body)  
   }
+
+  console.log(POST_CONF)
+  return POST_CONF
 }
 
 class syncer {
@@ -66,7 +70,8 @@ class syncer {
         node: translatedOperation[2],
         action: translatedOperation[3]
       }
-
+      console.log('--------------operation--------')
+      console.log(operation)
       this.generateOperation(operation)
     }
 
@@ -142,6 +147,7 @@ class syncer {
 
           console.log(body)
           this.uid = body.uid
+          this.revisionNr = body.revisionNr
 
           return true;
         })
@@ -159,7 +165,7 @@ class syncer {
 
   *poll() {
     while(true) {
-      yield this.timeout(10000, fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr))
+      yield fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr)
         .then(response => {
           console.log(response)
           return response.json().then(body => ({ body, response }))
@@ -210,16 +216,17 @@ class syncer {
         this.inFlight = false
       }
     } else {
-      if (!this.inFlight) {
+      if (this.inflightOp) {
         let transformFirst = xformT(receivedOp, this.inflightOp)
         receivedOp = transformFirst[0]
         this.inflightOp = transformFirst[1]
 
         receivedOp = this.transform(this.buffer, receivedOp)[0]
       }
+
+      this.apply(this._store.dispatch)(translateOperationToAction(receivedOp, this._store))
     }
 
-    apply(receivedOp.type === 'insert' ? insertNode : deleteNode)(receivedOp)
   }
 
   initializeSynchronization(timeOfReconnection) {
@@ -244,24 +251,35 @@ class syncer {
   initialLoad() {
     // if connection === up get the initialLoad from server
     if (Offline.state === 'up') {
-      return this.delay(500).then(() => {
-        console.log(fromFakeBackend.fakeBackend)
-        return fromFakeBackend.fakeBackend      
-      });
+      return fetch(INITAL_STATE_URL)
+        .then(response => {
+          console.log(response)
+          return response.json().then(body => ({ body, response }))
+        })
+        .then(({ body, response }) => {
+          if (!response.ok) {
+            throw new Error(body)
+          }
+
+          console.log(body)
+          
+
+          return { entities: body };
+        })
+        .catch(
+          console.log.bind(console, 'something went wrong..')
+        );
     }
 
-    return this.delay(500).then(
-      () => {
-        return fromDatabase.loadState().then(
-          state => {
-            return {entities: state}
-          }, 
-          error => console.log('initialLoad failed: ', error)
-        ).catch(
-          console.log.bind(console, 'something went wrong..')
-        )
-      }
-    )
+    return fromDatabase.loadState().then(
+      state => {
+        return {entities: state}
+      }, 
+      error => console.log('initialLoad failed: ', error)
+      )
+      .catch(
+        console.log.bind(console, 'something went wrong..')
+      );
   }
 
   saveCurrentStateIntoIndexedDB() {
