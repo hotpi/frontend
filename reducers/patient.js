@@ -24,9 +24,9 @@ const patient = (state = {
       return {
         ...state,
         notes: [
-          ...state.notes.slice(0, index+1),
+          ...state.notes.slice(0, action.index+1),
           action.NoteID,
-          ...state.notes.slice(index+1)  
+          ...state.notes.slice(action.index+1)  
         ]
       };
 

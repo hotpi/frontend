@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router';
 
+import { v4 } from 'node-uuid';
 import { get as _get , has as _has, set as _set, forOwn as _forOwn, merge as _merge, assignIn } from 'lodash';
 
 import Paper from 'material-ui/Paper';
@@ -58,7 +59,7 @@ class Note extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.type === 'new') {
+    if (this.props.type === 'new' && this.props.note === null) {
       this.props.newNote(this.props.patientId) 
     }
   }
@@ -349,7 +350,7 @@ Note.defaultProps = {
 
 const mapStateToProps = (state, { params }) => {
   const noteNumber = params.noteNumber || 0
-  const patientId = params.patientId || getFirstPatientId(state)
+  const patientId = params.patientId
   const typeFilter = params.type || 'new'
   const patientNotesFromType = getNotesByTypeFromPatient(state, patientId, typeFilter)
   var sortedNotes = patientNotesFromType

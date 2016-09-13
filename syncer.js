@@ -55,15 +55,28 @@ class syncer {
     this.listen()
   }
 
-  getUid() {
-    return this.uid;
-  }
-
   newAction(action) {
     let translatedOperation = translateActionToOperation(action, this._store)
 
     if (typeof translatedOperation !== 'undefined') {
-      const operation = {
+      if (translatedOperation.length === 2) {
+        let operation = {
+
+        origin: this.uid, //import uid
+        type: translatedOperation[0][0],
+        accessPath: translatedOperation[0][1],
+        node: translatedOperation[0][2],
+        action: translatedOperation[0][3]
+        }
+
+
+        console.log('--------------operation--------')
+        console.log(operation)
+        this.generateOperation(operation)
+        translatedOperation = translatedOperation[1]
+      }
+      
+      let operation = {
         origin: this.uid, //import uid
         type: translatedOperation[0],
         accessPath: translatedOperation[1],
@@ -80,13 +93,12 @@ class syncer {
   generateOperation(newOp) {
     console.log('generateOperation')
     if (this.inFlight) {
-      buffer.push(newOp)
+      this.buffer.push(newOp)
     } else {
+      this.inFlight = true
       this.inflightOp = newOp
       this.sendToServer()
     }
-
-    //this.apply(this._store.dispatch)(translateOperationToAction(newOp, this._store))
   }
 
   transform(operations, receivedOp) {
@@ -113,7 +125,7 @@ class syncer {
   sendToServer() {
     console.log('sendToServer')
 
-    return fetch(SEND_OP_URL, POST_FETCH_CONF({
+    fetch(SEND_OP_URL, POST_FETCH_CONF({
       operation: this.inflightOp,
       revisionNr: this.revisionNr
     }))
@@ -132,6 +144,7 @@ class syncer {
         return true;
       })
 
+    return 
   }
 
   // Fetch uid 
@@ -188,7 +201,7 @@ class syncer {
   // Fetch current status
   listen(generator) {
     if (this.uid === 0) {
-      return setTimeout(() => this.listen(), 10000)
+      return setTimeout(() => this.listen(), 500)
     }
 
     console.log('listen')
@@ -209,7 +222,7 @@ class syncer {
 
     if (typeof receivedOp.acknowledge !== 'undefined') {
       if ( this.buffer.length > 0) {
-        this.inflightOp = buffer.shift()
+        this.inflightOp = this.buffer.shift()
         this.sendToServer()
       } else {
         this.inflightOp = null

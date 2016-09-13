@@ -23,7 +23,7 @@ export const translateActionToOperation = (action, store) => {
       var node = {
         ID: action.NoteID,
         type: 'new',
-        noteLines: [action.NoteLineID]
+        noteLines: []
       }
       return [INSERT, accessPath, node, action];
     case noteLineTypes.CREATE_AND_APPEND_LAST:
@@ -108,6 +108,94 @@ export const translateActionToOperation = (action, store) => {
 
       var accessPath = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex},{'3': textIndex}]
       return [operationType, accessPath, node, action]
+    case noteLineTypes.DELETE_LINE:
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patient = patients.reduce((prev, curr, index) => {
+        if (curr.notes.indexOf(action.NoteID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patientIndex = patients.map(patient => patient.ID).indexOf(patient.ID)
+
+      var noteIndex = patient.notes.indexOf(action.NoteID)
+      var note = getNoteById(store.getState(), action.NoteID)
+      var noteLineIndex = note.noteLines.indexOf(action.NoteLineID)
+      var accessPath = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex}]
+      var node = {}
+      return [DELETE, accessPath, node, action];
+
+    case noteLineTypes.IMPORTANT_LINE:
+      var notes = getAllNotes(store.getState())
+      var note = notes.reduce((prev, curr, index) => {
+        if (curr.noteLines.indexOf(action.NoteLineID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patient = patients.reduce((prev, curr, index) => {
+        if (curr.notes.indexOf(note.ID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patientIndex = patients.map(patient => patient.ID).indexOf(patient.ID)
+      var noteIndex = patient.notes.indexOf(note.ID)
+      var noteLineIndex = note.noteLines.indexOf(action.NoteLineID)
+      var noteLine = getNoteLine(store.getState(), action.NoteLineID)
+      var accessPath/*Insert*/ = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex}]
+      
+      var node = {
+        ...noteLine,
+        important: {
+          set: action.value === 0,
+          color: action.color,
+          value: action.value
+        }
+      }
+      return [[INSERT, accessPath, node, action], [DELETE, accessPath, {}, action]];
+    case noteLineTypes.HIGHLIGHT_LINE:
+      var notes = getAllNotes(store.getState())
+      var note = notes.reduce((prev, curr, index) => {
+        if (curr.noteLines.indexOf(action.NoteLineID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patient = patients.reduce((prev, curr, index) => {
+        if (curr.notes.indexOf(note.ID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patientIndex = patients.map(patient => patient.ID).indexOf(patient.ID)
+      var noteIndex = patient.notes.indexOf(note.ID)
+      var noteLineIndex = note.noteLines.indexOf(action.NoteLineID)
+      var noteLine = getNoteLine(store.getState(), action.NoteLineID)
+      var accessPath/*Insert*/ = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex}]
+      // var accessPathDelete = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex}]
+
+      var node = {
+        ...noteLine,
+        highlight: {
+          set: action.value === 0,
+          color: action.color,
+          value: action.value
+        }
+      }
+      return [[INSERT, accessPath, node, action], [DELETE, accessPath, {}, action]]
   }
 
 }
@@ -127,12 +215,13 @@ export const getAccessPath = (objectAccessPath) => {
 export const translateOperationToAction = (operation, store) => {
   const { type, accessPath, node, action } = operation
   const newAccessPath = getAccessPath(accessPath)
-  const patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
-  const patient = patients[newAccessPath[0]]
-  const actionToDispatch = {
-    ...action,
-    index: newAccessPath[newAccessPath.length-1],
-    fromServer: true
+  var actionToDispatch = { type: 'NO-OP'};
+  if (operation.type !== 'no-op') {
+    actionToDispatch = {
+      ...action,
+      index: newAccessPath[newAccessPath.length-1],
+      fromServer: true
+    }
   }
 
   return actionToDispatch
