@@ -72,7 +72,13 @@ class syncer {
 
         console.log('--------------operation--------')
         console.log(operation)
-        this.generateOperation(operation)
+        
+        if (Offline.state === 'up') {
+          this.generateOperation(operation)
+        } else {
+          this.saveOperationIntoQueue(operation)
+        }
+
         translatedOperation = translatedOperation[1]
       }
       
@@ -85,7 +91,12 @@ class syncer {
       }
       console.log('--------------operation--------')
       console.log(operation)
-      this.generateOperation(operation)
+
+      if (Offline.state === 'up') {
+        this.generateOperation(operation)
+      } else {
+        this.saveOperationIntoQueue(operation)
+      }
     }
 
   }
@@ -178,29 +189,31 @@ class syncer {
 
   *poll() {
     while(true) {
-      yield fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr)
-        .then(response => {
-          console.log(response)
-          return response.json().then(body => ({ body, response }))
-        }
-        ).then(({ body, response }) => {
-          if (!response.ok) {
-            throw new Error(body)
+      if (Offline.state === 'up') {
+        yield fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr)
+          .then(response => {
+            console.log(response)
+            return response.json().then(body => ({ body, response }))
           }
+          ).then(({ body, response }) => {
+            if (!response.ok) {
+              throw new Error(body)
+            }
 
-          console.log(body)
-          if (typeof body.empty === 'undefined') {
-            this.opReceived(body)
-          }
+            console.log(body)
+            if (typeof body.empty === 'undefined') {
+              this.opReceived(body)
+            }
 
-          return body;
-        })
+            return body;
+          })
+      }
     }
   }
 
   // Fetch current status
   listen(generator) {
-    if (this.uid === 0) {
+    if (this.uid === 0 || Offline.state === 'down') {
       return setTimeout(() => this.listen(), 500)
     }
 
@@ -243,7 +256,10 @@ class syncer {
   }
 
   initializeSynchronization(timeOfReconnection) {
-    fromDatabase.loadActionsFromQueue([this._lastConnectionAt, timeOfReconnection]).then(response => console.log(response))
+    fromDatabase.loadOperationsFromQueue([this._lastConnectionAt, timeOfReconnection])
+      .then(operations => {
+        console.log(operations)
+      })
     // send to server actions
     // wait for them to be received
     // synchronize
@@ -299,8 +315,8 @@ class syncer {
     fromDatabase.saveState(this._store.getState().entities)
   }
 
-  saveActionIntoQueue(action) {
-    fromDatabase.saveActionIntoQueue(action)
+  saveOperationIntoQueue(operation) {
+    fromDatabase.saveOperationIntoQueue(operation)
   }
 
   fetchState() {
@@ -309,7 +325,7 @@ class syncer {
         return fromFakeBackend.fakeBackend      
       }).catch(console.log.bind(console, 'Error getting state from server: '));
     }
-    return this.delay(5000).then(() => {
+    return this.delay(0).then(() => {
       return fromDatabase.loadState().then(state => state)
     }).catch(console.log.bind(console, 'Error getting state from indexed db: '));
   } 

@@ -17,11 +17,11 @@ export const saveState = (state) => {
   )*/
 }
 
-export const saveActionIntoQueue = (action) => {
+export const saveOperationIntoQueue = (action) => {
   const currentTime = Date.now()
-  db.actions.add({executionTime: currentTime, action}).then(null, (message) => console.log('saveActionIntoQueue failed: ', message))
+  db.actions.add({executionTime: currentTime, action}).then(null, (message) => console.log('saveOperationIntoQueue failed: ', message))
 }
 
-export const loadActionsFromQueue = (timeInterval) => {
+export const loadOperationsFromQueue = (timeInterval) => {
   return db.actions.where('executionTime').between(...timeInterval).toArray()
 }

@@ -13,7 +13,6 @@ const DELETE = 'delete';
 export const translateActionToOperation = (action, store) => {
   switch (action.type) {
     case noteTypes.NEW_NOTE:
-      console.log(getAllPatients(store.getState()))
 
       var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
       var patientIndex = patients.map(patient => patient.ID).indexOf(action.PatientID)
@@ -155,12 +154,13 @@ export const translateActionToOperation = (action, store) => {
       var node = {
         ...noteLine,
         important: {
-          set: action.value === 0,
+          set: action.value !== 0,
           color: action.color,
           value: action.value
         }
       }
-      return [[INSERT, accessPath, node, action], [DELETE, accessPath, {}, action]];
+      return [ [DELETE, accessPath, {}, action]], [INSERT, accessPath, node, action] ;
+    
     case noteLineTypes.HIGHLIGHT_LINE:
       var notes = getAllNotes(store.getState())
       var note = notes.reduce((prev, curr, index) => {
@@ -190,12 +190,55 @@ export const translateActionToOperation = (action, store) => {
       var node = {
         ...noteLine,
         highlight: {
-          set: action.value === 0,
+          set: action.value !== 0,
           color: action.color,
           value: action.value
         }
       }
-      return [[INSERT, accessPath, node, action], [DELETE, accessPath, {}, action]]
+      return [ [DELETE, accessPath, {}, action], [INSERT, accessPath, node, action] ]
+
+    case noteTypes.CHANGE_NOTE_TYPE:
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patient = patients.reduce((prev, curr, index) => {
+        if (curr.notes.indexOf(action.NoteID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patientIndex = patients.map(patient => patient.ID).indexOf(patient.ID)
+      console.log(patients[patientIndex], 'CHANGE_NOTE_TYPE')
+      var note = getNoteById(store.getState(), action.NoteID)
+      var noteIndex = patients[patientIndex].notes.indexOf(action.NoteID)
+      var accessPath = [{'0': patientIndex}, {'1': noteIndex}]
+      var node = {
+        ...note,
+        type: action.newType,
+      }
+      
+      return [[DELETE, accessPath, {}, action], [INSERT, accessPath, node, action]]
+    case noteTypes.MERGE_NOTES:
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patient = patients.reduce((prev, curr, index) => {
+        if (curr.notes.indexOf(action.NoteID) !== -1 ) {
+          return curr;
+        }
+
+        return prev;
+
+      }, {})
+      var patientIndex = patients.map(patient => patient.ID).indexOf(patient.ID)
+      console.log(patients[patientIndex], 'MERGE_NOTES')
+      var note = getNoteById(store.getState(), action.NoteID)
+      var noteIndex = patients[patientIndex].notes.indexOf(action.NoteID)
+      var accessPath = [{'0': patientIndex}, {'1': noteIndex}]
+      var node = {
+        ...note,
+        noteLines: action.noteLines
+      }
+      
+      return [[DELETE, accessPath, {}, action], [INSERT, accessPath, node, action]]
   }
 
 }
