@@ -50,13 +50,8 @@ function xformTii(op1, op2, isServer) {
 
     if (op1.accessPath.length == op2.accessPath.length) {
       //application depndent priorities
-      if(isServer) {
-        op1.accessPath[tpt][''+tpt]++;
-        return [op1, op2];
-      } else {
-        op2.accessPath[tpt][''+tpt]++;
-        return [op1, op2];
-      }
+      op1.accessPath[tpt][''+tpt]++;
+      return [op1, op2];
     }
   }
 }

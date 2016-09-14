@@ -41,7 +41,9 @@ class NoteLine extends React.Component {
 
   render() {
     const { deleteLine, last, important, highlight, text, canGetFocus } = this.props
-
+    if (!this.props.noteLine) {
+      return <div></div>
+    }
     return (
       <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
         <div className="line-w-button" tabIndex="0">
@@ -92,12 +94,21 @@ NoteLine.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const noteLine = getNoteLine(state, ownProps.ID);
-  
+  if (noteLine) {
+    return {
+      noteLine,
+      text: noteLine.text,
+      important: noteLine.important,
+      highlight: noteLine.highlight
+    };
+  }
+
   return {
-    text: noteLine.text,
-    important: noteLine.important,
-    highlight: noteLine.highlight
-  };
+    noteLine,
+    text: '',
+    important: {},
+    highlight: {}
+  }
 
 }
 

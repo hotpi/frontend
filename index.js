@@ -15,7 +15,7 @@ import syncer from './syncer';
 export const db = new Dexie('hotpi')
 
 db.version(1).stores({
-  actions: '++id, executionTime, action',
+  operations: '++id, executionTime, operation',
   state: '++id, state'
 });
 
