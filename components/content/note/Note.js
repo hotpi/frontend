@@ -69,20 +69,20 @@ class Note extends React.Component {
 
     this.setState({ canAllocateFocus: true })
 
-    if (this.last && !this.last.isEmpty && type === 'new') {
-      this.createNewLine(null, 'append_end')
-    }
+    // if (this.last && !this.last.isEmpty && type === 'new') {
+    //   this.createNewLine(null, 'append_end')
+    // }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type;
   }
 
-  componentWillUpdate(nextProps) {
-    if (!_has(this.props, 'note.ID') && _has(nextProps, 'note.ID')) {
-      this.props.createAndAppendLast(nextProps.note.ID)
-    }
-  }
+  // componentWillUpdate(nextProps) {
+  //   if (!_has(this.props, 'note.ID') && _has(nextProps, 'note.ID')) {
+  //     this.props.createAndAppendLast(nextProps.note.ID)
+  //   }
+  // }
 
   isNoteLineEmpty() {
     if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
@@ -148,9 +148,15 @@ class Note extends React.Component {
             return 0;
           }
         })
+
         const lastSavedNote = sortedNotes[sortedNotes.length-1]
+        if (!lastSavedNote) {
+          break;
+        } 
+
         const lastDate = new Date(lastSavedNote.createdAt)
         const currentDate = new Date()
+
 
         // if it's from the same day -> merge
         if (lastDate.getDate() === currentDate.getDate() && lastDate.getMonth() === currentDate.getMonth() && lastDate.getFullYear() === currentDate.getFullYear()) {
@@ -392,7 +398,7 @@ const mapDispatchToProps = (dispatch) => {
     //saveNote: () => dispatch({type: 'NOT_FOUND'/*saveNote()*/}), // TODO: Include save logic 
     newNote: (patientId) => dispatch(newNote(patientId)),
     deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
-    mergeNotes: (patientId, noteId, type) => dispatch(mergeNotes(patientId, noteId, type))
+    mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines))
   };
 }
 

@@ -13,7 +13,13 @@ const actionQueue = (store) => (next) => (action) =>  {
   if (typeof action.fromServer === 'undefined') {
     middleware.newAction(action)
   }
+  if (typeof action.next === 'function') {
+    next(action)
+
+    return next(action.next());    
+  }
   
+
   return next(action);
 } 
 

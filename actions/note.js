@@ -2,6 +2,8 @@ import { v4 } from 'node-uuid';
 
 import { typeValues } from '../components/helpers/Helpers';
 
+import { createAndAppendLast } from './noteLines';
+
 export const CHANGE_NOTE_TYPE = 'CHANGE_NOTE_TYPE'
 export const changeNoteType = (NoteID, index) => ({
   type: CHANGE_NOTE_TYPE,
@@ -10,11 +12,15 @@ export const changeNoteType = (NoteID, index) => ({
 });
 
 export const NEW_NOTE = 'NEW_NOTE'
-export const newNote = (PatientID) => ({
-  type: NEW_NOTE,
-  NoteID: v4(),
-  PatientID
-});
+export const newNote = (PatientID) => {
+  let noteId = v4();
+  return {
+    type: NEW_NOTE,
+    NoteID: noteId,
+    PatientID,
+    next: () => createAndAppendLast(noteId)
+  };
+}
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 export const deleteNote = (PatientID, NoteID) => ({
