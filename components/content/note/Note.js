@@ -51,7 +51,8 @@ class Note extends React.Component {
       hasFocus: false,
       type: '' + typeValues.map(typeObj => typeObj.type).indexOf(props.type)
     }
-
+    this.selStart = 0
+    this.selEnd = 0
     this.handleClick = this.handleClick.bind(this)
     this.handleNewButton = this.handleNewButton.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -68,21 +69,11 @@ class Note extends React.Component {
     const { type } = this.props;
 
     this.setState({ canAllocateFocus: true })
-
-    // if (this.last && !this.last.isEmpty && type === 'new') {
-    //   this.createNewLine(null, 'append_end')
-    // }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type;
   }
-
-  // componentWillUpdate(nextProps) {
-  //   if (!_has(this.props, 'note.ID') && _has(nextProps, 'note.ID')) {
-  //     this.props.createAndAppendLast(nextProps.note.ID)
-  //   }
-  // }
 
   isNoteLineEmpty() {
     if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
@@ -133,6 +124,11 @@ class Note extends React.Component {
     switch (+this.state.type) {
       case 1:
       case 3:
+        if (!notesFromSelectedType[0]) {
+          this.props.changeNoteType(this.props.note.ID, +this.state.type)
+          break;
+        }
+
         notesFromSelectedType[0].noteLines = [...notesFromSelectedType[0].noteLines, ...noteLinesToSave]
         this.props.mergeNotes(notesFromSelectedType[0].ID, notesFromSelectedType[0].noteLines)
         this.props.deleteNote(this.props.patientId, this.props.note.ID)
@@ -189,6 +185,8 @@ class Note extends React.Component {
   }
 
   handleKeyDown(id, index, last, e) {
+
+    // handle here all the updates?! -> think of why didn't work at the beginning and/or possible disadvantages and advantages
     if (e.keyCode === 13) {
       e.preventDefault() 
 
@@ -207,8 +205,10 @@ class Note extends React.Component {
   handleChange(id, last, isEmpty, e) {
     if (isEmpty && last) {
       this.createNewLine(null, 'append_end')
-    } 
+    }
 
+    console.log('selection starts: ', e.target.selectionStart)
+    console.log('selection ends: ', e.target.selectionEnd)
     this.props.updateLineValue(id, e)
   }
 
@@ -294,7 +294,7 @@ class Note extends React.Component {
     }
 
     return (
-      <div style={{height: 532,  overflowY: 'auto', display: 'block'}}>
+      <div style={{height: 570,  overflowY: 'auto', display: 'block'}}>
         <HistoryNavigation 
           show={type === 'history'}
           handleNavigation={(navigateTo) => this.handleNavigation.bind(this, navigateTo)}
@@ -392,10 +392,9 @@ const mapDispatchToProps = (dispatch) => {
     createAndAppendLast: (noteId) => dispatch(createAndAppendLast(noteId)),
     deleteLine: (id, noteId) => dispatch(deleteLine(id, noteId)),
     changeNoteType: (noteId, index) => dispatch(changeNoteType(noteId, index)),
-    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value)),
+    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value, e.target.selectionStart, e.target.selectionEnd)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
-    //saveNote: () => dispatch({type: 'NOT_FOUND'/*saveNote()*/}), // TODO: Include save logic 
     newNote: (patientId) => dispatch(newNote(patientId)),
     deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
     mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines))

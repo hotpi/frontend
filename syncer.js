@@ -8,10 +8,12 @@ import * as fromFakeBackend from './fakeBackend';
 import xformT from './helpers/xformT';
 import { translateActionToOperation, translateOperationToAction } from './helpers/actionTranslator'
 
-const BROADCAST_URL = 'http://localhost:3001/sync/status/'
-const SEND_OP_URL = 'http://localhost:3001/sync/sendOp'
-const SUBSCRIBE_URL = 'http://localhost:3001/sync/subscribe'
-const INITAL_STATE_URL = 'http://localhost:3001/sync/initialState'
+const ROOT_URL = __API_ROOT_URL__
+const BROADCAST_URL = ROOT_URL + 'sync/status/'
+const SEND_OP_URL = ROOT_URL + 'sync/sendOp'
+const SUBSCRIBE_URL = ROOT_URL + 'sync/subscribe'
+const INITAL_STATE_URL = ROOT_URL + 'sync/initialState'
+const MONITOR_URL = ROOT_URL + 'health-check'
 
 const POST_FETCH_CONF = (body) => {
   console.log( body )
@@ -33,6 +35,8 @@ class syncer {
   constructor() {
     this._lastConnectionAt = Date.now()
     this._initialLoad = false
+
+    Offline.options = {checks: {xhr: {url: MONITOR_URL}}};
 
     Offline.on('down', () => {
       this._lastConnectionAt = Date.now()
@@ -89,6 +93,7 @@ class syncer {
         node: translatedOperation[2],
         action: translatedOperation[3]
       }
+
       console.log('--------------operation--------')
       console.log(operation)
 
@@ -189,6 +194,7 @@ class syncer {
 
   *poll() {
     while(true) {
+      console.log(Offline.state)
       if (Offline.state === 'up') {
         yield fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr)
           .then(response => {

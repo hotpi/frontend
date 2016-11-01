@@ -80,8 +80,7 @@ class BaseList extends React.Component {
         <List style={listStyle}>
           <Paper
             zDepth={0}
-            style={{height: '88px', width: '100%', margin: '0', paddingTop: '24px'}}>
-              <h3 style={{textAlign: 'center', paddingBottom: '0px', margin: '0'}}>Something</h3>
+            style={{height: '60px', width: '100%', margin: '0', paddingTop: '17px'}}>
               <IconButton
                 tooltip="add patient"
                 tooltipPosition="top-right"

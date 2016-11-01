@@ -83,29 +83,13 @@ export const translateActionToOperation = (action, store) => {
       var noteLineIndex = note.noteLines.indexOf(action.NoteLineID)
       var noteLine = getNoteLine(store.getState(), action.NoteLineID)
 
-      var textIndex = null;
-      for (var i = 0; i < noteLine.text.length; i++) {
-        if (noteLine.text[i] !== action.text[i]) {
-          textIndex = i;
-          break;
-        }
-      }
+      var operationType = action.text.length > noteLine.text.length ? INSERT : DELETE
+      var textIndex = operationType === INSERT ? action.position - 1 : action.position
 
-      var operationType = ''
-      var node = ''
-      if (textIndex === null) {
-        operationType = INSERT;
-        textIndex = noteLine.text.length 
-        node = action.text[noteLine.text.length]
-      } else if (noteLine.text.length > action.text.length) {
-        operationType = DELETE
-        node = {}
-      } else if (noteLine.text.length < action.text.length) {
-        operationType = INSERT
-        node = action.text[textIndex]
-      }
+      var node = action.text[textIndex]
 
-      var accessPath = [{'0': patientIndex},{'1': noteIndex},{'2': noteLineIndex},{'3': textIndex}]
+      var accessPath = [{'0': patientIndex}, {'1': noteIndex}, {'2': noteLineIndex}, {'3': textIndex}]
+
       return [operationType, accessPath, node, action]
     case noteLineTypes.DELETE_LINE:
       var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
@@ -154,7 +138,7 @@ export const translateActionToOperation = (action, store) => {
       var node = {
         ...noteLine,
         important: {
-          set: action.value !== 0,
+          set: +action.value !== 0,
           color: action.color,
           value: action.value
         }
@@ -190,7 +174,7 @@ export const translateActionToOperation = (action, store) => {
       var node = {
         ...noteLine,
         highlight: {
-          set: action.value !== 0,
+          set: +action.value !== 0,
           color: action.color,
           value: action.value
         }

@@ -29,38 +29,29 @@ const noteLine = (state = {
         }
       }
 
-      for (var i = 0; i < state.text.length; i++) {
-        if (state.text[i] !== action.text[i]) {
-          textIndex = i
-          console.log('-------difference at ---------')
-          console.log(textIndex)
-          break;
-        }
-      }
-      if (textIndex === null && state.text.length > 0) {
-        operationType = 'insert';
-        textIndex = state.text.length 
-        node = action.text[state.text.length]
-      } else if (state.text.length < action.text.length) {
-        operationType = 'insert'
-        node = action.text[textIndex]
-      } else if (state.text.length > action.text.length) {
-        operationType = 'delete'
-        console.log()
-        node = ''
-      }
+      if (action.startPos === action.endPos) {
+        operationType = action.text.length > state.text.length ? 'insert' : 'delete'
+        textIndex = operationType === 'insert' ? action.position - 1 : action.position
+        
+        if (operationType === 'insert') {
+          node = action.text[textIndex]
 
-      if (operationType === 'insert') {
+          return {
+            ...state,
+            text: state.text.slice(0, textIndex) + node + state.text.slice(textIndex)
+          };
+        }
+
         return {
           ...state,
-          text: state.text.slice(0, textIndex) + node + state.text.slice(textIndex)
-        }
+          text: state.text.slice(0, textIndex) + state.text.slice(textIndex+1)
+        };
       }
 
       return {
         ...state,
-        text: state.text.slice(0, textIndex) + state.text.slice(textIndex+1)
-      };
+        text: state.text.slice(0, action.startPos-1) + action.text[action.startPos-1] + state.text.slice(action.startPos)
+      }
     case 'HIGHLIGHT_LINE':
       return {
         ...state,

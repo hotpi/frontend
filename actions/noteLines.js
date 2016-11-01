@@ -41,8 +41,9 @@ export const highlightLine = (NoteLineID, value) => ({
 });
 
 export const UPDATE_LINE_VALUE = 'UPDATE_LINE_VALUE'
-export const updateLineValue = (NoteLineID, value) => ({
+export const updateLineValue = (NoteLineID, value, position) => ({
   type: UPDATE_LINE_VALUE,
   NoteLineID,
+  position,
   text: value
 });
