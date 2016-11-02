@@ -1,1 +1,12 @@
 CACHE MANIFEST
+# v3
+
+CACHE:
+index.html
+static/bundle.js
+styles/styles.css
+styles/css/materialdesignicons.min.css
+favicon.ico
+
+NETWORK:
+*

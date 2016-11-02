@@ -10,7 +10,6 @@ const environmentPlugin = new webpack.DefinePlugin({
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: [
-    'webpack-hot-middleware/client',
     './index',
     './styles/styles.css'
   ],
@@ -21,17 +20,16 @@ module.exports = {
   },
   plugins: [
     environmentPlugin,
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.optimize.OccurrenceOrderPlugin()
   ],
   module: {
     loaders: [
       {
         test: /\.js$/,
         loader: 'babel',
-        query:
-        {
-          presets: ['react']
+        query: {
+          presets: ['es2015', 'react'],
+          plugins: ['transform-object-rest-spread', 'lodash']
         },
         exclude: /node_modules/,
         include: __dirname

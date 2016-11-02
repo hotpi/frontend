@@ -1,7 +1,7 @@
 var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
-var config = require('./webpack.config')
+var config = require('./webpack.dev.config')
 
 var express = require('express');
 
@@ -13,6 +13,14 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler))
 
 app.use('/styles', express.static(__dirname + '/styles'));
+
+// app.get('/hotpi.manifest', function(req, res){
+//   res.header('Content-Type', 'text/cache-manifest');
+//   res.header('Cache-Control', 'no-store, no-cache');
+//   res.header('Expires', '-1');
+//   res.sendFile(__dirname + '/hotpi.manifest');
+
+// });
 
 app.use(function(req, res) {
   res.sendFile(__dirname + '/index.html')
