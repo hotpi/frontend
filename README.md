@@ -2,7 +2,7 @@
 # HotPi
 HotPi is a web application for patient documentation, which ensures availability even if no connection is available at all without compromising the state of the application. If a connection is available in all devices, a Google-Docs-like workflow can be experienced. 
 
-
+![Main view](patient_list.png) ![Patient Detail view](patient_detail.png)
 
 ## Features
 HotPi leverages the browsers' APIs to bring the following features:
@@ -13,7 +13,9 @@ HotPi leverages the browsers' APIs to bring the following features:
 - Support of mobile devices
 
 ## Requirements
-A NodeJS instance is needed to fetch all the dependencies. If you don't have one, you can get it with [`nvm`](https://github.com/creationix/nvm) or directly on [NodeJS website](https://nodejs.org/en/). 
+A NodeJS instance is needed to fetch all the dependencies. If you don't have one, you can get it with [`nvm`](https://github.com/creationix/nvm) or directly on [NodeJS website](https://nodejs.org/en/).
+
+Besides, it needs a server to communicate with. We provide a [server example](https://github.com/hotpi/backend). For more information about what is needed for the server, visit the repository of our server.
 
 ## Technologies
 HotPi's underlying technology to maintain consistency is [Operational Transformation](https://en.wikipedia.org/wiki/Operational_transformation)(OT). OT is also used to support real-time collaborative work.
