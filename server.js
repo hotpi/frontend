@@ -14,6 +14,10 @@ app.use(webpackHotMiddleware(compiler))
 
 app.use('/styles', express.static(__dirname + '/styles'));
 
+/**
+ * Uncomment the following lines and use the production environment to make the AppCache work. 
+*/
+
 // app.get('/hotpi.manifest', function(req, res){
 //   res.header('Content-Type', 'text/cache-manifest');
 //   res.header('Cache-Control', 'no-store, no-cache');
