@@ -12,6 +12,22 @@ const DELETE = 'delete';
 
 export const translateActionToOperation = (action, store) => {
   switch (action.type) {
+    case patientTypes.ADD_PATIENT:
+      var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      var patientIndex = patients.indexOf(action.PatientID)
+      var accessPath = [{'0': patientIndex}]
+      var node = {
+        ID: action.PatientID,
+        firstName: action.firstName,
+        lastName: action.lastName,
+        birthday: action.birthday,
+        clinic: action.clinic,
+        station: action.station,
+        admissionDate: action.admissionDate,
+        dischargeDate: action.dischargeDate
+      }
+
+      return [INSERT, accessPath, node, action]
     case noteTypes.NEW_NOTE:
 
       var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
