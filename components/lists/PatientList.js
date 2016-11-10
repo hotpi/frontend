@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
+import Swipeout from 'rc-swipeout';
+import 'rc-swipeout/assets/index.css';
+
 import { keys } from 'lodash';
 
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -42,6 +45,17 @@ class PatientList extends React.Component {
       const clinicInfo = clinic(patient.clinic)
 
       return (
+        <Swipeout
+          right={[
+            {
+              text: 'delete',
+              onPress:() => console.log('delete'),
+              style: { backgroundColor: 'red', color: 'white' }
+            }
+          ]}
+          onOpen={() => console.log('open')}
+          onClose={() => console.log('close')}
+        >
           <Link 
               key={patient.ID}
               to={"/patient/" + patient.ID}
@@ -65,6 +79,7 @@ class PatientList extends React.Component {
               rightIcon={rightIconInfo(clinicInfo)}
             />
           </Link>
+        </Swipeout>
         );
     });
   }
