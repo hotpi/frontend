@@ -1,10 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import Formsy from 'formsy-react';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle } from 'formsy-material-ui/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
+
+import { addPatient } from '../../../actions/patients'
 
 class AddPatientForm extends React.Component {
   constructor(props) {
@@ -39,6 +43,8 @@ class AddPatientForm extends React.Component {
 
   submitForm(data) {
     alert(JSON.stringify(data, null, 4));
+    this.props.addPatient(data)
+    this.props.closeDialog()
   }
 
   notifyFormError(data) {
@@ -54,7 +60,7 @@ class AddPatientForm extends React.Component {
           onInvalidSubmit={this.notifyFormError}
          >
           <FormsyText
-            name="first-name"
+            name="firstName"
             validations="isWords"
             validationError={this.errorMessages.wordsError}
             style={{width: '48%', marginRight: 4, marginTop: 0}}
@@ -63,7 +69,7 @@ class AddPatientForm extends React.Component {
             floatingLabelText="First name"
           />
           <FormsyText
-            name="last-name"
+            name="lastName"
             validations="isWords"
             validationError={this.errorMessages.wordsError}
             style={{width: '48%', marginRight: 4, marginTop: 0}}
@@ -72,7 +78,7 @@ class AddPatientForm extends React.Component {
             floatingLabelText="Last name"
           />
           <FormsyText
-            name="bed-number"
+            name="bedNumber"
             validations="isNumeric"
             validationError={this.errorMessages.numericError}
             style={{width: '100%', marginRight: 4, marginTop: 0, padding: 0}}
@@ -81,7 +87,7 @@ class AddPatientForm extends React.Component {
             floatingLabelText="Bed number"
           />          
           <FormsyDate
-            name="birthdate"
+            name="birthday"
             maxDate={new Date()}
             formatDate={new Intl.DateTimeFormat('de-GE', {
               day: 'numeric',
@@ -115,7 +121,7 @@ class AddPatientForm extends React.Component {
             <MenuItem value={'29'} primaryText="29" />
           </FormsySelect>
           <FormsyDate
-            name="admission-date"
+            name="admissionDate"
             required
             floatingLabelText="Admission date"
             formatDate={new Intl.DateTimeFormat('de-GE', {
@@ -129,7 +135,7 @@ class AddPatientForm extends React.Component {
             autoOk={true}
           />
           <FormsyDate
-            name="discharge-date"
+            name="dischargeDate"
             required
             floatingLabelText="Discharge date"
             minDate={new Date()}
@@ -154,4 +160,10 @@ class AddPatientForm extends React.Component {
   }
 }
 
-export default AddPatientForm;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addPatient: (info) => dispatch(addPatient(info))
+  }
+}
+
+export default withRouter(connect(null, mapDispatchToProps)(AddPatientForm));

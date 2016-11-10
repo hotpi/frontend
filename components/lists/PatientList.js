@@ -102,7 +102,7 @@ class PatientList extends React.Component {
 const mapStateToProps = (state) => {
   const patients = getAllPatients(state)
 
-  const stations = patients.reduce((prev, current) => {
+  let stations = patients.reduce((prev, current) => {
     if (!prev.includes(current.station)) {
       prev = [...prev, current.station]
     }
@@ -110,7 +110,19 @@ const mapStateToProps = (state) => {
     return prev;
   }, [])
 
-  const patientsByStation = stations.map(station => ({station: station, patients: patients.filter(patient => station === patient.station)}))
+  let sortedStations = stations.sort((a, b) => {
+    if (a < b) {
+      return -1;
+    } else if (a > b) {
+      return 1;
+    } else {
+      return 0;
+    }
+  })
+
+  console.log('sortedStations: ', sortedStations)
+
+  const patientsByStation = sortedStations.map(station => ({station: station, patients: patients.filter(patient => station === patient.station)}))
 
   return {
     patientsByStation,

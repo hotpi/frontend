@@ -35,7 +35,7 @@ const patient = (state = {
         ...state,
         notes: state.notes.filter(noteID => noteID !== action.NoteID)
       };
-    case 'NEW_PATIENT':
+    case 'ADD_PATIENT':
       return {
         ...state,
         ID: action.PatientID,

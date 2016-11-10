@@ -51,12 +51,15 @@ class BaseList extends React.Component {
               </IconButton>
               <Dialog 
                 title="New Patient"
+                titleStyle={{fontWeight: 100, padding: '16px 24px'}}
                 open={this.state.isOpen}
                 onRequestClose={this.handleClose.bind(this)}
                 contentStyle={{width: 380}}
                 autoScrollBodyContent={true}
                 >
-                <AddPatientForm />
+                <AddPatientForm 
+                  closeDialog={() => this.handleClose()}
+                  />
               </Dialog>
               <IconButton
                 tooltip="more"
