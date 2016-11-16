@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
-import { forOwn as _forOwn } from 'lodash';
+import { forOwn as _forOwn, omit as _omit } from 'lodash';
 
 import note from './note';
 
@@ -20,8 +20,7 @@ export const notes = (state = {}, action) => {
 
       return nextState;
     case 'DELETE_NOTE':
-      delete state[action.NoteID]
-      return state;
+      return _omit(state, action.NoteID)
     case 'NEW_NOTE':
     case 'CREATE_AND_APPEND_LAST':
     case 'CREATE_AND_APPEND_NEXT':

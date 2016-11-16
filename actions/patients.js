@@ -6,3 +6,9 @@ export const addPatient = (info) => ({
   PatientID: v4(),
   ...info
 })
+
+export const DELETE_PATIENT = 'DELETE_PATIENT';
+export const deletePatient = (PatientID) => ({
+  type: DELETE_PATIENT,
+  PatientID
+})

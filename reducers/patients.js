@@ -1,4 +1,4 @@
- import { forOwn as _forOwn } from 'lodash';
+ import { forOwn as _forOwn, omit as _omit } from 'lodash';
 
 import patient from './patient';
 
@@ -23,7 +23,8 @@ export const patients = (state = {}, action) => {
         ...state,
         [action.PatientID]: patient(state[action.PatientID], action)
       };
-
+    case 'DELETE_PATIENT':
+      return _omit(state, action.PatientID)
     default: 
       return state;
   }

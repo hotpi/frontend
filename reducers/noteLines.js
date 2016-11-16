@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { v4 } from 'node-uuid';
-import { forOwn as _forOwn } from 'lodash';
+import { forOwn as _forOwn, omit as _omit } from 'lodash';
 
 import noteLine from './noteLine';
 
@@ -33,8 +33,7 @@ export const noteLines = (state = {}, action) => {
         [action.NoteLineID]: noteLine(undefined, action)
       };
     case 'DELETE_LINE':
-      delete state[action.NoteLineID];
-      return state;
+      return _omit(state, action.NoteLineID)
     default: 
       return state;
   }

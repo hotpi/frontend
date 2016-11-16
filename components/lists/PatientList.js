@@ -21,6 +21,7 @@ import ActionLabel from 'material-ui/svg-icons/action/label';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 
 import {
 lightGreen300,
@@ -34,11 +35,37 @@ import BaseList from './BaseList';
 import { dateToString, clinic, rightIconInfo } from '../helpers/Helpers';
 import { getAllPatients } from '../../reducers';
 
+import { deletePatient } from '../../actions/patients';
 
 class PatientList extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return keys(this.props.patients).length !== keys(nextProps.patients).length;
+  constructor() {
+    super()
+    this.handleMouseDown = this.handleMouseDown.bind(this)
+    this.handleMouseMove = this.handleMouseMove.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.flag = 0
   }
+
+  shouldComponentUpdate(nextProps) {
+    console.log('--shouldComponentUpdate--', this.props.patients.length !== nextProps.patients.length)
+    return this.props.patients.length !== nextProps.patients.length;
+  }
+
+  handleMouseDown(e) {
+    this.flag = 0
+  }
+
+  handleMouseMove(e) {
+    this.flag = 1
+  }
+
+  handleClick(e) {
+    if (this.flag === 1) {
+      e.preventDefault()
+    }
+
+  }
+
 
   renderPatientsFromStation(patients) {
     return patients.map(patient => {
@@ -46,20 +73,24 @@ class PatientList extends React.Component {
 
       return (
         <Swipeout
+          key={patient.ID}
+          autoClose
           right={[
             {
-              text: 'delete',
-              onPress:() => console.log('delete'),
-              style: { backgroundColor: 'red', color: 'white' }
+              text: 'Delete',
+              onPress: () => this.props.deletePatient(patient.ID),
+              style: { cursor: 'pointer', backgroundColor: 'red', color: 'white', padding: '0 1.5em', right: 1, fontWeight: 400, fontSize: 16 }
             }
           ]}
           onOpen={() => console.log('open')}
           onClose={() => console.log('close')}
         >
           <Link 
-              key={patient.ID}
               to={"/patient/" + patient.ID}
               style={{textDecoration: 'none'}}
+              onMouseDown={this.handleMouseDown}
+              onMouseMove={this.handleMouseMove}
+              onClick={this.handleClick}
               >
 
             <ListItem
@@ -135,7 +166,7 @@ const mapStateToProps = (state) => {
     }
   })
 
-  console.log('sortedStations: ', sortedStations)
+  console.log('patients: ', patients)
 
   const patientsByStation = sortedStations.map(station => ({station: station, patients: patients.filter(patient => station === patient.station)}))
 
@@ -145,4 +176,10 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps)(PatientList);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deletePatient: (patientID) => dispatch(deletePatient(patientID))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PatientList);
