@@ -25,7 +25,9 @@
   "dependencies": {
     "babel-polyfill": "^6.9.1",
     "bluebird": "^3.4.6",
+    "component-emitter": "^1.2.1",
     "dexie": "^1.4.1",
+    "emitter": "0.0.5",
     "formsy-material-ui": "^0.5.0",
     "formsy-react": "^0.18.1",
     "isomorphic-fetch": "^2.2.1",
@@ -44,7 +46,9 @@
     "redux": "^3.5.2",
     "redux-form": "^5.3.1",
     "redux-logger": "^2.6.1",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "superagent": "^2.3.0",
+    "superagent-throttle": "^0.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

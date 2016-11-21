@@ -185,6 +185,7 @@ class Note extends React.Component {
   }
 
   handleKeyDown(id, index, last, e) {
+    console.log('im here too')
 
     // handle here all the updates?! -> think of why didn't work at the beginning and/or possible disadvantages and advantages
     if (e.keyCode === 13) {

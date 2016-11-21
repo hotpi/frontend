@@ -1,8 +1,9 @@
-import 'offline-js';
 import { throttle } from 'lodash';
 import 'isomorphic-fetch';
 import Promise from 'bluebird';
-
+import Emitter from 'component-emitter';
+import request from 'superagent';
+import Throttle from 'superagent-throttle';
 import * as fromDatabase from './helpers/databaseStorage';
 import * as fromFakeBackend from './fakeBackend';
 import xformT from './helpers/xformT';
@@ -15,36 +16,46 @@ const SUBSCRIBE_URL = ROOT_URL + 'sync/subscribe'
 const INITAL_STATE_URL = ROOT_URL + 'sync/initialState'
 const MONITOR_URL = ROOT_URL + 'health-check'
 
-const POST_FETCH_CONF = (body) => {
-  console.log( body )
-  const POST_CONF = {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    method: 'POST',
-    mode: 'cors',
-    body: JSON.stringify(body)  
-  }
+var connectionEmitter = new Emitter
 
-  console.log(POST_CONF)
-  return POST_CONF
-}
+const superagentThrottle = new Throttle({
+  active: true,     // set false to pause queue
+  rate: 10,          // how many requests can be sent every `ratePer`
+  ratePer: 5000,   // number of ms in which `rate` requests may be sent
+  concurrent: 5     // how many requests can be sent concurrently
+})
 
 class syncer {
   constructor() {
     this._lastConnectionAt = Date.now()
     this._initialLoad = false
+    this._connectionStatus = 'up'
+    this.requestArray = []
 
-    Offline.options = {checks: {xhr: {url: MONITOR_URL}}};
-
-    Offline.on('down', () => {
-      this._lastConnectionAt = Date.now()
+    connectionEmitter.on('disconnected', (e) => {
+      this._connectionStatus = 'down'
+      this.requestArray.map(request => {
+        if (typeof request.abort === 'function') {
+          request.abort()
+        }
+      })
+      this.monitorConnectionToServer()
+      console.log('working')
     })
 
-    Offline.on('up', () => {
+    connectionEmitter.on('reconnected', (e) => {
+      this._connectionStatus = 'up'
+      this.listen()
+      this.inFlight ? this.sendToServer() : console.log('buffer empty');
+      console.log('working too')
+    })
+    // Offline.on('down', () => {
+      // this._lastConnectionAt = Date.now()
+    // })
+
+    /*Offline.on('up', () => {
       this.initializeSynchronization(Date.now())
-    })
+    })*/
 
     this.inflightOp = null
     this.inFlight = false
@@ -77,12 +88,8 @@ class syncer {
         console.log('--------------operation--------')
         console.log(operation)
         
-        if (Offline.state === 'up') {
-          this.generateOperation(operation)
-        } else {
-          this.saveOperationIntoQueue(operation)
-        }
 
+        this.generateOperation(operation)
         translatedOperation = translatedOperation[1]
       }
       
@@ -97,29 +104,53 @@ class syncer {
       console.log('--------------operation--------')
       console.log(operation)
 
-      if (Offline.state === 'up') {
-        this.generateOperation(operation)
-      } else {
-        this.saveOperationIntoQueue(operation)
-      }
+
+      this.generateOperation(operation)
+      
     }
 
   }
 
+  monitorConnectionToServer() {
+    var retry = true
+
+    var monitoredRequest = request
+      .head(MONITOR_URL)
+      .timeout(300)
+      .end((err, res) => {
+
+        if (res !== undefined) {
+          connectionEmitter.emit('reconnected')
+          retry = false
+          return {}
+        }
+      })
+    console.log(monitoredRequest)
+    setTimeout(() => {
+      if (typeof monitoredRequest.abort === 'function') {
+        monitoredRequest.abort()
+      }
+
+      if (retry) {
+        this.monitorConnectionToServer()
+      }      
+    }, 500)
+  }
+
   generateOperation(newOp) {
-    console.log('generateOperation')
     if (this.inFlight) {
       this.buffer.push(newOp)
     } else {
       this.inFlight = true
       this.inflightOp = newOp
-      this.sendToServer()
+      
+      if (this._connectionStatus === 'up') {
+        this.sendToServer()
+      }
     }
   }
 
   transform(operations, receivedOp) {
-    console.log('transform')
-
     receivedOp = operations.reduce( (prev, curr) => {
       return xformT(prev[0], curr);
     }, [receivedOp, {}])
@@ -139,26 +170,25 @@ class syncer {
 
   // Fetch from server localhost:3001/sendOp
   sendToServer() {
-    console.log('sendToServer')
+    request
+      .post(SEND_OP_URL)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json; charset=utf-8')
+      .send({operation: this.inflightOp})
+      .send({revisionNr: this.revisionNr})
+      .then(
+        (res) => {
+          if (res.ok) {
+            console.log(res.body)
+          }
 
-    fetch(SEND_OP_URL, POST_FETCH_CONF({
-      operation: this.inflightOp,
-      revisionNr: this.revisionNr
-    }))
-      .then(response =>
-        response.json().then(body => ({ body, response }))
-      ).then(({ body, response }) => {
-        if (!response.ok) {
-          throw new Error(body)
+          return true;
+        },
+        (err) => {
+          connectionEmitter.emit('disconnected')
+          console.log('Something went wrong..', err)
         }
-
-        if (response.ok) {
-            console.log(body)
-          //this.opReceived(response)
-        }
-
-        return true;
-      })
+      )
 
     return 
   }
@@ -166,74 +196,56 @@ class syncer {
   // Fetch uid 
   subscribe() {
     console.log('subscribe')
-    return fetch(SUBSCRIBE_URL)
-      .then(response => 
-        response.json().then(body => ({ body, response }))
-        ).then(({ body, response }) => {
-          if (!response.ok) {
-            throw new Error(body)
-          }
-
-          console.log(body)
-          this.uid = body.uid
-          this.revisionNr = body.revisionNr
+    return request
+      .get(SUBSCRIBE_URL)
+      .then(
+        (res) => {
+          console.log(res.body)
+          this.uid = res.body.uid
+          this.revisionNr = res.body.revisionNr
 
           return true;
+        },
+        (err) => {
+          connectionEmitter.emit('disconnected')
+          console.log('Something went wrong..', err)
         })
   }
 
-  timeout(ms, promise) {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        resolve(new Response(JSON.stringify({empty: 'true'}), {ok: true}))
-      }, ms)
-      promise.then(resolve, reject)
-    })
-  }
-
-
-  *poll() {
-    while(true) {
-      console.log(Offline.state)
-      if (Offline.state === 'up') {
-        yield fetch(BROADCAST_URL + this.uid + '/' + this.revisionNr)
-          .then(response => {
-            console.log(response)
-            return response.json().then(body => ({ body, response }))
-          }
-          ).then(({ body, response }) => {
-            if (!response.ok) {
-              throw new Error(body)
-            }
-
-            console.log(body)
-            if (typeof body.empty === 'undefined') {
-              this.opReceived(body)
-            }
-
-            return body;
-          })
-      }
-    }
-  }
-
-  // Fetch current status
-  listen(generator) {
-    if (this.uid === 0 || Offline.state === 'down') {
+    // Fetch current status
+  listen() {
+    if (this.uid === 0 || this._connectionStatus === 'down') {
       return setTimeout(() => this.listen(), 500)
     }
 
     console.log('listen')
+    if (this._connectionStatus === 'up') {
+      let nextRequest = request
+        .get(BROADCAST_URL + this.uid + '/' + this.revisionNr)
+        .use(superagentThrottle.plugin())
+        .then(
+          (res) => { 
+            console.log(res.body)
+            
+            if (res.body.empty === undefined) {
+              console.log('---------operation received--------')
+              console.log(res.body)
+              this.opReceived(res.body)
+            }
+            console.log('status', this._connectionStatus)
+            this.listen()
 
-    if (!generator) {
-      generator = this.poll()
-    }
-
-    var nextIteration = generator.next()
-
-    nextIteration.value.then( (response) => {
-      this.listen(generator)
-    })
+            return res.body
+          },
+          (err) => {
+            if (err !== null) {
+              connectionEmitter.emit('disconnected')
+              console.log('Something went wrong..', err)
+            }
+          }
+        )
+      this.requestArray.push(nextRequest)       
+    } 
   }
 
   opReceived(receivedOp) {
@@ -261,17 +273,6 @@ class syncer {
 
   }
 
-  initializeSynchronization(timeOfReconnection) {
-    fromDatabase.loadOperationsFromQueue([this._lastConnectionAt, timeOfReconnection])
-      .then(operations => {
-        console.log(operations)
-      })
-    // send to server actions
-    // wait for them to be received
-    // synchronize
-    // send back version
-  }
-
   setStore(store) {
     this._store = store
     this._store.subscribe(throttle(() => {
@@ -279,31 +280,21 @@ class syncer {
     }, 1000))
   }
 
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   initialLoad() {
     // if connection === up get the initialLoad from server
-    if (Offline.state === 'up') {
-      return fetch(INITAL_STATE_URL)
-        .then(response => {
-          console.log(response)
-          return response.json().then(body => ({ body, response }))
-        })
-        .then(({ body, response }) => {
-          if (!response.ok) {
-            throw new Error(body)
-          }
-
-          console.log(body)
+    if (this._connectionStatus === 'up') {
+      return request
+        .get(INITAL_STATE_URL)
+        .then(
+          (res) => {
+            console.log(res.body)
           
-
-          return { entities: body };
-        })
-        .catch(
-          console.log.bind(console, 'something went wrong..')
-        );
+            return { entities: res.body };
+          },
+          (err) => {
+            connectionEmitter.emit('disconnected')
+            console.log.bind(console, 'something went wrong..')
+          });
     }
 
     return fromDatabase.loadState().then(

@@ -10,6 +10,14 @@ class LineText extends React.Component {
     }
   }
 
+  handleKeyDown(e) {
+    const { onKeyDownDo } = this.props
+    let start = e.target.selectionStart
+    console.log('im here')
+    this.setState({}, () => this._input.selectionStart = this._input.selectionEnd = start + 1)
+    onKeyDownDo(e)
+  }
+
   shouldComponentUpdate(nextProps) {
     return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight;
   }
@@ -20,7 +28,7 @@ class LineText extends React.Component {
     return (
       <TextField 
         onChange={onChangeDo}
-        onKeyDown={onKeyDownDo}
+        onKeyDown={this.handleKeyDown.bind(this)}
         hintText={'Write here to start a new line'}
         rows={1}
         ref={(c) => this._input = c}
