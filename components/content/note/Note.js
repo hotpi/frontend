@@ -32,7 +32,7 @@ import {
 
 import {
   changeNoteType,
-  newNote,
+  newNoteAndLine,
   deleteNote,
   mergeNotes
 } from '../../../actions/note';
@@ -61,7 +61,7 @@ class Note extends React.Component {
 
   componentWillMount() {
     if (this.props.type === 'new' && this.props.note === null) {
-      this.props.newNote(this.props.patientId) 
+      this.props.newNoteAndLine(this.props.patientId) 
     }
   }
 
@@ -173,7 +173,7 @@ class Note extends React.Component {
     }
 
     this.setState({type: '0', canAllocateFocus: true, hasFocus: false})
-    this.props.newNote(this.props.patientId)
+    this.props.newNoteAndLine(this.props.patientId)
   }
 
   handleSelectField(e, index, value) {
@@ -220,7 +220,7 @@ class Note extends React.Component {
   }
 
   handleNewButton() {
-    this.props.newNote(this.props.patientId)
+    this.props.newNoteAndLine(this.props.patientId)
     browserHistory.push('/patient/' + this.props.patientId + '/new')
   }
 
@@ -396,7 +396,7 @@ const mapDispatchToProps = (dispatch) => {
     updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value, e.target.selectionStart, e.target.selectionEnd)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
-    newNote: (patientId) => dispatch(newNote(patientId)),
+    newNoteAndLine: (patientId) => dispatch(newNoteAndLine(patientId)),
     deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
     mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines))
   };

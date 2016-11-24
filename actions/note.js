@@ -11,14 +11,18 @@ export const changeNoteType = (NoteID, index) => ({
   NoteID
 });
 
-export const NEW_NOTE = 'NEW_NOTE'
-export const newNote = (PatientID) => {
+export const newNoteAndLine = (PatientID) => (dispatch) => {
   let noteId = v4();
+  dispatch(newNote(PatientID, noteId))
+  dispatch(createAndAppendLast(noteId))
+}
+
+export const NEW_NOTE = 'NEW_NOTE'
+export const newNote = (PatientID, NoteID) => {  
   return {
     type: NEW_NOTE,
-    NoteID: noteId,
-    PatientID,
-    next: () => createAndAppendLast(noteId)
+    NoteID: NoteID,
+    PatientID
   };
 }
 

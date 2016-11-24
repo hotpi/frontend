@@ -140,6 +140,7 @@ class syncer {
   generateOperation(newOp) {
     if (this.inFlight) {
       this.buffer.push(newOp)
+      console.log(this.buffer)
     } else {
       this.inFlight = true
       this.inflightOp = newOp
