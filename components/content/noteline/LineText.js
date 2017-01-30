@@ -8,13 +8,25 @@ class LineText extends React.Component {
     if (canGetFocus) {
       this._input.focus()
     }
+
+    this.state = {
+      cursorPosition: this._input.selectionStart
+    }
+  }
+
+  componentDidUpdate(nextProps) {
+    console.log('cursor pos before:', this._input.selectionStart)
+    this._input.selectionStart = this._input.selectionEnd = 3//this.state.cursorPosition
+    console.log('cursor pos after:', this._input.selectionStart)
   }
 
   handleKeyDown(e) {
     const { onKeyDownDo } = this.props
     let start = e.target.selectionStart
     console.log('im here')
-    this.setState({}, () => this._input.selectionStart = this._input.selectionEnd = start + 1)
+    this.setState({
+      cursorPosition: start + 1
+    })
     onKeyDownDo(e)
   }
 

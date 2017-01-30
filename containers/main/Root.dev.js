@@ -1,7 +1,6 @@
 import React from 'react';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import { Provider } from 'react-redux';
-
 import {
   green400,
   cyan500,
@@ -10,7 +9,8 @@ import {
 
 import PatientContainer from '../PatientContainer';
 import PatientDetailContainer from '../PatientDetailContainer';
-import DevTools from '../DevTools'
+import DevTools from '../DevTools';
+import PerfManager from '../PerfManager';
 import EmergencyCallButton from '../../components/content/top-view/EmergencyCallButton';
 import { fetchData } from '../../actions/sync';
 
@@ -22,7 +22,7 @@ class Root extends React.Component {
         <div>
           <Router history={history}>
             <Route path="/" component={PatientContainer} />
-            <Route path="/patients" component={PatientContainer} />
+            <Route path="/patients" component={PatientContainer}  />
             <Route path="/patient/:patientId(/:type(/:noteNumber))" component={PatientDetailContainer} />
           </Router>
           <EmergencyCallButton />

@@ -4,6 +4,10 @@ import { render } from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
+import Perf from 'react-addons-perf'; 
+
+window.Perf = Perf;
+
 import Dexie from 'dexie';
 
 import Root from './containers/main/Root';

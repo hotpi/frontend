@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Formsy from 'formsy-react';
-import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
+import Formsy, { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle } from 'formsy-material-ui/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
@@ -53,7 +52,7 @@ class AddPatientForm extends React.Component {
 
   render() {
     return (
-      <Formsy.Form
+      <Form
           onValid={this.enableButton}
           onInvalid={this.disableButton}
           onValidSubmit={this.submitForm}
@@ -155,7 +154,7 @@ class AddPatientForm extends React.Component {
               label="Submit"
               disabled={!this.state.canSubmit}
             />
-      </Formsy.Form>
+      </Form>
       );
   }
 }

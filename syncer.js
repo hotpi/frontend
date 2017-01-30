@@ -46,16 +46,13 @@ class syncer {
     connectionEmitter.on('reconnected', (e) => {
       this._connectionStatus = 'up'
       this.listen()
-      this.inFlight ? this.sendToServer() : console.log('buffer empty');
+      
+      this.sendToServer()
+      if (this.buffer.length > 0) {
+        
+      }
       console.log('working too')
     })
-    // Offline.on('down', () => {
-      // this._lastConnectionAt = Date.now()
-    // })
-
-    /*Offline.on('up', () => {
-      this.initializeSynchronization(Date.now())
-    })*/
 
     this.inflightOp = null
     this.inFlight = false
@@ -76,12 +73,11 @@ class syncer {
     if (typeof translatedOperation !== 'undefined') {
       if (translatedOperation.length === 2) {
         let operation = {
-
-        origin: this.uid, //import uid
-        type: translatedOperation[0][0],
-        accessPath: translatedOperation[0][1],
-        node: translatedOperation[0][2],
-        action: translatedOperation[0][3]
+          origin: this.uid, //import uid
+          type: translatedOperation[0][0],
+          accessPath: translatedOperation[0][1],
+          node: translatedOperation[0][2],
+          action: translatedOperation[0][3]
         }
 
 
@@ -276,9 +272,9 @@ class syncer {
 
   setStore(store) {
     this._store = store
-    this._store.subscribe(throttle(() => {
-      this.saveCurrentStateIntoIndexedDB()
-    }, 1000))
+    //this._store.subscribe(throttle(() => {
+    //  this.saveCurrentStateIntoIndexedDB()
+    //}, 1000))
   }
 
   initialLoad() {

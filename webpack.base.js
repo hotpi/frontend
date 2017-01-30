@@ -29,7 +29,7 @@ module.exports = {
         loader: 'babel',
         query: {
           presets: ['es2015', 'react'],
-          plugins: ['transform-object-rest-spread', 'lodash']
+          plugins: ['transform-object-rest-spread', 'lodash', 'transform-react-constant-elements', 'transform-react-inline-elements']
         },
         exclude: /node_modules/,
         include: __dirname
