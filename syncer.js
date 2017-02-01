@@ -27,7 +27,7 @@ const superagentThrottle = new Throttle({
 
 class syncer {
   constructor() {
-    this._lastConnectionAt = Date.now()
+    /*this._lastConnectionAt = Date.now()
     this._initialLoad = false
     this._connectionStatus = 'up'
     this.requestArray = []
@@ -64,7 +64,7 @@ class syncer {
       throw new Error('Unable to fetch uid')
     }
 
-    this.listen()
+    this.listen()*/
   }
 
   newAction(action) {

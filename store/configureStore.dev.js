@@ -11,7 +11,7 @@ const configureStore = (state) => {
     rootReducer,
     state,
     compose(
-      applyMiddleware(thunk, actionQueue, /*api, */createLogger()),
+      applyMiddleware(thunk, /*actionQueue,*/ /*api, */createLogger()),
       DevTools.instrument()
     )
   )
