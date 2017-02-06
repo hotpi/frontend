@@ -26,21 +26,26 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react'],
-          plugins: ['transform-object-rest-spread', 'lodash', 'transform-react-constant-elements', 'transform-react-inline-elements']
+          plugins: ['transform-object-rest-spread', 'lodash', 'transform-react-constant-elements', 'transform-react-inline-elements'],
+	  env: {
+	    production: {
+	      presets: ['babili']
+	    }
+	  }
         },
         exclude: /node_modules/,
         include: __dirname
       },
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json-loader'
       },
       {
         test: /\.css$/,
-        loaders: ["style", "css"]
+        loaders: ["style-loader", "css-loader"]
       }
     ]
   }
