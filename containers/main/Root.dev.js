@@ -10,7 +10,6 @@ import {
 import PatientContainer from '../PatientContainer';
 import PatientDetailContainer from '../PatientDetailContainer';
 import DevTools from '../DevTools';
-import PerfManager from '../PerfManager';
 import EmergencyCallButton from '../../components/content/top-view/EmergencyCallButton';
 import { fetchData } from '../../actions/sync';
 

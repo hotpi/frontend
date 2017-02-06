@@ -27,7 +27,7 @@ const superagentThrottle = new Throttle({
 
 class syncer {
   constructor() {
-    /*this._lastConnectionAt = Date.now()
+    this._lastConnectionAt = Date.now()
     this._initialLoad = false
     this._connectionStatus = 'up'
     this.requestArray = []
@@ -40,7 +40,7 @@ class syncer {
         }
       })
       this.monitorConnectionToServer()
-      console.log('working')
+      // console.log('working')
     })
 
     connectionEmitter.on('reconnected', (e) => {
@@ -51,7 +51,7 @@ class syncer {
       if (this.buffer.length > 0) {
         
       }
-      console.log('working too')
+      // console.log('working too')
     })
 
     this.inflightOp = null
@@ -64,7 +64,7 @@ class syncer {
       throw new Error('Unable to fetch uid')
     }
 
-    this.listen()*/
+    this.listen()
   }
 
   newAction(action) {
@@ -81,8 +81,8 @@ class syncer {
         }
 
 
-        console.log('--------------operation--------')
-        console.log(operation)
+        // console.log('--------------operation--------')
+        // console.log(operation)
         
 
         this.generateOperation(operation)
@@ -97,8 +97,8 @@ class syncer {
         action: translatedOperation[3]
       }
 
-      console.log('--------------operation--------')
-      console.log(operation)
+      // console.log('--------------operation--------')
+      // console.log(operation)
 
 
       this.generateOperation(operation)
@@ -121,7 +121,7 @@ class syncer {
           return {}
         }
       })
-    console.log(monitoredRequest)
+    // console.log(monitoredRequest)
     setTimeout(() => {
       if (typeof monitoredRequest.abort === 'function') {
         monitoredRequest.abort()
@@ -136,7 +136,7 @@ class syncer {
   generateOperation(newOp) {
     if (this.inFlight) {
       this.buffer.push(newOp)
-      console.log(this.buffer)
+      // console.log(this.buffer)
     } else {
       this.inFlight = true
       this.inflightOp = newOp
@@ -156,7 +156,7 @@ class syncer {
   }
 
   apply(operationFunction) {
-    console.log('apply')
+    // console.log('apply')
 
     if (typeof operationFunction !== 'function') {
       return 'Error: first argument of apply must be a function';
@@ -176,14 +176,14 @@ class syncer {
       .then(
         (res) => {
           if (res.ok) {
-            console.log(res.body)
+            // console.log(res.body)
           }
 
           return true;
         },
         (err) => {
           connectionEmitter.emit('disconnected')
-          console.log('Something went wrong..', err)
+          // console.log('Something went wrong..', err)
         }
       )
 
@@ -192,12 +192,12 @@ class syncer {
 
   // Fetch uid 
   subscribe() {
-    console.log('subscribe')
+    // console.log('subscribe')
     return request
       .get(SUBSCRIBE_URL)
       .then(
         (res) => {
-          console.log(res.body)
+          // console.log(res.body)
           this.uid = res.body.uid
           this.revisionNr = res.body.revisionNr
 
@@ -215,21 +215,21 @@ class syncer {
       return setTimeout(() => this.listen(), 500)
     }
 
-    console.log('listen')
+    // console.log('listen')
     if (this._connectionStatus === 'up') {
       let nextRequest = request
         .get(BROADCAST_URL + this.uid + '/' + this.revisionNr)
         .use(superagentThrottle.plugin())
         .then(
           (res) => { 
-            console.log(res.body)
+            // console.log(res.body)
             
             if (res.body.empty === undefined) {
-              console.log('---------operation received--------')
-              console.log(res.body)
+              // console.log('---------operation received--------')
+              // console.log(res.body)
               this.opReceived(res.body)
             }
-            console.log('status', this._connectionStatus)
+            // console.log('status', this._connectionStatus)
             this.listen()
 
             return res.body
@@ -284,7 +284,7 @@ class syncer {
         .get(INITAL_STATE_URL)
         .then(
           (res) => {
-            console.log(res.body)
+            // console.log(res.body)
           
             return { entities: res.body };
           },

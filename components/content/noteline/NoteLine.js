@@ -41,6 +41,8 @@ class NoteLine extends React.Component {
 
   render() {
     const { deleteLine, last, important, highlight, text, canGetFocus } = this.props
+
+    console.log('cursor received at NoteLine component: ', this.props.cursorPosition())
     if (!this.props.noteLine) {
       return <div></div>
     }
@@ -53,6 +55,9 @@ class NoteLine extends React.Component {
           <LineText 
             onChangeDo={this.props.onChangeDo} // this.props.onChangeDo
             onKeyDownDo={this.props.keyDownHandler} // this.props.onKeyDownDo
+            onFocusDo={this.props.onFocusDo}
+            cursorPosition={this.props.cursorPosition()}
+            updateCursorPosition={this.props.updateCursorPosition}
             text={text}
             highlight={highlight}
             canGetFocus={canGetFocus}
