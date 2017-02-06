@@ -271,7 +271,8 @@ export const translateOperationToAction = (operation, store) => {
     actionToDispatch = {
       ...action,
       index: newAccessPath[newAccessPath.length-1],
-      fromServer: true
+      fromServer: true,
+      textOp: operation.type
     }
   }
 

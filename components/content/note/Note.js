@@ -37,7 +37,12 @@ import {
   mergeNotes
 } from '../../../actions/note';
 
-import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine } from '../../../reducers';
+import {
+  focusChanged,
+  updateCursorPosition
+} from '../../../actions/cursor';
+
+import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine, getCursorPosition } from '../../../reducers';
 
 import { typeValues, dateToString } from '../../helpers/Helpers';
 
@@ -185,8 +190,6 @@ class Note extends React.Component {
   }
 
   handleKeyDown(id, index, last, e) {
-    console.log('im here too')
-
     // handle here all the updates?! -> think of why didn't work at the beginning and/or possible disadvantages and advantages
     if (e.keyCode === 13) {
       e.preventDefault() 
@@ -233,12 +236,19 @@ class Note extends React.Component {
     }
   }
 
+  handleNoteLineFocus(noteLineId) {
+    this.props.focusChanged(noteLineId)
+  }
+
+  getCursorPosition() {
+    return this.props.cursorPosition;
+  }
+
   renderNoteLines() {
     var noteLines = {}
     const { type } = this.props;
     const noteLinesTotal = this.props.noteLines.length
 
-    console.log(this.props.noteLines.length)
     if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
       return (<div></div>)
     } 
@@ -248,6 +258,8 @@ class Note extends React.Component {
       const line = noteLine
       const last = (index === (noteLinesTotal - 1)) && type === 'new'
       const isEmpty = line.text === ''
+      console.log('cursor received at Note  component: ', this.props.cursorPosition)
+
 
       if (last) {
         _set(this, 'last.isEmpty', isEmpty)
@@ -264,9 +276,12 @@ class Note extends React.Component {
           keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
           onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
           canGetFocus={this.state.canAllocateFocus} 
+          onFocusDo={this.handleNoteLineFocus.bind(this, ID)}
           deleteLine={this.props.deleteLine.bind(this, ID, this.props.note.ID)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
           onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
+          updateCursorPosition={this.props.updateCursorPosition.bind(this)}
+          cursorPosition={this.getCursorPosition.bind(this)}
           />
       );  
     })
@@ -356,6 +371,8 @@ Note.defaultProps = {
 } 
 
 const mapStateToProps = (state, { params }) => {
+  const cursorPosition = getCursorPosition(state)
+  console.log('receives new cursor', cursorPosition)
   const noteNumber = params.noteNumber || 0
   const patientId = params.patientId
   const typeFilter = params.type || 'new'
@@ -377,6 +394,7 @@ const mapStateToProps = (state, { params }) => {
   const noteLines = sortedNotes[noteNumber] && getAllNoteLines(state, sortedNotes[noteNumber].ID) || []
 
   return {
+    cursorPosition,
     noteLines,
     note: sortedNotes[noteNumber] || null,
     patientId,
@@ -398,7 +416,9 @@ const mapDispatchToProps = (dispatch) => {
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
     newNoteAndLine: (patientId) => dispatch(newNoteAndLine(patientId)),
     deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
-    mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines))
+    mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines)),
+    focusChanged: (noteLineId) => dispatch(focusChanged(noteLineId)),
+    updateCursorPosition: (newPosition) => dispatch(updateCursorPosition(newPosition))
   };
 }
 

@@ -8,15 +8,15 @@ class LineText extends React.Component {
     if (canGetFocus) {
       this._input.focus()
     }
-
-    this.state = {
-      cursorPosition: this._input.selectionStart
-    }
+    /*
+    setInterval(() => 
+      console.log('cursor at:', this._input.selectionStart), 1000)
+    */
   }
 
   componentDidUpdate(nextProps) {
     console.log('cursor pos before:', this._input.selectionStart)
-    this._input.selectionStart = this._input.selectionEnd = 3//this.state.cursorPosition
+    this._input.selectionStart = this._input.selectionEnd = this.props.cursorPosition
     console.log('cursor pos after:', this._input.selectionStart)
   }
 
@@ -24,10 +24,17 @@ class LineText extends React.Component {
     const { onKeyDownDo } = this.props
     let start = e.target.selectionStart
     console.log('im here')
-    this.setState({
+    this.props.updateCursorPosition(start+1)
+    /*this.setState({
       cursorPosition: start + 1
-    })
+    })*/
     onKeyDownDo(e)
+  }
+
+  handleFocus(e) {
+    const { onFocusDo } = this.props
+    onFocusDo()
+    this.props.updateCursorPosition(this._input.selectionStart)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -38,20 +45,18 @@ class LineText extends React.Component {
     const { text, highlight, onChangeDo, onKeyDownDo } = this.props
 
     return (
-      <TextField 
-        onChange={onChangeDo}
-        onKeyDown={this.handleKeyDown.bind(this)}
-        hintText={'Write here to start a new line'}
-        rows={1}
+      <textarea 
         ref={(c) => this._input = c}
-        multiLine={true}
-        underlineShow={false} 
-        textareaStyle={{paddingBottom: 0, backgroundColor: highlight.set ? highlight.color : 'transparent'}}
-        inputStyle={{margin: 0, padding: 0}}
-        style={{marginRight: 0, marginTop: 0, width: '94%'}} 
+        onChange={onChangeDo}
+        onFocus={this.handleFocus.bind(this)}
+        onKeyDown={this.handleKeyDown.bind(this)}
+        placeholder={'Write here to start a new line'}
+        rows={0}
+        style={{fontSize: 16, outline: 'none', border: 'none', resize: 'none', marginRight: 0, marginTop: 13, marginBottom: 0, paddingTop: 0, width: '94%', paddingBottom: 0, backgroundColor: highlight.set ? highlight.color : 'transparent'}}
         value={text}
         >
-      </TextField>
+       
+      </textarea>
     );
   }
 }
