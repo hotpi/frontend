@@ -38,11 +38,19 @@ import {
 } from '../../../actions/note';
 
 import {
+  allowFocusChange,
   focusChanged,
   updateCursorPosition
 } from '../../../actions/cursor';
 
-import { getAllNoteLines, getNotesByTypeFromPatient, getFirstPatientId, getAllPatientNotes, getNoteLine, getCursorPosition } from '../../../reducers';
+import { 
+  getAllNoteLines, 
+  getNotesByTypeFromPatient, 
+  getFirstPatientId, 
+  getAllPatientNotes, 
+  getNoteLine, 
+  getCursorPosition,
+  isFocusChangeAllowed } from '../../../reducers';
 
 import { typeValues, dateToString } from '../../helpers/Helpers';
 
@@ -73,7 +81,7 @@ class Note extends React.Component {
   componentDidMount() {
     const { type } = this.props;
 
-    this.setState({ canAllocateFocus: true })
+    this.props.allowFocusChange(true)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -100,11 +108,9 @@ class Note extends React.Component {
     switch(positionToInsert) {
       case 'append_next': 
         this.props.createAndAppendNext(index, this.props.note.ID)
-        this.setState({canAllocateFocus: true})
         break;
       case 'append_end':
         this.props.createAndAppendLast(this.props.note.ID)
-        this.setState({canAllocateFocus: false})
         break;
       default:
         console.log('error')
@@ -177,7 +183,7 @@ class Note extends React.Component {
         break;
     }
 
-    this.setState({type: '0', canAllocateFocus: true, hasFocus: false})
+    this.setState({type: '0', hasFocus: false})
     this.props.newNoteAndLine(this.props.patientId)
   }
 
@@ -275,7 +281,7 @@ class Note extends React.Component {
           ID={ID}
           keyDownHandler={this.handleKeyDown.bind(this, ID, index, last)} 
           onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
-          canGetFocus={this.state.canAllocateFocus} 
+          canGetFocus={this.props.canAllocateFocus} 
           onFocusDo={this.handleNoteLineFocus.bind(this, ID)}
           deleteLine={this.props.deleteLine.bind(this, ID, this.props.note.ID)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
@@ -372,6 +378,7 @@ Note.defaultProps = {
 
 const mapStateToProps = (state, { params }) => {
   const cursorPosition = getCursorPosition(state)
+  const canAllocateFocus = isFocusChangeAllowed(state)
   console.log('receives new cursor', cursorPosition)
   const noteNumber = params.noteNumber || 0
   const patientId = params.patientId
@@ -394,6 +401,7 @@ const mapStateToProps = (state, { params }) => {
   const noteLines = sortedNotes[noteNumber] && getAllNoteLines(state, sortedNotes[noteNumber].ID) || []
 
   return {
+    canAllocateFocus,
     cursorPosition,
     noteLines,
     note: sortedNotes[noteNumber] || null,
@@ -418,7 +426,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteNote: (patientId, noteId) => dispatch(deleteNote(patientId, noteId)),
     mergeNotes: (noteId, noteLines) => dispatch(mergeNotes(noteId, noteLines)),
     focusChanged: (noteLineId) => dispatch(focusChanged(noteLineId)),
-    updateCursorPosition: (newPosition) => dispatch(updateCursorPosition(newPosition))
+    updateCursorPosition: (newPosition) => dispatch(updateCursorPosition(newPosition)),
+    allowFocusChange: (isAllowed) => dispatch(allowFocusChange(isAllowed))
   };
 }
 

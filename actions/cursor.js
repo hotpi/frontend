@@ -9,3 +9,9 @@ export const updateCursorPosition = (newCursorPosition) => ({
   type: UPDATE_CURSOR_POSITION,
   newCursorPosition
 });
+
+export const ALLOW_FOCUS_CHANGE = 'ALLOW_FOCUS_CHANGE';
+export const allowFocusChange = (isAllowed) => ({
+  type: ALLOW_FOCUS_CHANGE,
+  isAllowed
+});

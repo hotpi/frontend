@@ -38,7 +38,7 @@ class LineText extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight;
+    return this.props.cursorPosition !== nextProps.cursorPosition || this.props.text !== nextProps.text || this.props.highlight !== nextProps.highlight;
   }
   
   render() {

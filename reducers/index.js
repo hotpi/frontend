@@ -14,6 +14,7 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
+export const isFocusChangeAllowed = (state) => fromCursor.isFocusChangeAllowed(state.cursor)
 export const getCursorPosition = (state) => fromCursor.getCursorPosition(state.cursor)
 export const getAllNoteLines = (state, noteId) => fromEntities.getAllNoteLines(state.entities, noteId);
 export const getNoteLine = (state, noteLineId) => fromEntities.getNoteLine(state.entities, noteLineId);

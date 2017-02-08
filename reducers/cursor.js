@@ -1,5 +1,6 @@
 const cursor = (state = {
   cursorPosition: 0,
+  allowedFocusChange: false,
   noteLineId: ''
 }, action ) => {
   switch (action.type) {
@@ -30,6 +31,28 @@ const cursor = (state = {
         ...state,
         noteLineId: action.NoteLineID,
       };
+    case 'ALLOW_FOCUS_CHANGE':
+      return {
+        ...state,
+        allowedFocusChange: action.isAllowed
+      }
+    case 'CREATE_AND_APPEND_LAST':
+      return {
+        ...state,
+        allowedFocusChange: false
+      }
+    case 'CREATE_AND_APPEND_NEXT':
+      if (action.fromServer) {
+        return {
+          ...state,
+          allowedFocusChange: false
+        }
+      }
+
+      return {
+        ...state,
+        allowedFocusChange: true
+      }
     default:
       return state;
   }
@@ -38,3 +61,4 @@ const cursor = (state = {
 export default cursor;
 
 export const getCursorPosition = (state) => state.cursorPosition
+export const isFocusChangeAllowed = (state) => state.allowedFocusChange
