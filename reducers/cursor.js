@@ -11,13 +11,13 @@ const cursor = (state = {
       if (action.textOp === 'delete') {
         return {
           ...state,
-          cursorPosition: cursorPosition - 1
+          cursorPosition: state.cursorPosition - 1
         };
       }
 
       return {
         ...state,
-        cursorPosition: cursorPosition + 1
+        cursorPosition: state.cursorPosition + 1
       };
       // delete more than character not possible atm
     case 'UPDATE_CURSOR_POSITION':
