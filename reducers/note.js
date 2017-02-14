@@ -36,9 +36,9 @@ const note = (state = {
       return {
         ...state,
         noteLines: [
-          ...state.noteLines.slice(0, action.index+1), 
+          ...state.noteLines.slice(0, action.index), 
           action.NoteLineID,
-          ...state.noteLines.slice(action.index+1)
+          ...state.noteLines.slice(action.index)
         ]
       };
     case 'CREATE_AND_APPEND_LAST':

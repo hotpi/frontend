@@ -107,7 +107,7 @@ class Note extends React.Component {
   createNewLine(index, positionToInsert) {
     switch(positionToInsert) {
       case 'append_next': 
-        this.props.createAndAppendNext(index, this.props.note.ID)
+        this.props.createAndAppendNext(index+1, this.props.note.ID)
         break;
       case 'append_end':
         this.props.createAndAppendLast(this.props.note.ID)

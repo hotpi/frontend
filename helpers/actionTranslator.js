@@ -52,6 +52,7 @@ export const translateActionToOperation = (action, store) => {
     case noteLineTypes.CREATE_AND_APPEND_LAST:
     case noteLineTypes.CREATE_AND_APPEND_NEXT:
       var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
+      console.log('sorted patients: ', patients)
       var patient = patients.reduce((prev, curr, index) => {
         if (curr.notes.indexOf(action.NoteID) !== -1 ) {
           return curr;
@@ -271,12 +272,13 @@ export const translateOperationToAction = (operation, store) => {
     actionToDispatch = {
       ...action,
       index: newAccessPath[newAccessPath.length-1],
+      node: operation.node,
       fromServer: true,
       textOp: operation.type
     }
   }
 
-  return actionToDispatch
+  return actionToDispatch;
 }
 
 const sortAlphabetically = (a, b) => {

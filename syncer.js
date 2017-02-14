@@ -167,7 +167,8 @@ class syncer {
 
   // Fetch from server localhost:3001/sendOp
   sendToServer() {
-    request
+    console.log('Sending operation: ', this.inflightOp, 'revisionNr: ', this.revisionNr)
+    this.sendRequest = request
       .post(SEND_OP_URL)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json; charset=utf-8')
@@ -245,9 +246,10 @@ class syncer {
     } 
   }
 
+// if inflightop was affected through the transformation should it be sent again and cancel the last one?
   opReceived(receivedOp) {
+    console.log('Operation received: ', receivedOp, 'current revisionNr: ', this.revisionNr)
     this.revisionNr++
-
     if (typeof receivedOp.acknowledge !== 'undefined') {
       if ( this.buffer.length > 0) {
         this.inflightOp = this.buffer.shift()

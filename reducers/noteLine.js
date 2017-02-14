@@ -29,29 +29,38 @@ const noteLine = (state = {
         }
       }
 
-      if (action.startPos === action.endPos) {
-        operationType = action.text.length > state.text.length ? 'insert' : 'delete'
-        textIndex = operationType === 'insert' ? action.position - 1 : action.position
-        
-        if (operationType === 'insert') {
-          node = action.text[textIndex]
-
-          return {
-            ...state,
-            text: state.text.slice(0, textIndex) + node + state.text.slice(textIndex)
-          };
-        }
+      // console.log('start pos end pos ', action.startPos, action.endPos)
+// 
+      // if (action.startPos === action.endPos) {
+      operationType = action.text.length >= state.text.length ? 'insert' : 'delete'      
+      textIndex = operationType === 'insert' ? action.position - 1 : action.position
+      
+      if (action.fromServer) {
+        textIndex = action.index
+        operationType = action.textOp
+      } 
+      
+      if (operationType === 'insert') {
+        node = action.fromServer ? action.node : action.text[textIndex]
+        console.log('text b4: ', state.text, 'node:', node, 'index: ', textIndex)
+        console.log('text after: ', state.text.slice(0, textIndex) + node + state.text.slice(textIndex))
 
         return {
           ...state,
-          text: state.text.slice(0, textIndex) + state.text.slice(textIndex+1)
+          text: state.text.slice(0, textIndex) + node + state.text.slice(textIndex)
         };
       }
 
       return {
         ...state,
-        text: state.text.slice(0, action.startPos-1) + action.text[action.startPos-1] + state.text.slice(action.startPos)
-      }
+        text: state.text.slice(0, textIndex) + state.text.slice(textIndex+1)
+      };
+      // }
+
+      // return {
+        // ...state,
+        // text: state.text.slice(0, action.startPos-1) + action.text[action.startPos-1] + state.text.slice(action.startPos)
+      // }
     case 'HIGHLIGHT_LINE':
       return {
         ...state,
