@@ -22,22 +22,21 @@ const noteLine = (state = {
       var textIndex = null
       var operationType = '';
       var node = ''
-      if (state.text.length === 0) {
+      /*if (state.text.length === 0) {
         return {
           ...state,
           text: action.text
         }
-      }
+      }*/
 
       // console.log('start pos end pos ', action.startPos, action.endPos)
 // 
       // if (action.startPos === action.endPos) {
-      operationType = action.text.length >= state.text.length ? 'insert' : 'delete'      
+      operationType = action.opType
       textIndex = operationType === 'insert' ? action.position - 1 : action.position
       
       if (action.fromServer) {
         textIndex = action.index
-        operationType = action.textOp
       } 
       
       if (operationType === 'insert') {
@@ -51,6 +50,8 @@ const noteLine = (state = {
         };
       }
 
+      console.log('text b4: ', state.text, 'index: ', textIndex)
+      console.log('text after: ', state.text.slice(0, textIndex) + state.text.slice(textIndex+1))
       return {
         ...state,
         text: state.text.slice(0, textIndex) + state.text.slice(textIndex+1)

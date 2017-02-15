@@ -37,7 +37,7 @@ function xformTii(op1, op2, isServer) {
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
+  if (op1.accessPath[tpt][''+tpt] === op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
       op1.accessPath[tpt][''+tpt]++;
       return [op1, op2];
@@ -48,7 +48,7 @@ function xformTii(op1, op2, isServer) {
       return [op1, op2];
     }
 
-    if (op1.accessPath.length == op2.accessPath.length) {
+    if (op1.accessPath.length === op2.accessPath.length) {
       //application depndent priorities
       op1.accessPath[tpt][''+tpt]++;
       return [op1, op2];
@@ -60,24 +60,31 @@ function xformTid(op1, op2) {
   var tpt = transformationPoint(op1.accessPath, op2.accessPath);
 
   if (effectIndependent(op1.accessPath, op2.accessPath)) {
+    console.log('effect independent', op1, op2)
     return [op1, op2];
   }
 
   if (op1.accessPath[tpt][''+tpt] > op2.accessPath[tpt][''+tpt]) {
+    console.log('op1.accessPath[tpt] > op2.accessPath[tpt] -> it should reduce op1 accessPath by one', op1, op2)
     op1.accessPath[tpt][''+tpt]--;
     return [op1, op2]; 
   }
 
   if (op1.accessPath[tpt][''+tpt] < op2.accessPath[tpt][''+tpt]) {
+    console.log('op1.accessPath[tpt] < op2.accessPath[tpt] -> it should increase op2 accessPath by one', op1, op2)
+    let old = op2.accessPath[tpt][''+tpt]
     op2.accessPath[tpt][''+tpt]++;
+    console.log('old vs new', old, op2)
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
+  if (op1.accessPath[tpt][''+tpt] === op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
+      console.log('op1.accessPath[tpt] === op2.accessPath[tpt] -> BUT op1.accessPath.length > op2.accessPath.length -> OP1 NO OP', op1, op2)
       op1.type = 'no-op';
       return [op1, op2];
     }
+      console.log('op1.accessPath[tpt] === op2.accessPath[tpt] -> BUT op1.accessPath.length <= op2.accessPath.length -> OP2 should be increased by 1', op1, op2)
 
     op2.accessPath[tpt][''+tpt]++;
     return [op1, op2];
@@ -102,7 +109,7 @@ function xformTdd(op1, op2, isServer) {
     return [op1, op2];
   }
 
-  if (op1.accessPath[tpt][''+tpt] == op2.accessPath[tpt][''+tpt]) {
+  if (op1.accessPath[tpt][''+tpt] === op2.accessPath[tpt][''+tpt]) {
     if (op1.accessPath.length > op2.accessPath.length) {
       op1.type = 'no-op';
       return [op1, op2];
@@ -113,7 +120,7 @@ function xformTdd(op1, op2, isServer) {
       return [op1, op2];
     }
 
-    if (op1.accessPath.length == op2.accessPath.length) {
+    if (op1.accessPath.length === op2.accessPath.length) {
       op1.type = 'no-op';
       op2.type = 'no-op';
       return [op1, op2];

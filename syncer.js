@@ -20,23 +20,32 @@ var connectionEmitter = new Emitter
 
 const superagentThrottle = new Throttle({
   active: true,     // set false to pause queue
-  rate: 10,          // how many requests can be sent every `ratePer`
+  rate: 30,          // how many requests can be sent every `ratePer`
   ratePer: 5000,   // number of ms in which `rate` requests may be sent
-  concurrent: 5     // how many requests can be sent concurrently
+  concurrent: 10     // how many requests can be sent concurrently
 })
 
 class syncer {
   constructor() {
     this._lastConnectionAt = Date.now()
     this._initialLoad = false
+    this.hasAcknowledge = true
     this._connectionStatus = 'up'
     this.requestArray = []
+    this.sendRequests = []
 
     connectionEmitter.on('disconnected', (e) => {
       this._connectionStatus = 'down'
+      this.hasAcknowledge = false
       this.requestArray.map(request => {
         if (typeof request.abort === 'function') {
           request.abort()
+        }
+      })
+
+      this.sendRequests.map(sendRequest => {
+        if (typeof sendRequest.abort === 'function') {
+          sendRequest.abort()
         }
       })
       this.monitorConnectionToServer()
@@ -48,9 +57,7 @@ class syncer {
       this.listen()
       
       this.sendToServer()
-      if (this.buffer.length > 0) {
-        
-      }
+      
       // console.log('working too')
     })
 
@@ -130,7 +137,7 @@ class syncer {
       if (retry) {
         this.monitorConnectionToServer()
       }      
-    }, 500)
+    }, 5000)
   }
 
   generateOperation(newOp) {
@@ -148,10 +155,13 @@ class syncer {
   }
 
   transform(operations, receivedOp) {
+    let oppp = receivedOp
+    console.log('--b4 transform: ', oppp)
     receivedOp = operations.reduce( (prev, curr) => {
       return xformT(prev[0], curr);
     }, [receivedOp, {}])
 
+    console.log('--Transformed:', receivedOp)
     return receivedOp;
   }
 
@@ -168,26 +178,34 @@ class syncer {
   // Fetch from server localhost:3001/sendOp
   sendToServer() {
     console.log('Sending operation: ', this.inflightOp, 'revisionNr: ', this.revisionNr)
-    this.sendRequest = request
-      .post(SEND_OP_URL)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json; charset=utf-8')
-      .send({operation: this.inflightOp})
-      .send({revisionNr: this.revisionNr})
-      .then(
-        (res) => {
-          if (res.ok) {
-            // console.log(res.body)
-          }
+    if (this.inFlight && this.hasAcknowledge) {
+      this.hasAcknowledge = false
+      let sendRequest = request
+                          .post(SEND_OP_URL)
+                          .set('Accept', 'application/json')
+                          .set('Content-Type', 'application/json; charset=utf-8')
+                          .send({operation: this.inflightOp})
+                          .send({revisionNr: this.revisionNr})
+                          .then(
+                            (res) => {
+                              if (res.ok) {
+                                // console.log(res.body)
+                              }
 
-          return true;
-        },
-        (err) => {
-          connectionEmitter.emit('disconnected')
-          // console.log('Something went wrong..', err)
-        }
-      )
-
+                              return true;
+                            },
+                            (err) => {
+                              connectionEmitter.emit('disconnected')
+                              // console.log('Something went wrong..', err)
+                            }
+                          )
+      this.sendRequests.push(sendRequest)
+    }
+    if (!this.hasAcknowledge) {
+      setTimeout(() => {
+        this.sendToServer()
+      }, 3000)
+    }
     return 
   }
 
@@ -229,6 +247,8 @@ class syncer {
               // console.log('---------operation received--------')
               // console.log(res.body)
               this.opReceived(res.body)
+            } else {
+              this.hasAcknowledge = true
             }
             // console.log('status', this._connectionStatus)
             this.listen()
@@ -251,6 +271,7 @@ class syncer {
     console.log('Operation received: ', receivedOp, 'current revisionNr: ', this.revisionNr)
     this.revisionNr++
     if (typeof receivedOp.acknowledge !== 'undefined') {
+      this.hasAcknowledge = true
       if ( this.buffer.length > 0) {
         this.inflightOp = this.buffer.shift()
         this.sendToServer()

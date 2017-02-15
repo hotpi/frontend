@@ -66,6 +66,7 @@ class Note extends React.Component {
     }
     this.selStart = 0
     this.selEnd = 0
+    this.isDelete = false
     this.handleClick = this.handleClick.bind(this)
     this.handleNewButton = this.handleNewButton.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -196,20 +197,22 @@ class Note extends React.Component {
   }
 
   handleKeyDown(id, index, last, e) {
-    // handle here all the updates?! -> think of why didn't work at the beginning and/or possible disadvantages and advantages
+    this.isDelete = false
     if (e.keyCode === 13) {
       e.preventDefault() 
 
       if (!last) {
         this.createNewLine(index, 'append_next')
       }
+    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 || e.keyCode === 46 && this.props.noteLines[index].text.length !== 0) {
+      this.isDelete = true
     } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.noteLines[index].text.length === 0) {
       e.preventDefault()
 
       if (!last) {
         this.props.deleteLine(id, this.props.note.ID)
       }
-    } 
+    }  
   }
 
   handleChange(id, last, isEmpty, e) {
@@ -219,7 +222,8 @@ class Note extends React.Component {
 
     console.log('selection starts: ', e.target.selectionStart)
     console.log('selection ends: ', e.target.selectionEnd)
-    this.props.updateLineValue(id, e)
+    console.log('is delete: ', this.isDelete)
+    this.props.updateLineValue(id, this.isDelete ? 'delete' : 'insert', e)
   }
 
   handleNavigation(navigateTo) {
@@ -419,7 +423,7 @@ const mapDispatchToProps = (dispatch) => {
     createAndAppendLast: (noteId) => dispatch(createAndAppendLast(noteId)),
     deleteLine: (id, noteId) => dispatch(deleteLine(id, noteId)),
     changeNoteType: (noteId, index) => dispatch(changeNoteType(noteId, index)),
-    updateLineValue: (id, e) => dispatch(updateLineValue(id, e.target.value, e.target.selectionStart, e.target.selectionEnd)),
+    updateLineValue: (id, opType, e) => dispatch(updateLineValue(id, opType, e.target.value, e.target.selectionStart, e.target.selectionEnd)),
     onImportant: (id, value) => dispatch(importantLine(id, value)),
     onHighlight: (id, value) => dispatch(highlightLine(id, value)),
     newNoteAndLine: (patientId) => dispatch(newNoteAndLine(patientId)),

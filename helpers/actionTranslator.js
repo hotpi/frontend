@@ -108,7 +108,7 @@ export const translateActionToOperation = (action, store) => {
       var noteLineIndex = note.noteLines.indexOf(action.NoteLineID)
       var noteLine = getNoteLine(store.getState(), action.NoteLineID)
 
-      var operationType = action.text.length > noteLine.text.length ? INSERT : DELETE
+      var operationType = action.opType
       var textIndex = operationType === INSERT ? action.position - 1 : action.position
 
       var node = action.text[textIndex]
@@ -267,14 +267,13 @@ export const getAccessPath = (objectAccessPath) => {
 export const translateOperationToAction = (operation, store) => {
   const { type, accessPath, node, action } = operation
   const newAccessPath = getAccessPath(accessPath)
-  var actionToDispatch = { type: 'NO-OP'};
+  var actionToDispatch = { type: 'NO-OP' };
   if (operation.type !== 'no-op') {
     actionToDispatch = {
       ...action,
       index: newAccessPath[newAccessPath.length-1],
       node: operation.node,
-      fromServer: true,
-      textOp: operation.type
+      fromServer: true
     }
   }
 
