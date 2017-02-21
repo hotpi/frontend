@@ -64,9 +64,9 @@ module.exports = {
       {
         test: /\.(sass|scss)$/,
         loaders: ExtractTextPlugin.extract({ 
-          filename: 'style-loader', 
+          fallback: 'style-loader', 
           use: [
-            'css-loader?modules&importLoaders=1', 
+            'css-loader?importLoaders=1', 
             'postcss-loader', 
             'sass-loader?includePaths[]=' + path.resolve(__dirname, 'node_modules/foundation-sites/scss/')
           ] 
