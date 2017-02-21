@@ -64,6 +64,7 @@ class Note extends React.Component {
       hasFocus: false,
       type: '' + typeValues.map(typeObj => typeObj.type).indexOf(props.type)
     }
+    
     this.selStart = 0
     this.selEnd = 0
     this.isDelete = false
@@ -204,9 +205,10 @@ class Note extends React.Component {
       if (!last) {
         this.createNewLine(index, 'append_next')
       }
-    } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 || e.keyCode === 46 && this.props.noteLines[index].text.length !== 0) {
+    } else if (!e.ctrlKey && !e.altKey && (e.keyCode === 8 || e.keyCode === 46) && this.props.noteLines[index].text.length !== 0) {
       this.isDelete = true
     } else if (!e.ctrlKey && !e.altKey && e.keyCode === 8 && this.props.noteLines[index].text.length === 0) {
+      console.log('Im')
       e.preventDefault()
 
       if (!last) {
@@ -220,9 +222,6 @@ class Note extends React.Component {
       this.createNewLine(null, 'append_end')
     }
 
-    console.log('selection starts: ', e.target.selectionStart)
-    console.log('selection ends: ', e.target.selectionEnd)
-    console.log('is delete: ', this.isDelete)
     this.props.updateLineValue(id, this.isDelete ? 'delete' : 'insert', e)
   }
 

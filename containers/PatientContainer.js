@@ -26,10 +26,14 @@ class PatientContainer extends React.Component {
     }
 
     return (
-        <div style={{display: 'inline-flex'}}>
-          <PatientList />
-          <div style={{display: 'block', overflow: 'hidden', marginTop: '5em'}}>
-            <EmptySelection text={"Please select a patient"} />
+        <div className="row">
+          <div className="small-2">
+            <PatientList />
+          </div>
+          <div className="small-8">
+            <div style={{display: 'block', overflow: 'hidden', marginTop: '5em'}}>
+              <EmptySelection text={"Please select a patient"} />
+            </div>
           </div>
         </div>
     	);

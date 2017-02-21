@@ -2,6 +2,8 @@ import React from 'react';
 
 import TextField from 'material-ui/TextField';
 
+import muiThemeable from 'material-ui/styles/muiThemeable';
+
 class LineText extends React.Component {
   componentDidMount() {
     const { canGetFocus } = this.props
@@ -23,11 +25,7 @@ class LineText extends React.Component {
   handleKeyDown(e) {
     const { onKeyDownDo } = this.props
     let start = e.target.selectionStart
-    console.log('im here')
-    this.props.updateCursorPosition(start+1)
-    /*this.setState({
-      cursorPosition: start + 1
-    })*/
+    this.props.updateCursorPosition(e.keyCode === 46 ? start : start+1)
     onKeyDownDo(e)
   }
 
@@ -52,7 +50,7 @@ class LineText extends React.Component {
         onKeyDown={this.handleKeyDown.bind(this)}
         placeholder={'Write here to start a new line'}
         rows={0}
-        style={{fontSize: 16, outline: 'none', border: 'none', resize: 'none', marginRight: 0, marginTop: 13, marginBottom: 0, paddingTop: 0, width: '94%', paddingBottom: 0, backgroundColor: highlight.set ? highlight.color : 'transparent'}}
+        style={{fontFamily: this.props.muiTheme.fontFamily, fontSize: 16, outline: 'none', border: 'none', resize: 'none', marginRight: 0, marginTop: 13, marginBottom: 0, paddingTop: 0, width: '94%', paddingBottom: 0, backgroundColor: highlight.set ? highlight.color : 'transparent'}}
         value={text}
         >
        
@@ -72,4 +70,4 @@ LineText.propTypes = {
   onKeyDownDo: React.PropTypes.func.isRequired
 }
 
-export default LineText;
+export default muiThemeable()(LineText);

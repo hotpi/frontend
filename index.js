@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+//import injectTapEventPlugin from 'react-tap-event-plugin';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import Perf from 'react-addons-perf'; 
@@ -31,7 +31,7 @@ middleware.initialLoad().then(state => {
 
   middleware.setStore(store)
 
-  injectTapEventPlugin()
+//  injectTapEventPlugin()
 
   render(
     <MuiThemeProvider style={{height: '100vh', width: '100%'}}>

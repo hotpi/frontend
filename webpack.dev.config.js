@@ -9,9 +9,9 @@ config.plugins = config.plugins || [ ]
 config.plugins.push(new webpack.HotModuleReplacementPlugin())
 
 // enable react HMR
-config.module.loaders.forEach((loader) => {
+config.module.rules.forEach((loader) => {
   if (loader.test.test('.js')) {
-    loader.query.presets.push("react-hmre")
+    loader.options.presets.push('react-hmre')
   }
 });
 

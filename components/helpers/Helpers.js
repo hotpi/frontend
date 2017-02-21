@@ -69,8 +69,8 @@ export const headerStylesMobile = {
 };
 
 export const listStyle = {
-    width: '19.2em', 
-    height: '100vh', 
+    //width: '19.2em', 
+    //height: '100vh', 
     borderRight: '0.1em #d0d0d0 solid', 
     marginRight: '0',
     marginTop: '0',

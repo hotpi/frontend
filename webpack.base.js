@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var environment = require('./environment.js');
 
 const environmentPlugin = new webpack.DefinePlugin({
@@ -11,7 +11,8 @@ module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: [
     './index',
-    './styles/styles.css'
+    './styles/styles.css',
+    './node_modules/rc-swipeout/assets/index.css'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -20,21 +21,30 @@ module.exports = {
   },
   plugins: [
     environmentPlugin,
+    new ExtractTextPlugin({
+      filename: 'sassyStyle.css', 
+      allChunks: true
+    }),
     new webpack.optimize.OccurrenceOrderPlugin()
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        query: {
+        options: {
           presets: ['es2015', 'react'],
-          plugins: ['transform-object-rest-spread', 'lodash', 'transform-react-constant-elements', 'transform-react-inline-elements'],
-	  env: {
-	    production: {
-	      presets: ['babili']
-	    }
-	  }
+          plugins: [
+            'transform-object-rest-spread', 
+            'lodash', 
+            'transform-react-constant-elements', 
+            'transform-react-inline-elements'
+          ],
+      	  env: {
+      	    production: {
+      	      presets: ['babili']
+      	    }
+      	  }
         },
         exclude: /node_modules/,
         include: __dirname
@@ -45,7 +55,22 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ["style-loader", "css-loader"]
+        loaders: [ 
+          'style-loader', 
+          'css-loader?importLoaders=1', 
+          'postcss-loader' 
+        ]
+      },
+      {
+        test: /\.(sass|scss)$/,
+        loaders: ExtractTextPlugin.extract({ 
+          filename: 'style-loader', 
+          use: [
+            'css-loader?modules&importLoaders=1', 
+            'postcss-loader', 
+            'sass-loader?includePaths[]=' + path.resolve(__dirname, 'node_modules/foundation-sites/scss/')
+          ] 
+        })
       }
     ]
   }
