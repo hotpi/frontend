@@ -319,20 +319,21 @@ class Note extends React.Component {
     }
 
     return (
-      <div style={{height: 570,  overflowY: 'auto', display: 'block'}}>
+      <div className="columns row" style={{maxWidth: '100%', margin: 0, height: 570, overflowY: 'auto'}}>
         <HistoryNavigation 
           show={type === 'history'}
           handleNavigation={(navigateTo) => this.handleNavigation.bind(this, navigateTo)}
           first={+noteNumber === 0}
           last={+noteNumber === this.props.numberOfNotesOfCurrentType-1}/>
         <div
-          style={{margin: type === 'history' ? '1em 0 3em 6.3em' : '3em 0 3em 6.3em', display: 'inline-flex'}}
+          className="columns row small-collapse"
+          style={{margin: type === 'history' ? '1em 0 3em 4em' : '3em 0 3em 4em', display: 'inline-flex'}}
           >
-
           <Paper
             zDepth={2}
-            style={{left: '19.2em', width: '470px', height: 'auto'}}
-            onTouchTap={this.handleClick}>
+            className="small-10 large-10 small-centered large-centered small-offset-2 large-offset-2 columns"
+            style={{margin: 0, height: 'auto', overflowY: 'scroll'}}
+            onClick={this.handleClick}>
             
             <NoteHeader 
               show={this.canShowHeaderAndFooter('header')}
@@ -356,6 +357,7 @@ class Note extends React.Component {
               />     
 
           </Paper>
+          {/*</div>*/}
           <NoteTimestamp 
             type={type}
             date={this.props.note && new Date(this.props.note.createdAt) || new Date()}

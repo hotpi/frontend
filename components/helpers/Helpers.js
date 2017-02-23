@@ -32,26 +32,19 @@ export const headerStylesDesktop = {
 
 export const headerStylesMobile = {
   area: {
-    height: '154px',
-    backgroundColor: blue800,
-    width: '70vw',
-    left: '19.2em',
-    margin: 0,
-    padding: 0
+    backgroundColor: blue800
   },
   header3: {
     color: 'white', 
-    marginTop: '0',
-    marginBottom: '5px', 
-    padding: '18px 10px 0 30px', 
-    fontWeight: '200'
+    margin: '17px 0 8px 0',
+    padding: '0px 0px 0 30px', 
+    fontWeight: 100
   },
   header2: {
     color: 'white', 
-    marginTop: '10px', 
-    marginBottom: '10px', 
+    margin: 0,
     padding: '0 5px 0 30px', 
-    fontWeight: '400'
+    fontWeight: 400
   },
   line: {
     marginBottom: '0', 
@@ -59,18 +52,12 @@ export const headerStylesMobile = {
     border: '0', 
     height: '1px', 
     backgroundImage: 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0))'
-  },
-  space1: {
-    padding: '0 9vw'
-  },
-  space2: {
-    padding: '0 7vw'
   }
 };
 
 export const listStyle = {
     //width: '19.2em', 
-    //height: '100vh', 
+    height: '100vh', 
     borderRight: '0.1em #d0d0d0 solid', 
     marginRight: '0',
     marginTop: '0',
@@ -81,7 +68,7 @@ export const listStyle = {
 
 export const labelStyles = {
   infoItem: {
-    padding: '1em 2em 1em 2em',
+    padding: '1em 0',
     display: 'inline-block',
     backgroundColor: 'transparent'
   },
@@ -104,10 +91,11 @@ export const titleArea = {
     display: 'none'
   },
   visible: {
-    padding: '1em 2em', 
-    margin: '0', 
+    textAlign: 'left',
+    padding: '1em 0 1em 20px', 
+    margin: '0 0 0 20px', 
     color: 'black', 
-    fontWeight: '200'
+    fontWeight: 100
   }
 };
 
@@ -116,9 +104,8 @@ export const actionsArea = {
     display: 'none'
   },
   visible: {
-    display: 'inline-flex',
-    height: 65,
-    padding: '0 1em 0 2em'
+    maxWidth: '100%',
+    margin: 0
   }
 };
 

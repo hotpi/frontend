@@ -48,7 +48,7 @@ class PatientList extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     console.log('--shouldComponentUpdate--', this.props.patients.length !== nextProps.patients.length)
-    return this.props.patients.length !== nextProps.patients.length;
+    return this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen;
   }
 
   handleMouseDown(e) {
@@ -135,7 +135,7 @@ class PatientList extends React.Component {
 
   render() {
     return (
-  		<BaseList>
+  		<BaseList isDrawerOpen={this.props.isDrawerOpen}>
         <Tabs style={{marginTop: '0'}} tabItemContainerStyle={{borderRight: '1px #aeaeae solid'}}>
           
           {this.renderTabs()}

@@ -17,7 +17,7 @@ const CancelButton = ({
         className="line-buttons"
         style={inlineIconStyle.iconArea} 
         iconStyle={inlineIconStyle.icon} 
-        onTouchTap={onClickDo} >
+        onClick={onClickDo} >
         <NavigationCancel />
       </IconButton>
     );

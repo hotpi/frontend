@@ -7,9 +7,14 @@ const NoteHeader = ({
   title
 }) => {
   return (
-    <h3 style={show ? titleArea.visible : titleArea.hidden }>
-      {title}
-    </h3>
+    <div className="row">
+      <h3
+        className="small-12" 
+        style={show ? titleArea.visible : titleArea.hidden }
+        >
+        {title}
+      </h3>
+    </div>
   );
 }
 

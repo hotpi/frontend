@@ -15,7 +15,7 @@ const NewNoteButton = ({
   onClickDo
 }) => {
   return (
-    <FloatingActionButton onTouchTap={onClickDo} style={newNoteButtonStyle}>
+    <FloatingActionButton onClick={onClickDo} style={newNoteButtonStyle}>
       <ContentAdd />
     </FloatingActionButton>
   );

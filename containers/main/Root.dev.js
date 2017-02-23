@@ -18,7 +18,7 @@ class Root extends React.Component {
     const { store, history } = this.props
     return (
       <Provider store={store}>
-        <div>
+        <div style={{width: '100%'}}>
           <Router history={history}>
             <Route path="/" component={PatientContainer} />
             <Route path="/patients" component={PatientContainer}  />

@@ -1,11 +1,29 @@
 import React from 'react';
+import FlatButton from 'material-ui/FlatButton';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 
 const EmptySelection = ({
-  text
+  text,
+  onClickDo
 }) => {
   return (
-    <div style={{margin: '8em 0 3em 10.3em', width: '50%', display: 'inline-flex'}}>
-      <h3 style={{fontWeight: 100, fontSize: 40, color: 'grey', margin: 0, textAlign: 'center', width: 470, height: 'auto'}}> {text} </h3>
+    <div className="small-centered columns">
+      <div className="small-4 show-for-small-only colums">
+              <FlatButton
+                  className="show-for-small-only"
+                  backgroundColor={'grey'}
+                  onClick={onClickDo}
+                  icon={<NavigationMenu color={'white'} />}
+                  />
+            </div>
+      <h3 style={{
+        fontWeight: 100, 
+        fontSize: 40, 
+        color: 'grey', 
+        padding: '10rem 2rem',
+        textAlign: 'center',
+        height: 'auto'
+      }}> {text} </h3>
     </div>
   );
 }

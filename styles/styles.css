@@ -1,24 +1,9 @@
-html {
-  font-family: Roboto, sans-serif;
-}
-
-html, body {
-  margin: 0;
-  overflow: hidden;
-}
-
+/*
+ * Maybe remove as autoprefixer takes care of this?
+ */
 ::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
     background: transparent;  /* optional: just make scrollbar invisible */
-}
-
-/* optional: show position indicator in red */
-::-webkit-scrollbar-thumb {
-    background: #FF0000;
-}
-
-#root {
-  height: 100%;
 }
 
 .note-line-container:hover {

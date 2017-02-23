@@ -12,6 +12,13 @@ import { getIsFetching, getIsSynced } from '../reducers';
 import { fetchData } from '../actions/sync';
 
 class PatientContainer extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      isDrawerOpen: false
+    }
+  }
+
   componentDidMount() {
     const { fetchData, isSynced } = this.props
 
@@ -20,19 +27,29 @@ class PatientContainer extends React.Component {
     }
   }
     
+  handleClick(e) {
+    this.setState({
+      isDrawerOpen: !this.state.isDrawerOpen
+    })
+  }
+  
+
   render() {
     if (this.props.isLoading) {
       return <Loading />
     }
 
     return (
-        <div className="row">
-          <div className="small-2">
-            <PatientList />
+        <div className="row" style={{margin: 0, maxWidth: '100%'}}>
+          <div className="large-3 columns" style={{padding: 0}}>
+            <PatientList isDrawerOpen={this.state.isDrawerOpen}/>
           </div>
-          <div className="small-8">
-            <div style={{display: 'block', overflow: 'hidden', marginTop: '5em'}}>
-              <EmptySelection text={"Please select a patient"} />
+          <div className="small-12 medium-8 large-9 columns" style={{padding:0}}>
+            <div style={{overflow: 'hidden'}}>
+              <EmptySelection 
+                onClickDo={this.handleClick.bind(this)}
+                text={"Please select a patient"} 
+                />
             </div>
           </div>
         </div>

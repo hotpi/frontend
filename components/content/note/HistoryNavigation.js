@@ -20,12 +20,12 @@ const HistoryNavigation = ({
       <RaisedButton
         icon={<NavigationChevronLeft />}
         disabled={first}
-        onTouchTap={handleNavigation('left')}
+        onClick={handleNavigation('left')}
         />
       <RaisedButton
         icon={<NavigationChevronRight />}
         disabled={last}
-        onTouchTap={handleNavigation('right')}
+        onClick={handleNavigation('right')}
         />
     </div>
   );
