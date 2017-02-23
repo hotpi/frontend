@@ -62,9 +62,11 @@ class Note extends React.Component {
     this.state = {
       canAllocateFocus: false,
       hasFocus: false,
-      type: '' + typeValues.map(typeObj => typeObj.type).indexOf(props.type)
+      type: '' + typeValues.map(typeObj => typeObj.type).indexOf(props.type),
+      totalNoteHeight: 0
     }
     
+    this.heights = []
     this.selStart = 0
     this.selEnd = 0
     this.isDelete = false
@@ -87,7 +89,7 @@ class Note extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type;
+    return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type || this.props.width !== nextProps.width || this.props.height !== nextProps.height;
   }
 
   isNoteLineEmpty() {
@@ -134,18 +136,19 @@ class Note extends React.Component {
     const notesFromSelectedType = this.props.getPatientNotes().filter(note => note.type === typeValues[+this.state.type].type)
     const noteLinesToSave = this.props.noteLines.filter(noteLine => noteLine.text !== '').map(noteLine => noteLine.ID)
 
-    switch (+this.state.type) {
+   /* switch (+this.state.type) {
       case 1:
-      case 3:
+      case 2:
+      case 3:*/
         if (!notesFromSelectedType[0]) {
           this.props.changeNoteType(this.props.note.ID, +this.state.type)
-          break;
+          // break;
         }
 
         notesFromSelectedType[0].noteLines = [...notesFromSelectedType[0].noteLines, ...noteLinesToSave]
         this.props.mergeNotes(notesFromSelectedType[0].ID, notesFromSelectedType[0].noteLines)
         this.props.deleteNote(this.props.patientId, this.props.note.ID)
-        break;
+      /*  break;
       case 2:
         this.props.changeNoteType(this.props.note.ID, +this.state.type)
         const sortedNotes = notesFromSelectedType.sort((a, b) => {
@@ -183,7 +186,7 @@ class Note extends React.Component {
         break;
       default:
         break;
-    }
+    }*/
 
     this.setState({type: '0', hasFocus: false})
     this.props.newNoteAndLine(this.props.patientId)
@@ -212,6 +215,9 @@ class Note extends React.Component {
       e.preventDefault()
 
       if (!last) {
+
+        this.heights.filter((line) => line.ID === id)[0].height = 0 // is there a better way?
+        this.calculateTotalHeight()
         this.props.deleteLine(id, this.props.note.ID)
       }
     }  
@@ -245,9 +251,32 @@ class Note extends React.Component {
     }
   }
 
+  handleChangeOfHeight(index, noteLineId, newHeight) {
+    console.log(newHeight)
+    if (index < this.props.noteLines.length - 1) {
+      newHeight += (15 + 58) // upper margin and buttons
+    }
+    console.log('at handleChangeOfHeight', newHeight, this.heights)
+    this.heights.filter(line => line.ID === noteLineId)[0].height = newHeight
+    this.calculateTotalHeight()
+  }
+
+  calculateTotalHeight() {
+    console.log(this.props.height - 260 - (this.props.height*.4))
+    console.log('calculation', this.heights.reduce((prev, current) => prev+current.height, 0) + (this.canShowHeaderAndFooter('footer') ? 68 : 0) + (this.canShowHeaderAndFooter('header') ? 60 : 0))
+    this.setState({ totalNoteHeight: this.heights.reduce((prev, current) => prev+current.height, 0) })
+  }
+
   handleNoteLineFocus(noteLineId) {
     this.props.focusChanged(noteLineId)
   }
+
+  handleDelete(noteLineId, noteId) {
+    this.props.deleteLine(noteLineId, noteId)
+    this.heights.filter((line) => line.ID === noteLineId)[0].height = 0 // is there a better way?
+    this.calculateTotalHeight()
+  }
+
 
   getCursorPosition() {
     return this.props.cursorPosition;
@@ -268,8 +297,10 @@ class Note extends React.Component {
       const last = (index === (noteLinesTotal - 1)) && type === 'new'
       const isEmpty = line.text === ''
       console.log('cursor received at Note  component: ', this.props.cursorPosition)
-
-
+      console.log(index)
+      if (this.heights.filter(line => line.ID === ID).length === 0) {
+        this.heights.push({ ID, height: 0 })
+      }
       if (last) {
         _set(this, 'last.isEmpty', isEmpty)
       }
@@ -286,9 +317,10 @@ class Note extends React.Component {
           onChangeDo={this.handleChange.bind(this, ID, last, isEmpty)}
           canGetFocus={this.props.canAllocateFocus} 
           onFocusDo={this.handleNoteLineFocus.bind(this, ID)}
-          deleteLine={this.props.deleteLine.bind(this, ID, this.props.note.ID)}
+          deleteLine={this.handleDelete.bind(this, ID, this.props.note.ID)}
           onImportant={this.lineModifierHandler.bind(this, ID, 'onImportant')}
           onHighlight={this.lineModifierHandler.bind(this, ID, 'onHighlight')}
+          onChangeOfHeightDo={this.handleChangeOfHeight.bind(this, index, ID)}
           updateCursorPosition={this.props.updateCursorPosition.bind(this)}
           cursorPosition={this.getCursorPosition.bind(this)}
           />
@@ -319,21 +351,16 @@ class Note extends React.Component {
     }
 
     return (
-      <div className="columns row" style={{maxWidth: '100%', margin: 0, height: 570, overflowY: 'auto'}}>
-        <HistoryNavigation 
-          show={type === 'history'}
-          handleNavigation={(navigateTo) => this.handleNavigation.bind(this, navigateTo)}
-          first={+noteNumber === 0}
-          last={+noteNumber === this.props.numberOfNotesOfCurrentType-1}/>
-        <div
+      <div className="columns row" style={{maxWidth: '100%', margin: 0, overflowY: 'hidden'}}>
+         <div
           className="columns row small-collapse"
-          style={{margin: type === 'history' ? '1em 0 3em 4em' : '3em 0 3em 4em', display: 'inline-flex'}}
+          style={{margin: '3em 0 3em 4em', display: 'inline-flex'}}
           >
           <Paper
             zDepth={2}
             className="small-10 large-10 small-centered large-centered small-offset-2 large-offset-2 columns"
-            style={{margin: 0, height: 'auto', overflowY: 'scroll'}}
-            onClick={this.handleClick}>
+            style={{margin: 0, height: 'auto'}}
+            onTouchTap={this.handleClick}>
             
             <NoteHeader 
               show={this.canShowHeaderAndFooter('header')}
@@ -342,8 +369,10 @@ class Note extends React.Component {
 
             <Divider />
 
-            <div style={{padding: '1em 0', margin: '0'}}>
-              {this.renderNoteLines()}
+            <div style={{position: 'relative', overflow: 'auto', maxHeight: this.props.height - 260 - (this.props.height*.4)}} >
+              <div style={{padding: '1em 0 0' + (noteLines.length > 1 ? '0' : '1em'), margin: '0', height: this.state.totalHeight, overflowY: 'scroll'}}>
+                {this.renderNoteLines()}
+              </div>
             </div>
 
             <Divider />
@@ -357,13 +386,9 @@ class Note extends React.Component {
               />     
 
           </Paper>
-          {/*</div>*/}
-          <NoteTimestamp 
-            type={type}
-            date={this.props.note && new Date(this.props.note.createdAt) || new Date()}
-            />
         </div>
         <NewNoteButton
+          width={this.props.width}
           onClickDo={this.handleNewButton}
          />
       </div>

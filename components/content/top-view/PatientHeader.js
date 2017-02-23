@@ -37,7 +37,7 @@ class PatientHeader extends React.Component {
               <FlatButton
                   className="show-for-small-only"
                   backgroundColor={blue800}
-                  onClick={this.props.onClickDo}
+                  onTouchTap={this.props.onClickDo}
                   icon={<NavigationMenu color={'white'} />}
                   />
             </div>
@@ -54,7 +54,7 @@ class PatientHeader extends React.Component {
             <InfoLabels 
               label="Admission date"
               info={dateToString(this.props.patient.admissionDate)} 
-              classForPosition="small-2 large-1 large-offset-4 small-offset-4 small-centered columns"
+              classForPosition="small-2 large-1 large-offset-4 small-offset-3 small-centered columns"
               />
             <InfoLabels 
               label="Discharge date"

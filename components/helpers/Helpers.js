@@ -140,7 +140,6 @@ export const iconStyles = {
 export const newNoteButtonStyle = {
   margin: 20,
   position: 'fixed',
-  left: '90%',
   top: '85%'
 };
 

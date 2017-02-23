@@ -2,16 +2,8 @@ import React from 'react';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import { Provider } from 'react-redux';
 
-import {
-  green400,
-  cyan500,
-  blue800
-} from 'material-ui/styles/colors';
-
 import PatientContainer from '../PatientContainer';
 import PatientDetailContainer from '../PatientDetailContainer';
-
-import { fetchData } from '../../actions/sync';
 
 class Root extends React.Component {
   render() {

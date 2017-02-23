@@ -47,7 +47,7 @@ class PatientList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    console.log('--shouldComponentUpdate--', this.props.patients.length !== nextProps.patients.length)
+    console.log('--shouldComponentUpdate--', this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen)
     return this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen;
   }
 
@@ -90,7 +90,7 @@ class PatientList extends React.Component {
               style={{textDecoration: 'none'}}
               onMouseDown={this.handleMouseDown}
               onMouseMove={this.handleMouseMove}
-              onClick={this.handleClick}
+              onTouchTap={this.handleClick}
               >
 
             <ListItem
@@ -135,7 +135,7 @@ class PatientList extends React.Component {
 
   render() {
     return (
-  		<BaseList isDrawerOpen={this.props.isDrawerOpen}>
+  		<BaseList width={this.props.width} onClickDo={this.props.onClickDo} isDrawerOpen={this.props.isDrawerOpen}>
         <Tabs style={{marginTop: '0'}} tabItemContainerStyle={{borderRight: '1px #aeaeae solid'}}>
           
           {this.renderTabs()}

@@ -10,11 +10,17 @@ import {
 } from 'material-ui/styles/colors';
 
 class EmergencyCallButton extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      open: false
+      open: false,
+      width: props.width
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('here')
+    this.setState({ width: nextProps.width })
   }
 
   handleOpen() {
@@ -30,8 +36,8 @@ class EmergencyCallButton extends React.Component {
       <div>
         <FloatingActionButton 
           backgroundColor="#c83030" 
-          onClick={this.handleOpen.bind(this)}
-          style={{position: 'fixed', left: '90%', top: 20}} 
+          onTouchTap={this.handleOpen.bind(this)}
+          style={{position: 'fixed', left: this.state.width - 80, top: 20}} 
           >
           <CommunicationPhone />
         </FloatingActionButton>

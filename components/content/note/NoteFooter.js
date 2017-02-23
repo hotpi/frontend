@@ -17,9 +17,9 @@ const NoteFooter = ({
   onSaveDo
 }) => {
   return (
-    <div className="row small-collapse" style={show ? actionsArea.visible : actionsArea.hidden}>
+    <div className="row small-collapse medium-collapse large-collapse" style={show ? actionsArea.visible : actionsArea.hidden}>
       <SelectField 
-        className="small-6 small-centered columns"
+        className="small-5 medium-6large-5 small-centered columns"
         value={value}
         onChange={onChangeDo} 
         errorText={+value === 0 && 'Please select one'}
@@ -33,12 +33,12 @@ const NoteFooter = ({
           <MenuItem value='3' primaryText='ToDo' />
       </SelectField>
       <div 
-        className="small-2 medium-3 large-2 small-centered small-offset-3 medium-offset-2 large-offset-3  columns" 
+        className="small-1 medium-3 large-3 small-centered small-offset-1 medium-offset-2 large-offset-3  columns" 
       >
       <FlatButton
         backgroundColor='#00bcd4'
         style={{margin: '15px 0', padding: 0, position: 'relative'}}
-        onClick={onSaveDo}
+        onTouchTap={onSaveDo}
         label='Save'
         labelPosition='after'
         labelStyle={{color: 'white', position: 'auto'}}

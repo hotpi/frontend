@@ -7,6 +7,7 @@ import PatientHeader from '../components/content/top-view/PatientHeader';
 import Note from '../components/content/note/Note';
 import Loading from '../components/helpers/Loading';
 import EmptySelection from '../components/helpers/EmptySelection';
+import EmergencyCallButton from '../components/content/top-view/EmergencyCallButton';
 
 import { getIsFetching, getIsSynced } from '../reducers';
 import { fetchData } from '../actions/sync';
@@ -15,8 +16,13 @@ class PatientContainer extends React.Component {
   constructor() {
     super()
     this.state = {
-      isDrawerOpen: false
+      isDrawerOpen: false,
+      width: window.innerWidth
     }
+  } 
+  componentWillMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions.bind(this));
   }
 
   componentDidMount() {
@@ -26,7 +32,15 @@ class PatientContainer extends React.Component {
       fetchData()
     }
   }
-    
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions.bind(this));
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth });
+  }
+
   handleClick(e) {
     this.setState({
       isDrawerOpen: !this.state.isDrawerOpen
@@ -42,7 +56,7 @@ class PatientContainer extends React.Component {
     return (
         <div className="row" style={{margin: 0, maxWidth: '100%'}}>
           <div className="large-3 columns" style={{padding: 0}}>
-            <PatientList isDrawerOpen={this.state.isDrawerOpen}/>
+            <PatientList width={this.state.width} onClickDo={this.handleClick.bind(this)} isDrawerOpen={this.state.isDrawerOpen}/>
           </div>
           <div className="small-12 medium-8 large-9 columns" style={{padding:0}}>
             <div style={{overflow: 'hidden'}}>
@@ -52,6 +66,7 @@ class PatientContainer extends React.Component {
                 />
             </div>
           </div>
+          <EmergencyCallButton width={this.state.width} />
         </div>
     	);
   }

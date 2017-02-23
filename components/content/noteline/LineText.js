@@ -69,6 +69,8 @@ class LineText extends React.Component {
       this.setState({
         height: newHeight
       })
+
+      this.props.onChangeOfHeightDo(newHeight)
     }
   }
 

@@ -42,7 +42,6 @@ class NoteLine extends React.Component {
   render() {
     const { deleteLine, last, important, highlight, text, canGetFocus } = this.props
 
-    console.log('cursor received at NoteLine component: ', this.props.cursorPosition())
     if (!this.props.noteLine) {
       return <div></div>
     }
@@ -58,9 +57,11 @@ class NoteLine extends React.Component {
             onFocusDo={this.props.onFocusDo}
             cursorPosition={this.props.cursorPosition()}
             updateCursorPosition={this.props.updateCursorPosition}
+            onChangeOfHeightDo={this.props.onChangeOfHeightDo}
             text={text}
             highlight={highlight}
             canGetFocus={canGetFocus}
+
             />
           <CancelButton 
             last={last}

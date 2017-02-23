@@ -12,7 +12,7 @@ const EmptySelection = ({
               <FlatButton
                   className="show-for-small-only"
                   backgroundColor={'grey'}
-                  onClick={onClickDo}
+                  onTouchTap={onClickDo}
                   icon={<NavigationMenu color={'white'} />}
                   />
             </div>

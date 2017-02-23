@@ -24,35 +24,25 @@ class BaseList extends React.Component {
     super(props)
     this.state = {
       isOpen: false,
-      width: window.innerWidth,
-      drawerOpen: false
+      width: props.width,
+      drawerWidth: this.calculateDrawerWidth()
     }
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
+  calculateDrawerWidth(){
+    return [1027, 640, 399].reduce((prev, current, index) => {
+        return window.innerWidth > current && prev === 0 ? 
+          window.innerWidth/(Math.max(4-(index*Math.pow(2, index-1)), 1)) :
+          prev
+    }, 0)
+  }
 
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions.bind(this));
-    this.setState({
-      drawerOpen: this.state.drawerOpen
+ componentWillReceiveProps(nextProps) {
+  this.setState({
+      width: nextProps.width,
+      drawerWidth: this.calculateDrawerWidth()
     })
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions.bind(this));
-  }
-
-  componentWillReceiveProps(nextProps, nextState) {
-    console.log(nextProps, this.state.drawerOpen, nextState)
-    this.setState({
-      drawerOpen: nextProps.isDrawerOpen
-    })
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, drawerOpen: window.innerWidth >= 640 });
-  }
+ }
 
   handleOpen() {
     this.setState({
@@ -77,8 +67,8 @@ class BaseList extends React.Component {
         <Drawer
           className="hide-for-small-only"
           docked={this.state.width >= 640}
-          open={this.state.drawerOpen || this.state.width >= 640}
-          width={this.state.width > 1027 ? this.state.width/4 : this.state.width/3}
+          open={this.props.isDrawerOpen || this.state.width >= 640}
+          width={this.state.drawerWidth}
           >
           <List style={listStyle}>
             <Paper
@@ -91,15 +81,15 @@ class BaseList extends React.Component {
                     <IconButton
                       tooltip="add patient"
                       tooltipPosition="top-right"
-                      onClick={this.handleOpen.bind(this)}>
+                      onTouchTap={this.handleOpen.bind(this)}>
                       <ContentAdd color={grey400} />
                     </IconButton>
                   </div>
                   <div 
-                    className="small-1 small-offset-4 show-for-small-only"
+                    className="small-1 small-offset-5 show-for-small-only"
                     >
                     <IconButton
-                        onClick={this.handleDrawer.bind(this)}
+                        onTouchTap={this.props.onClickDo}
                         style={{margin: 0, padding: 0, height: 24}}
                         >
                         <NavigationMenu color={grey400} />
@@ -117,11 +107,11 @@ class BaseList extends React.Component {
                       closeDialog={() => this.handleClose()}
                       />
                   </Dialog>
-                  <div className="small-1 medium-1 large-2 small-offset-3 medium-offset-9 large-offset-9">
+                  <div>
                     <IconButton
                       tooltip="more"
                       tooltipPosition="top-right"
-                      style={{left: '68%'}}>
+                      style={{left: this.state.drawerWidth - (this.state.width < 640 ? this.state.drawerWidth/1.8  : this.state.drawerWidth/4.5)}}>
                       <NavigationMoreVert color={grey400} />
                     </IconButton>
                   </div>  
