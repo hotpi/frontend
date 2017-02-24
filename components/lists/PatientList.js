@@ -48,7 +48,7 @@ class PatientList extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     console.log('--shouldComponentUpdate--', this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen)
-    return this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen;
+    return this.props.patients.length !== nextProps.patients.length || this.props.isDrawerOpen !== nextProps.isDrawerOpen || this.props.width !== nextProps.width;
   }
 
   handleMouseDown(e) {

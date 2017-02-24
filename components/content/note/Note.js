@@ -86,10 +86,11 @@ class Note extends React.Component {
     const { type } = this.props;
 
     this.props.allowFocusChange(true)
+    this.calculateTotalHeight()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type || this.props.width !== nextProps.width || this.props.height !== nextProps.height;
+    return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') || this.props.noteLines.length !== nextProps.noteLines.length || this.props.type !== nextProps.type || this.state.hasFocus !== nextState.hasFocus || this.state.type !== nextState.type || this.props.width !== nextProps.width || this.props.height !== nextProps.height || this.state.totalNoteHeight !== nextState.totalNoteHeight;
   }
 
   isNoteLineEmpty() {
@@ -253,8 +254,9 @@ class Note extends React.Component {
 
   handleChangeOfHeight(index, noteLineId, newHeight) {
     console.log(newHeight)
-    if (index < this.props.noteLines.length - 1) {
-      newHeight += (15 + 58) // upper margin and buttons
+    if (index < this.props.noteLines.length - 1 || this.props.type !== 'new') {
+      console.log('adding upper margin')
+      newHeight += (15 + 58) // upper margin and buttons and padding
     }
     console.log('at handleChangeOfHeight', newHeight, this.heights)
     this.heights.filter(line => line.ID === noteLineId)[0].height = newHeight
@@ -350,8 +352,10 @@ class Note extends React.Component {
       );
     }
 
+    let minHeight = this.heights.filter((height) => height.height > 0)[0] ? this.heights.filter((height) => height.height > 0)[0].height : 0
+    console.log('minHeight:', minHeight, this.state.totalNoteHeight)
     return (
-      <div className="columns row" style={{maxWidth: '100%', margin: 0, overflowY: 'hidden'}}>
+      <div className="columns row" style={{height: '100%', maxWidth: '100%', margin: 0, overflowY: 'hidden'}}>
          <div
           className="columns row small-collapse"
           style={{margin: '3em 0 3em 4em', display: 'inline-flex'}}
@@ -359,7 +363,7 @@ class Note extends React.Component {
           <Paper
             zDepth={2}
             className="small-10 large-10 small-centered large-centered small-offset-2 large-offset-2 columns"
-            style={{margin: 0, height: 'auto'}}
+            style={{overflow: 'hidden', margin: 0, height: this.state.totalNoteHeight+(this.canShowHeaderAndFooter('footer') ? 68 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0), maxHeight: Math.max(minHeight+(this.canShowHeaderAndFooter('footer') ? 68 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0), this.props.height - 260 - (this.props.height*.4))}}
             onTouchTap={this.handleClick}>
             
             <NoteHeader 
@@ -369,13 +373,13 @@ class Note extends React.Component {
 
             <Divider />
 
-            <div style={{position: 'relative', overflow: 'auto', maxHeight: this.props.height - 260 - (this.props.height*.4)}} >
-              <div style={{padding: '1em 0 0' + (noteLines.length > 1 ? '0' : '1em'), margin: '0', height: this.state.totalHeight, overflowY: 'scroll'}}>
+            <div style={{position: 'relative', overflow: 'auto', minHeight: minHeight, maxHeight: Math.max(minHeight, this.props.height - 260 - (this.props.height*.4))}} >
+              <div style={{padding: '10px 0 ' + (noteLines.length > 1 ? '0' : '10px') + ' 0', margin: '0', height: this.state.totalNoteHeight, overflowY: 'scroll'}}>
                 {this.renderNoteLines()}
               </div>
             </div>
 
-            <Divider />
+            <Divider style={{display: (this.canShowHeaderAndFooter('footer') ? 'inherit' : 'none')}}/>
 
             <NoteFooter 
               show={this.canShowHeaderAndFooter('footer')}

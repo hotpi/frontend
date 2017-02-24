@@ -30,7 +30,7 @@ class BaseList extends React.Component {
   }
 
   calculateDrawerWidth(){
-    return [1027, 640, 399].reduce((prev, current, index) => {
+    return [1027, 640, 300].reduce((prev, current, index) => {
         return window.innerWidth > current && prev === 0 ? 
           window.innerWidth/(Math.max(4-(index*Math.pow(2, index-1)), 1)) :
           prev
@@ -60,6 +60,19 @@ class BaseList extends React.Component {
     this.setState({
       drawerOpen: false
     })
+  }
+
+  getOffset() {
+    let offset = 0
+    if (this.state.width < 640 && this.state.width > 400){ 
+      offset = this.state.drawerWidth/1.55  
+    } else if (this.state.width < 400) { 
+      offset = this.state.drawerWidth/1.4
+    } else { 
+      offset = this.state.drawerWidth/4.5
+    }
+
+    return offset;
   }
 
   render() {
@@ -111,7 +124,7 @@ class BaseList extends React.Component {
                     <IconButton
                       tooltip="more"
                       tooltipPosition="top-right"
-                      style={{left: this.state.drawerWidth - (this.state.width < 640 ? this.state.drawerWidth/1.8  : this.state.drawerWidth/4.5)}}>
+                      style={{left: this.state.drawerWidth - this.getOffset()}}>
                       <NavigationMoreVert color={grey400} />
                     </IconButton>
                   </div>  
