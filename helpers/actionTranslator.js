@@ -22,7 +22,7 @@ export const translateActionToOperation = (action, store) => {
       return [DELETE, accessPath, node, action];
     case patientTypes.ADD_PATIENT:
       var patients = getAllPatients(store.getState()).sort((a, b) => sortAlphabetically(a,b))
-      var patientIndex = patients.map(patient => patient.ID).indexOf(action.PatientID)
+      var patientIndex = patients.length
       var accessPath = [{'0': patientIndex}]
       var node = {
         ID: action.PatientID,

@@ -265,7 +265,7 @@ class Note extends React.Component {
 
   calculateTotalHeight() {
     console.log(this.props.height - 260 - (this.props.height*.4))
-    console.log('calculation', this.heights.reduce((prev, current) => prev+current.height, 0) + (this.canShowHeaderAndFooter('footer') ? 68 : 0) + (this.canShowHeaderAndFooter('header') ? 60 : 0))
+    console.log('calculation', this.heights.reduce((prev, current) => prev+current.height, 0) + (this.canShowHeaderAndFooter('footer') ? 110 : 0) + (this.canShowHeaderAndFooter('header') ? 60 : 0))
     this.setState({ totalNoteHeight: this.heights.reduce((prev, current) => prev+current.height, 0) })
   }
 
@@ -353,6 +353,9 @@ class Note extends React.Component {
     }
 
     let minHeight = this.heights.filter((height) => height.height > 0)[0] ? this.heights.filter((height) => height.height > 0)[0].height : 0
+    if (minHeight === 28) {
+      minHeight += 40
+    }
     console.log('minHeight:', minHeight, this.state.totalNoteHeight)
     return (
       <div className="columns row" style={{height: '100%', maxWidth: '100%', margin: 0, overflowY: 'hidden'}}>
@@ -363,7 +366,7 @@ class Note extends React.Component {
           <Paper
             zDepth={2}
             className="small-10 large-10 small-centered large-centered small-offset-2 large-offset-2 columns"
-            style={{overflow: 'hidden', margin: 0, height: this.state.totalNoteHeight+(this.canShowHeaderAndFooter('footer') ? 68 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0), maxHeight: Math.max(minHeight+(this.canShowHeaderAndFooter('footer') ? 68 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0), this.props.height - 260 - (this.props.height*.4))}}
+            style={{overflow: 'hidden', margin: 0, height: Math.max(minHeight, this.state.totalNoteHeight+(this.canShowHeaderAndFooter('footer') ? 110 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0)), maxHeight: Math.max(minHeight+(this.canShowHeaderAndFooter('footer') ? 110 : 0)+(this.canShowHeaderAndFooter('header') ? 60 : 0), this.props.height - 260 - (this.props.height*.4))}}
             onTouchTap={this.handleClick}>
             
             <NoteHeader 
