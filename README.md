@@ -1,7 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/hotpi/frontend.png?label=ready&title=Ready)](https://waffle.io/hotpi/frontend)
 
-- [ ] todo 
-
 # HotPi
 HotPi is a web application for patient documentation, which ensures availability even if no connection is available at all without compromising the state of the application. If a connection is available in all devices, a Google-Docs-like workflow can be experienced. 
 
