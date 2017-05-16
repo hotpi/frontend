@@ -1,19 +1,18 @@
 import React from 'react';
 
-import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
 import ToggleStar from 'material-ui/svg-icons/toggle/star';
 
-import { 
+import {
   amber700,
   amber400,
-  amber100 
-} from 'material-ui/styles/colors'
+  amber100
+} from 'material-ui/styles/colors';
 
-import { iconStyles } from '../../helpers/Helpers'
+import { iconStyles } from '../../helpers/Helpers';
 
 
 class ImportantIcon extends React.Component {
@@ -22,15 +21,15 @@ class ImportantIcon extends React.Component {
   }
 
   render() {
-    const { onChangeDo, important } = this.props
+    const { onChangeDo, important } = this.props;
     let iconStyle = {
       ...iconStyles,
       icon: {
         ...iconStyles.icon,
         color: important.color
       }
-    }
-    
+    };
+
     return (
       <IconMenu
         onChange={onChangeDo}
@@ -45,8 +44,15 @@ class ImportantIcon extends React.Component {
                   <ToggleStar />
               </IconButton>
         )}
-        anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-        targetOrigin={{horizontal: 'left', vertical: 'top'}}>
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'top'
+        }}
+        targetOrigin={{
+          horizontal: 'left',
+          vertical: 'top'
+        }}
+      >
           <MenuItem value="0" primaryText="Normal priority" />
           <MenuItem value="1" leftIcon={<ToggleStar color={amber700}/>} primaryText="Priority 1" />
           <MenuItem value="2" leftIcon={<ToggleStar color={amber400}/>} primaryText="Priority 2" />
@@ -63,6 +69,6 @@ ImportantIcon.propTypes = {
     value: React.PropTypes.any.isRequired
   }).isRequired,
   onChangeDo: React.PropTypes.func.isRequired
-}
+};
 
 export default ImportantIcon;

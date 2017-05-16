@@ -32,15 +32,15 @@ export const importantLine = (NoteLineID, value) => ({
   value
 });
 
-export const HIGHLIGHT_LINE = 'HIGHLIGHT_LINE'
+export const HIGHLIGHT_LINE = 'HIGHLIGHT_LINE';
 export const highlightLine = (NoteLineID, value) => ({
-  type: HIGHLIGHT_LINE, 
+  type: HIGHLIGHT_LINE,
   NoteLineID,
   color: highlightColors[+value],
   value
 });
 
-export const UPDATE_LINE_VALUE = 'UPDATE_LINE_VALUE'
+export const UPDATE_LINE_VALUE = 'UPDATE_LINE_VALUE';
 export const updateLineValue = (NoteLineID, opType, value, position) => ({
   type: UPDATE_LINE_VALUE,
   NoteLineID,

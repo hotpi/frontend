@@ -1,5 +1,5 @@
-import { getIsFetching } from '../reducers'
-import { middleware } from '../index'
+import { getIsFetching } from '../reducers';
+import { middleware } from '../index';
 
 export const SYNC_COMPLETED = 'SYNC_COMPLETED';
 const receivedData = (response) => ({
@@ -10,16 +10,18 @@ const receivedData = (response) => ({
 export const SYNC_REQUESTED = 'SYNC_REQUESTED';
 const requestData = () => ({
   type: SYNC_REQUESTED
-})
+});
 
 export const fetchData = () => (dispatch, getState) => {
   if (getIsFetching(getState())) {
     return Promise.resolve();
   }
 
-  dispatch(requestData())
+  dispatch(requestData());
 
   middleware.fetchState().then(response => {
-      dispatch(receivedData(response))
-  })
+    dispatch(receivedData(response));
+  });
+
+  return null;
 };

@@ -15,8 +15,8 @@ const CancelButton = ({
       <IconButton
         tooltip="Delete line"
         className="line-buttons"
-        style={inlineIconStyle.iconArea} 
-        iconStyle={inlineIconStyle.icon} 
+        style={inlineIconStyle.iconArea}
+        iconStyle={inlineIconStyle.icon}
         onTouchTap={onClickDo} >
         <NavigationCancel />
       </IconButton>
@@ -24,13 +24,16 @@ const CancelButton = ({
   }
 
   return (
-    <div style={{display: 'none'}}></div>
+    <div style={{
+      display: 'none'
+    }}
+    />
   );
-}
+};
 
 CancelButton.propTypes = {
   onClickDo: React.PropTypes.func.isRequired,
   last: React.PropTypes.bool.isRequired
-}
+};
 
 export default CancelButton;

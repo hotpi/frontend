@@ -9,15 +9,15 @@ import MenuItem from 'material-ui/MenuItem';
 import EditorHighlight from 'material-ui/svg-icons/editor/highlight';
 import ImageLens from 'material-ui/svg-icons/image/lens';
 
-import { 
+import {
   yellowA100,
   blueA100,
   greenA100,
   orangeA100,
   cyanA100
-} from 'material-ui/styles/colors'
+} from 'material-ui/styles/colors';
 
-import { iconStyles } from '../../helpers/Helpers'
+import { iconStyles } from '../../helpers/Helpers';
 
 class HighlightIcon extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -26,14 +26,14 @@ class HighlightIcon extends React.Component {
 
 
   render() {
-    const { onChangeDo, highlight } = this.props
+    const { onChangeDo, highlight } = this.props;
     let iconStyle = {
       ...iconStyles,
       icon: {
         ...iconStyles.icon,
         color: highlight.color
       }
-    }
+    };
 
     return (
       <IconMenu
@@ -48,9 +48,16 @@ class HighlightIcon extends React.Component {
             iconStyle={iconStyle.icon} >
             <EditorHighlight />
           </IconButton>
-        )}            
-        anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-        targetOrigin={{horizontal: 'left', vertical: 'top'}}>
+        )}
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'top'
+        }}
+        targetOrigin={{
+          horizontal: 'left',
+          vertical: 'top'
+        }}
+      >
           <MenuItem value="0" leftIcon={<ImageLens color="transparent"/>} primaryText="No color" />
           <MenuItem value="1" leftIcon={<ImageLens color={yellowA100}/>} primaryText="Yellow" />
           <MenuItem value="2" leftIcon={<ImageLens color={blueA100}/>} primaryText="Blue" />
@@ -69,6 +76,6 @@ HighlightIcon.propTypes = {
     value: React.PropTypes.any.isRequired
   }).isRequired,
   onChangeDo: React.PropTypes.func.isRequired
-}
+};
 
 export default HighlightIcon;

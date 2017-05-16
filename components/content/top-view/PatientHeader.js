@@ -17,8 +17,14 @@ const InfoLabels = (props) => {
     <div className={props.classForPosition} style={labelStyles.infoItem}>
       <h6 style={labelStyles.label}> {props.label} </h6>
       <p style={labelStyles.info}> {props.info}</p>
-    </div>  
-  )
+    </div>
+  );
+};
+
+InfoLabels.propTypes = {
+  classForPosition: React.PropTypes.string,
+  label: React.PropTypes.string,
+  info: React.PropTypes.string
 };
 
 class PatientHeader extends React.Component {
@@ -27,11 +33,13 @@ class PatientHeader extends React.Component {
   }
 
   render() {
-
-    return (        
+    return (
         <Paper
-          zDepth={0} 
-          style={headerStylesMobile.area}>
+          zDepth={0}
+          style={
+            headerStylesMobile.area
+          }
+        >
           <div className="column row">
             <div className="small-4 show-for-small-only colums">
               <FlatButton
@@ -41,39 +49,69 @@ class PatientHeader extends React.Component {
                   icon={<NavigationMenu color={'white'} />}
                   />
             </div>
-            <h3 className="small-8 medium-12 columns" style={headerStylesMobile.header3}>Patient </h3>
-            <h2 className="small-8 medium-12 columns" style={headerStylesMobile.header2}>{this.props.patient.firstName + ' ' + this.props.patient.lastName}  </h2>
-            <hr className="small-8 medium-12 columns" style={headerStylesMobile.line}/>
+            <h3 className="small-8 medium-12 columns" style={
+              headerStylesMobile.header3
+            }
+            >Patient</h3>
+            <h2
+              className="small-8 medium-12 columns"
+              style={
+                headerStylesMobile.header2
+              }
+            >{this.props.patient.firstName + ' ' + this.props.patient.lastName}</h2>
+            <hr
+              className="small-8 medium-12 columns"
+              style={
+                headerStylesMobile.line
+              }
+            />
           </div>
-          <div className="row" style={{margin: '0 0 0 30px'}}>
-            <InfoLabels 
+          <div
+            className="row"
+            style={{
+              margin: '0 0 0 30px'
+            }}
+          >
+            <InfoLabels
               label="Clinic"
-              info={this.props.patient.clinic} 
+              info={this.props.patient.clinic}
               classForPosition="small-1 columns"
-              />
-            <InfoLabels 
+            />
+            <InfoLabels
               label="Admission date"
-              info={dateToString(this.props.patient.admissionDate)} 
+              info={dateToString(this.props.patient.admissionDate)}
+              // eslint-disable-next-line
               classForPosition="small-2 large-1 large-offset-4 small-offset-3 small-centered columns"
               />
-            <InfoLabels 
+            <InfoLabels
               label="Discharge date"
-              info={dateToString(this.props.patient.dischargeDate)} 
-              classForPosition="small-2 large-1 large-offset-5 small-offset-3 columns" 
+              info={dateToString(this.props.patient.dischargeDate)}
+              classForPosition="small-2 large-1 large-offset-5 small-offset-3 columns"
               />
           </div>
         </Paper>
-    	)
+    );
   }
 }
+
+PatientHeader.propTypes = {
+  patient: React.PropTypes.shape({
+    clinic: React.PropTypes.string,
+    admissionDate: React.PropTypes.string,
+    dischargeDate: React.PropTypes.string,
+    firstName: React.PropTypes.string,
+    lastName: React.PropTypes.string
+  }),
+  onClickDo: React.PropTypes.func
+};
 
 const mapStateToProps = (state, { params }) => {
   const patientId = (params && params.patientId) || getFirstPatientId(state);
-  const patient = patientId && getPatientById(state, patientId)
+  const patient = patientId && getPatientById(state, patientId);
 
   return {
     patient
-  }
-}
+  };
+};
 
 export default withRouter(connect(mapStateToProps)(PatientHeader));

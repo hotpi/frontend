@@ -6,7 +6,7 @@ import SliderMonitor from 'redux-slider-monitor';
 import Inspector from 'redux-devtools-inspector';
 
 const DevTools = createDevTools(
-  <DockMonitor 
+  <DockMonitor
     toggleVisibilityKey="ctrl-h"
     changePositionKey="ctrl-w"
     changeMonitorKey="ctrl-shift-m"

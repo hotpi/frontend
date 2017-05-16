@@ -1,3 +1,7 @@
+/**
+ * @deprecated
+ */
+
 import React from 'react';
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,11 +16,11 @@ const HistoryNavigation = ({
   handleNavigation
 }) => {
   if (!show) {
-    return <div></div>;
+    return null;
   }
 
   return (
-    <div style={{padding: '2em 0 0 17em'}}>
+    <div style={ { padding: '2em 0 0 17em' } }>
       <RaisedButton
         icon={<NavigationChevronLeft />}
         disabled={first}
@@ -29,6 +33,13 @@ const HistoryNavigation = ({
         />
     </div>
   );
-}
+};
+
+HistoryNavigation.propTypes = {
+  show: React.propTypes.bool,
+  first: React.propTypes.bool,
+  last: React.propTypes.bool,
+  handleNavigation: React.propTypes.func
+};
 
 export default HistoryNavigation;

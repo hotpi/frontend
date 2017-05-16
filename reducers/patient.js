@@ -10,47 +10,47 @@ const patient = (state = {
   admissionDate: new Date(),
   dischargeDate: new Date(),
   birthday: new Date(),
-  notes: []
+  notes: []
 }, action) => {
   switch (action.type) {
-    case 'NEW_NOTE':
-      if (typeof action.index === 'undefined') {
-        return {
-          ...state,
-          notes: [...state.notes, action.NoteID] 
-        };
-      }
-      
+  case 'NEW_NOTE':
+    if (typeof action.index === 'undefined') {
       return {
         ...state,
-        notes: [
-          ...state.notes.slice(0, action.index+1),
-          action.NoteID,
-          ...state.notes.slice(action.index+1)  
-        ]
+        notes: [...state.notes, action.NoteID]
       };
+    }
 
-    case 'DELETE_NOTE': 
-      return {
-        ...state,
-        notes: state.notes.filter(noteID => noteID !== action.NoteID)
-      };
-    case 'ADD_PATIENT':
-      return {
-        ...state,
-        ID: action.PatientID,
-        lastName: action.lastName,
-        firstName: action.firstName,
-        bedNumber: action.bedNumber,
-        clinic: action.clinic,
-        station: action.station,
-        admissionDate: action.admissionDate,
-        dischargeDate: action.dischargeDate,
-        birthday: action.birthday
-      };
-    default:
-      return state;
+    return {
+      ...state,
+      notes: [
+        ...state.notes.slice(0, action.index + 1),
+        action.NoteID,
+        ...state.notes.slice(action.index + 1)
+      ]
+    };
+
+  case 'DELETE_NOTE':
+    return {
+      ...state,
+      notes: state.notes.filter(noteID => noteID !== action.NoteID)
+    };
+  case 'ADD_PATIENT':
+    return {
+      ...state,
+      ID: action.PatientID,
+      lastName: action.lastName,
+      firstName: action.firstName,
+      bedNumber: action.bedNumber,
+      clinic: action.clinic,
+      station: action.station,
+      admissionDate: action.admissionDate,
+      dischargeDate: action.dischargeDate,
+      birthday: action.birthday
+    };
+  default:
+    return state;
   }
-}
+};
 
 export default patient;

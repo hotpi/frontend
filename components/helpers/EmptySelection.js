@@ -17,15 +17,20 @@ const EmptySelection = ({
                   />
             </div>
       <h3 style={{
-        fontWeight: 100, 
-        fontSize: 40, 
-        color: 'grey', 
+        fontWeight: 100,
+        fontSize: 40,
+        color: 'grey',
         padding: '10rem 2rem',
         textAlign: 'center',
         height: 'auto'
       }}> {text} </h3>
     </div>
   );
-}
+};
+
+EmptySelection.propTypes = {
+  text: React.PropTypes.string,
+  onClickDo: React.PropTypes.func
+};
 
 export default EmptySelection;

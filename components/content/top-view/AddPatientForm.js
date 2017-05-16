@@ -3,53 +3,61 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { Form } from 'formsy-react';
-import Formsy, { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
-    FormsySelect, FormsyText, FormsyTime, FormsyToggle } from 'formsy-material-ui/lib';
+import {
+  FormsyDate,
+  FormsySelect,
+  FormsyText
+} from 'formsy-material-ui/lib';
+
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 
-import { addPatient } from '../../../actions/patients'
+import { addPatient } from '../../../actions/patients';
 
 class AddPatientForm extends React.Component {
-  constructor(props) {
-    super(props)
+  constructor(props) {
+    super(props);
+
     this.state = {
       canSubmit: false,
       isOpen: false
-    }
-    this.errorMessages = {
-      wordsError: "Please only use letters",
-      numericError: "Please provide a number",
-      urlError: "Please provide a valid URL",
-    }
+    };
 
-    this.enableButton = this.enableButton.bind(this)
-    this.disableButton = this.disableButton.bind(this)
-    this.submitForm = this.submitForm.bind(this)
-    this.notifyFormError = this.notifyFormError.bind(this)
+    this.errorMessages = {
+      wordsError: 'Please only use letters',
+      numericError: 'Please provide a number',
+      urlError: 'Please provide a valid URL'
+    };
+
+    this.enableButton = this.enableButton.bind(this);
+    this.disableButton = this.disableButton.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+    this.notifyFormError = this.notifyFormError.bind(this);
   }
 
   enableButton() {
     this.setState({
-      canSubmit: true,
-    })
+      canSubmit: true
+    });
   }
 
   disableButton() {
     this.setState({
-      canSubmit: false,
-    })
+      canSubmit: false
+    });
   }
 
   submitForm(data) {
+    // eslint-disable-next-line no-alert
     alert(JSON.stringify(data, null, 4));
-    this.props.addPatient(data)
-    this.props.closeDialog()
+    this.props.addPatient(data);
+    this.props.closeDialog();
   }
 
   notifyFormError(data) {
-    console.error('Form error:', data);
-  } 
+    // console.error('Form error:', data);
+    throw new Error('Form error: ', data);
+  }
 
   render() {
     return (
@@ -63,8 +71,14 @@ class AddPatientForm extends React.Component {
             name="firstName"
             validations="isWords"
             validationError={this.errorMessages.wordsError}
-            style={{width: '48%', marginRight: 4, marginTop: 0}}
-            errorStyle={{float: "left"}}
+            style={{
+              width: '48%',
+              marginRight: 4,
+              marginTop: 0
+            }}
+            errorStyle={{
+              float: 'left'
+            }}
             required
             floatingLabelText="First name"
           />
@@ -72,8 +86,14 @@ class AddPatientForm extends React.Component {
             name="lastName"
             validations="isWords"
             validationError={this.errorMessages.wordsError}
-            style={{width: '48%', marginRight: 4, marginTop: 0}}
-            errorStyle={{float: "left"}}
+            style={{
+              width: '48%',
+              marginRight: 4,
+              marginTop: 0
+            }}
+            errorStyle={{
+              float: 'left'
+            }}
             required
             floatingLabelText="Last name"
           />
@@ -81,11 +101,18 @@ class AddPatientForm extends React.Component {
             name="bedNumber"
             validations="isNumeric"
             validationError={this.errorMessages.numericError}
-            style={{width: '100%', marginRight: 4, marginTop: 0, padding: 0}}
-            errorStyle={{float: "left"}}
+            style={{
+              width: '100%',
+              marginRight: 4,
+              marginTop: 0,
+              padding: 0
+            }}
+            errorStyle={{
+              float: 'left'
+            }}
             required
             floatingLabelText="Bed number"
-          />          
+          />
           <FormsyDate
             name="birthday"
             maxDate={new Date()}
@@ -94,17 +121,30 @@ class AddPatientForm extends React.Component {
               month: 'numeric',
               year: 'numeric'
             }).format}
-            required            
-            style={{display: 'inline-block', width: '100%', margin: 0, padding: 0}}
-            textFieldStyle={{width: '100%', padding: 0, margin: 0}}
+            required
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              margin: 0,
+              padding: 0
+            }}
+            textFieldStyle={{
+              width: '100%',
+              padding: 0,
+              margin: 0
+            }}
             floatingLabelText="Birthdate"
             autoOk={true}
           />
-          
+
           <FormsySelect
             name="clinic"
             floatingLabelText="Clinic"
-            style={{width: '100%', marginRight: 4, marginTop: 0}}
+            style={{
+              width: '100%',
+              marginRight: 4,
+              marginTop: 0
+            }}
             required
           >
             <MenuItem value={'endo'} primaryText="Endocrinology" />
@@ -112,9 +152,13 @@ class AddPatientForm extends React.Component {
             <MenuItem value={'all'} primaryText="General pediatry" />
           </FormsySelect>
           <FormsySelect
-            name="station"            
+            name="station"
             floatingLabelText="Station"
-            style={{width: '100%', marginRight: 4, marginTop: 0}}
+            style={{
+              width: '100%',
+              marginRight: 4,
+              marginTop: 0
+            }}
             required
           >
             <MenuItem value={'28'} primaryText="28" />
@@ -130,8 +174,17 @@ class AddPatientForm extends React.Component {
               year: 'numeric'
             }).format}
             minDate={new Date()}
-            style={{display: 'inline-block', width: '100%', margin: 0, padding: 0}}
-            textFieldStyle={{width: '100%', padding: 0, margin: 0}}
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              margin: 0,
+              padding: 0
+            }}
+            textFieldStyle={{
+              width: '100%',
+              padding: 0,
+              margin: 0
+            }}
             autoOk={true}
           />
           <FormsyDate
@@ -144,26 +197,44 @@ class AddPatientForm extends React.Component {
               month: 'numeric',
               year: 'numeric'
             }).format}
-            style={{display: 'inline-block', width: '100%', margin: 0, padding: 0}}
-            textFieldStyle={{width: '100%', padding: 0, margin: 0}}
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              margin: 0,
+              padding: 0
+            }}
+            textFieldStyle={{
+              width: '100%',
+              padding: 0,
+              margin: 0
+            }}
             autoOk={true}
           />
           <RaisedButton
-              style={{float: 'right', marginTop: 10}}
+              style={{
+                float: 'right',
+                marginTop: 10
+              }}
               type="submit"
               primary={true}
               label="Submit"
               disabled={!this.state.canSubmit}
             />
       </Form>
-      );
+    );
   }
 }
+
+AddPatientForm.propTypes = {
+  addPatient: React.PropTypes.func,
+  closeDialog: React.PropTypes.func
+};
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addPatient: (info) => dispatch(addPatient(info))
-  }
-}
+  };
+};
 
 export default withRouter(connect(null, mapDispatchToProps)(AddPatientForm));

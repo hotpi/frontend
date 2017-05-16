@@ -1,17 +1,17 @@
-var webpack = require('webpack')
+const webpack = require('webpack');
 
-var config = require('./webpack.base.js')
+const config = require('./webpack.base.js');
 
-config.entry.unshift('webpack-hot-middleware/client')
+config.entry.unshift('webpack-hot-middleware/client');
 
-//Get a handle the base config's plugins array and add the plugin
-config.plugins = config.plugins || [ ]
-config.plugins.push(new webpack.HotModuleReplacementPlugin())
+// Get a handle the base config's plugins array and add the plugin
+config.plugins = config.plugins || [];
+config.plugins.push(new webpack.HotModuleReplacementPlugin());
 
 // enable react HMR
 config.module.rules.forEach((loader) => {
   if (loader.test.test('.js')) {
-    loader.options.presets.push('react-hmre')
+    loader.options.presets.push('react-hmre');
   }
 });
 
