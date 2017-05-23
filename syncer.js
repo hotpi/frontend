@@ -9,6 +9,9 @@ import {
   translateActionToOperation,
   translateOperationToAction
 } from './helpers/actionTranslator';
+import ConnectionMonitor from './resync/src/connectionMonitor';
+// eslint-disable-next-line
+const connectionEmitter = new Emitter;
 
 // eslint-disable-next-line
 const ROOT_URL = __API_ROOT_URL__;
@@ -16,10 +19,6 @@ const BROADCAST_URL = ROOT_URL + 'sync/status/';
 const SEND_OP_URL = ROOT_URL + 'sync/sendOp';
 const SUBSCRIBE_URL = ROOT_URL + 'sync/subscribe';
 const INITAL_STATE_URL = ROOT_URL + 'sync/initialState';
-const MONITOR_URL = ROOT_URL + 'health-check';
-
-// eslint-disable-next-line
-const connectionEmitter = new Emitter;
 
 const superagentThrottle = new Throttle({
   // set false to pause queue
@@ -37,36 +36,10 @@ class Syncer {
     this.lastConnectionAt = Date.now();
     this.initialLoad = false;
     this.hasAcknowledge = true;
+    // TODO: get it from connectionMonitor
     this.connectionStatus = 'up';
-    this.requestArray = [];
-    this.sendRequests = [];
-
-    connectionEmitter.on('disconnected', () => {
-      this.connectionStatus = 'down';
-      this.hasAcknowledge = false;
-      this.requestArray.map(requestObj => {
-        if (typeof requestObj.abort === 'function') {
-          requestObj.abort();
-        }
-      });
-
-      this.sendRequests.map(sendRequest => {
-        if (typeof sendRequest.abort === 'function') {
-          sendRequest.abort();
-        }
-      });
-      this.monitorConnectionToServer();
-      // console.log('working')
-    });
-
-    connectionEmitter.on('reconnected', () => {
-      this.connectionStatus = 'up';
-      this.listen();
-
-      this.sendToServer();
-
-      // console.log('working too')
-    });
+    this.longPolledRequests = [];
+    this.newOperationRequests = [];
 
     this.inflightOp = null;
     this.inFlight = false;
@@ -74,11 +47,51 @@ class Syncer {
     this.revisionNr = 0;
     this.uid = 0;
 
+    this.connectionMonitor = new ConnectionMonitor();
+    this.disconnectionListener = this.connectionMonitor.listenToEvent(
+      'disconnected',
+      [
+        this.onDisconnectDo.bind(this, this.longPolledRequests, this.newOperationRequests),
+        this.getConnectionStatus.bind(this)
+      ]
+    );
+
+    this.reconnectionListener = this.connectionMonitor.listenToEvent(
+      'reconnected',
+      [
+        this.listen.bind(this),
+        this.sendToServer.bind(this),
+        this.getConnectionStatus.bind(this)
+      ]
+    );
+
     if (!this.subscribe()) {
       throw new Error('Unable to fetch uid');
     }
 
     this.listen();
+  }
+
+  getConnectionStatus() {
+    this.connectionStatus = this.connectionMonitor.getConnectionStatus();
+    return this.connectionStatus;
+  }
+
+  onDisconnectDo(queuedLongPollingRequests, queuedOperationRequests) {
+    // this.hasAcknowledge = false;
+    // Abort all queued long-polled requests that are open.
+    queuedLongPollingRequests.map(longPolledRequest => {
+      if (typeof longPolledRequest.abort === 'function') {
+        longPolledRequest.abort();
+      }
+    });
+
+    // Abort all queued new operation requests that are open.
+    queuedOperationRequests.map(newOperationRequest => {
+      if (typeof newOperationRequest.abort === 'function') {
+        newOperationRequest.abort();
+      }
+    });
   }
 
   newAction(action) {
@@ -110,35 +123,6 @@ class Syncer {
 
       this.generateOperation(operation);
     }
-  }
-
-  monitorConnectionToServer() {
-    let retry = true;
-
-    let monitoredRequest = request
-      .head(MONITOR_URL)
-      .timeout(300)
-      .end((err, res) => {
-        if (!res) {
-          connectionEmitter.emit('reconnected');
-          retry = false;
-          return {};
-        }
-
-        return null;
-      });
-      // console.log(monitoredRequest)
-    setTimeout(() => {
-      if (typeof monitoredRequest.abort === 'function') {
-        monitoredRequest.abort();
-      }
-
-      if (retry) {
-        this.monitorConnectionToServer();
-      }
-    }, 5000);
-
-    return null;
   }
 
   generateOperation(newOp) {
@@ -175,7 +159,7 @@ class Syncer {
     // console.log('Sending operation: ', this.inflightOp, 'revisionNr: ', this.revisionNr);
     if (this.inFlight && this.hasAcknowledge) {
       this.hasAcknowledge = false;
-      let sendRequest = request
+      let newOperationRequest = request
         .post(SEND_OP_URL)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json; charset=utf-8')
@@ -199,7 +183,7 @@ class Syncer {
             // console.log('Something went wrong..', err)
           }
         );
-      this.sendRequests.push(sendRequest);
+      this.newOperationRequests.push(newOperationRequest);
     }
     if (!this.hasAcknowledge) {
       setTimeout(() => {
@@ -258,7 +242,7 @@ class Syncer {
           }
         );
 
-      this.requestArray.push(nextRequest);
+      this.longPolledRequests.push(nextRequest);
     }
 
     return null;
