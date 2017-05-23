@@ -37,7 +37,6 @@ class Syncer {
     this.initialLoad = false;
     this.hasAcknowledge = true;
     // TODO: get it from connectionMonitor
-    this.connectionStatus = 'up';
     this.longPolledRequests = [];
     this.newOperationRequests = [];
 
@@ -51,8 +50,7 @@ class Syncer {
     this.disconnectionListener = this.connectionMonitor.listenToEvent(
       'disconnected',
       [
-        this.onDisconnectDo.bind(this, this.longPolledRequests, this.newOperationRequests),
-        this.getConnectionStatus.bind(this)
+        this.onDisconnectDo.bind(this, this.longPolledRequests, this.newOperationRequests)
       ]
     );
 
@@ -60,8 +58,7 @@ class Syncer {
       'reconnected',
       [
         this.listen.bind(this),
-        this.sendToServer.bind(this),
-        this.getConnectionStatus.bind(this)
+        this.sendToServer.bind(this)
       ]
     );
 
@@ -70,11 +67,6 @@ class Syncer {
     }
 
     this.listen();
-  }
-
-  getConnectionStatus() {
-    this.connectionStatus = this.connectionMonitor.getConnectionStatus();
-    return this.connectionStatus;
   }
 
   onDisconnectDo(queuedLongPollingRequests, queuedOperationRequests) {
@@ -132,7 +124,7 @@ class Syncer {
       this.inFlight = true;
       this.inflightOp = newOp;
 
-      if (this.connectionStatus === 'up') {
+      if (this.connectionMonitor.getConnectionStatus() === 'up') {
         this.sendToServer();
       }
     }
@@ -214,11 +206,11 @@ class Syncer {
 
   // Fetch current status
   listen() {
-    if (this.uid === 0 || this.connectionStatus === 'down') {
+    if (this.uid === 0 || this.connectionMonitor.getConnectionStatus() === 'down') {
       return setTimeout(() => this.listen(), 500);
     }
 
-    if (this.connectionStatus === 'up') {
+    if (this.connectionMonitor.getConnectionStatus() === 'up') {
       let nextRequest = request
         .get(BROADCAST_URL + this.uid + '/' + this.revisionNr)
         .use(superagentThrottle.plugin())
@@ -285,7 +277,7 @@ class Syncer {
 
   initialLoad() {
     // if connection === up get the initialLoad from server
-    if (this.connectionStatus === 'up') {
+    if (this.connectionMonitor.getConnectionStatus() === 'up') {
       return request
         .get(INITAL_STATE_URL)
         .then(
@@ -327,7 +319,7 @@ class Syncer {
   }
 
   fetchState() {
-    if (this.connectionStatus === 'up') {
+    if (this.connectionMonitor.getConnectionStatus() === 'up') {
       return this.delay(500).then(() => {
         return fromFakeBackend.fakeBackend;
       })
