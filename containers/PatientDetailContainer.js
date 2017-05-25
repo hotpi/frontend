@@ -77,7 +77,7 @@ class PatientDetailContainer extends React.Component {
             <PatientHeader onClickDo={this.handleClick.bind(this)}/>
             <Note
               width={this.state.width}
-              height={this.state.height}
+              height={this.state.height - 150}
               type={this.props.type}
             />
         </div>
@@ -89,7 +89,7 @@ class PatientDetailContainer extends React.Component {
 
 PatientDetailContainer.propTypes = {
   fetchData: React.PropTypes.func,
-  isSynced: React.PropTypes.bool,
+  isSynced: React.PropTypes.string,
   isLoading: React.PropTypes.bool,
   type: React.PropTypes.string
 };

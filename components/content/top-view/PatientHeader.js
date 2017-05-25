@@ -97,8 +97,8 @@ class PatientHeader extends React.Component {
 PatientHeader.propTypes = {
   patient: React.PropTypes.shape({
     clinic: React.PropTypes.string,
-    admissionDate: React.PropTypes.string,
-    dischargeDate: React.PropTypes.string,
+    admissionDate: React.PropTypes.number,
+    dischargeDate: React.PropTypes.number,
     firstName: React.PropTypes.string,
     lastName: React.PropTypes.string
   }),

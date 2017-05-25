@@ -40,6 +40,7 @@ import {
 } from '../../../actions/cursor';
 
 import {
+  getFocusedNoteLine,
   getAllNoteLines,
   getNotesByTypeFromPatient,
   getAllPatientNotes,
@@ -49,6 +50,7 @@ import {
 } from '../../../reducers';
 
 import { typeValues } from '../../helpers/Helpers';
+import { connectionMonitor } from '../../../index';
 
 class Note extends Component {
 
@@ -59,9 +61,11 @@ class Note extends Component {
       canAllocateFocus: false,
       hasFocus: false,
       type: '' + typeValues.map(typeObj => typeObj.type).indexOf(props.type),
-      totalNoteHeight: 0
+      totalNoteHeight: 0,
+      connectionStatus: 'up'
     };
 
+    this.lastNoteLine = '';
     this.heights = [];
     this.selStart = 0;
     this.selEnd = 0;
@@ -70,6 +74,21 @@ class Note extends Component {
     this.handleNewButton = this.handleNewButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectField = this.handleSelectField.bind(this);
+
+    this.disconnectListener = connectionMonitor.listenToEvent(
+      'disconnected',
+      [ this.connectionStatusChanged.bind(this, 'disconnected') ]
+      );
+    this.reconnectListener = connectionMonitor.listenToEvent(
+      'reconnected',
+      [ this.connectionStatusChanged.bind(this, 'reconnected') ]
+      );
+  }
+
+  connectionStatusChanged(event) {
+    this.setState({
+      connectionStatus: (event === 'disconnected' ? 'down' : 'up')
+    });
   }
 
   componentWillMount() {
@@ -91,7 +110,8 @@ class Note extends Component {
     this.state.type !== nextState.type ||
     this.props.width !== nextProps.width ||
     this.props.height !== nextProps.height ||
-    this.state.totalNoteHeight !== nextState.totalNoteHeight;
+    this.state.totalNoteHeight !== nextState.totalNoteHeight ||
+    this.state.connectionStatus !== nextState.connectionStatus;
   }
 
   isNoteLineEmpty() {
@@ -246,8 +266,11 @@ class Note extends Component {
     if (index < this.props.noteLines.length - 1 || this.props.type !== 'new') {
       // console.log('adding upper margin');
       // upper margin and buttons and padding
-      newHeight = newHeight + (15 + 58);
+      newHeight = newHeight + 20 + (this.props.focusedNoteLine === noteLineId ? 30 : 0);
+    } else if (index === this.props.noteLines.length - 1) {
+      newHeight = newHeight + 10;
     }
+
     // console.log('at handleChangeOfHeight', newHeight, this.heights)
     this.heights.filter(line => line.ID === noteLineId)[0].height = newHeight;
     this.calculateTotalHeight();
@@ -265,6 +288,7 @@ class Note extends Component {
     60 :
     0))
     */
+    console.log('>>>>>> heights array', this.heights)
     this.setState({
       totalNoteHeight: this.heights.reduce((prev, current) => {
         return prev + current.height;
@@ -273,6 +297,17 @@ class Note extends Component {
   }
 
   handleNoteLineFocus(noteLineId) {
+    if (noteLineId !== this.lastNoteLine) {
+      this.heights.filter((line) => line.ID === noteLineId)[0].height =
+        this.heights.filter((line) => line.ID === noteLineId)[0].height + 30;
+    }
+    console.log('>>>>>> focusedNoteLine', this.props.focusedNoteLine)
+    if (this.props.focusedNoteLine !== '' && this.props.focusedNoteLine !== this.lastNoteLine) {
+      this.heights.filter((line) => line.ID === this.props.focusedNoteLine)[0].height =
+        this.heights.filter((line) => line.ID === this.props.focusedNoteLine)[0].height - 30;
+    }
+
+    this.calculateTotalHeight();
     this.props.focusChanged(noteLineId);
   }
 
@@ -301,15 +336,13 @@ class Note extends Component {
       const ID = noteLine.ID;
       const last = (index === (noteLinesTotal - 1)) && type === 'new';
       const isEmpty = noteLine.text === '';
-      /*
-      console.log('cursor received at Note  component: ', this.props.cursorPosition);
-      console.log(index)
-      */
+
       if (this.heights.filter(line => line.ID === ID).length === 0) {
         this.heights.push({ ID, height: 0 });
       }
 
       if (last) {
+        this.lastNoteLine = ID;
         _set(this, 'last.isEmpty', isEmpty);
       }
 
@@ -336,6 +369,29 @@ class Note extends Component {
     });
 
     return noteLines;
+  }
+
+  getConnectionStatusText(status) {
+    switch (status) {
+    case 'up':
+      return 'All changes are saved online.';
+    case 'down':
+      return 'All changes are saved locally.';
+    default:
+      return 'All changes are saved.';
+    }
+  }
+
+  getHeaderHeight() {
+    return this.canShowHeaderAndFooter('header') ?
+    60 :
+    0;
+  }
+
+  getFooterHeight() {
+    return this.canShowHeaderAndFooter('footer') ?
+    110 :
+    0;
   }
 
   render() {
@@ -367,34 +423,52 @@ class Note extends Component {
     this.heights.filter((height) => height.height > 0)[0].height :
     0;
 
-    if (minHeight === 28) {
+    if (minHeight === 22) {
+      // 40 might be related to the line options area which now is 30px big
       minHeight = minHeight + 40;
     }
     // console.log('minHeight:', minHeight, this.state.totalNoteHeight)
     return (
       <div className="columns row"
           style={{
-            height: '100%', maxWidth: '100%', margin: 0, overflowY: 'hidden'
+            height: this.props.height, maxWidth: '100%', margin: 0, overflowY: 'hidden'
           }}
       >
          <div
           className="columns row small-collapse"
           style={{
-            margin: '3em 0 3em 4em',
-            display: 'inline-flex'
+            margin: '1em 4em 3em 4em',
+            display: 'block'
           }}
           >
+          <h3 style={{
+            fontWeight: 100,
+            fontSize: 14,
+            color: 'grey',
+            padding: '0',
+            textAlign: 'center',
+            height: 'auto',
+            marginTop: 0,
+            marginBottom: 5
+          }}
+          >{this.getConnectionStatusText(this.state.connectionStatus)}</h3>
           <Paper
             zDepth={2}
             // eslint-disable-next-line 
-            className="small-10 large-10 small-centered large-centered small-offset-2 large-offset-2 columns" // TODO: shrink me
+            className="small-12 large-12 small-centered large-centered columns" // TODO: shrink me
             style={{
               overflow: 'hidden',
               margin: 0,
-              // eslint-disable-next-line 
-              height: Math.max(minHeight, this.state.totalNoteHeight + (this.canShowHeaderAndFooter('footer') ? 110 : 0) + (this.canShowHeaderAndFooter('header') ? 60 : 0)), // TODO: shrink me
-              // eslint-disable-next-line 
-              maxHeight: Math.max(minHeight + (this.canShowHeaderAndFooter('footer') ? 110 : 0) + (this.canShowHeaderAndFooter('header') ? 60 : 0), this.props.height - 260 - (this.props.height * 0.4)) // TODO: shrink me
+              height: Math.max(minHeight,
+                this.state.totalNoteHeight - 30 + this.getFooterHeight() + this.getHeaderHeight()
+              ),
+              minHeight: (
+                this.props.focusedNoteLine !== '' &&
+                this.props.focusedNoteLine !== this.lastNoteLine ?
+                287 :
+                257
+              ),
+              maxHeight: this.props.height - 185
             }}
             onTouchTap={this.handleClick}>
 
@@ -409,7 +483,10 @@ class Note extends Component {
               position: 'relative',
               overflow: 'auto',
               minHeight: minHeight,
-              maxHeight: Math.max(minHeight, this.props.height - 260 - (this.props.height * 0.4))
+              maxHeight: Math.max(
+                minHeight,
+                this.props.height - 185 - this.getHeaderHeight() - this.getFooterHeight()
+              )
             }}
             >
               <div style={{
@@ -454,10 +531,10 @@ Note.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   // signature should be defined
-  note: PropTypes.obj,
+  note: PropTypes.object,
   newNoteAndLine: PropTypes.func,
   canAllocateFocus: PropTypes.bool,
-  cursorPosition: PropTypes.string,
+  cursorPosition: PropTypes.number,
   noteLines: PropTypes.array,
   patientId: PropTypes.string,
   noteNumber: PropTypes.number,
@@ -474,7 +551,8 @@ Note.propTypes = {
   deleteNote: PropTypes.func,
   createAndAppendNext: PropTypes.func,
   createAndAppendLast: PropTypes.func,
-  updateLineValue: PropTypes.func
+  updateLineValue: PropTypes.func,
+  focusedNoteLine: PropTypes.string
 };
 
 Note.defaultProps = {
@@ -512,6 +590,7 @@ const mapStateToProps = (state, { params }) => {
     canAllocateFocus,
     cursorPosition,
     noteLines,
+    focusedNoteLine: getFocusedNoteLine(state),
     note: sortedNotes[noteNumber] || null,
     patientId,
     noteNumber,

@@ -13,9 +13,15 @@ import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 
-import { grey400 } from 'material-ui/styles/colors';
+import {
+grey400,
+green100,
+red100
+} from 'material-ui/styles/colors';
 
 import { listStyle } from '../helpers/Helpers';
+
+import { connectionMonitor } from '../../index';
 
 class BaseList extends React.Component {
   constructor(props) {
@@ -23,12 +29,34 @@ class BaseList extends React.Component {
     this.state = {
       isOpen: false,
       width: props.width,
-      drawerWidth: this.calculateDrawerWidth()
+      drawerWidth: this.calculateDrawerWidth(),
+      colorState: (connectionMonitor.getConnectionStatus() === 'up' ?
+        green100 :
+        red100
+      )
     };
+
+    this.disconnectListener = connectionMonitor.listenToEvent(
+      'disconnected',
+      [ this.setBackgroundColor.bind(this, 'red') ]
+    );
+
+    this.reconnectListener = connectionMonitor.listenToEvent(
+      'reconnected',
+      [ this.setBackgroundColor.bind(this, 'green') ]
+    );
+  }
+
+  setBackgroundColor(color) {
+    console.log('>>>>> changing background color to ' , color)
+    this.setState({ colorState: (color === 'green' ?
+      green100 :
+      red100
+    ) });
   }
 
   calculateDrawerWidth() {
-    return [1027, 640, 300].reduce((prev, current, index) => {
+    return [ 1023, 640, 300 ].reduce((prev, current, index) => {
       return window.innerWidth > current && prev === 0 ?
         window.innerWidth / (Math.max(4 - (index * Math.pow(2, index - 1)), 1)) :
         prev;
@@ -89,7 +117,8 @@ class BaseList extends React.Component {
                 height: '60px',
                 width: '100%',
                 margin: '0',
-                paddingTop: 10
+                paddingTop: 10,
+                backgroundColor: this.state.colorState
               }}
             >
               <div className="column row">

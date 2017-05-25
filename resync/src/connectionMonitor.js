@@ -7,7 +7,7 @@ const MONITOR_URL = ROOT_URL + 'health-check';
 
 class ConnectionMonitor {
   constructor() {
-    this.status = 'down';
+    this.status = 'up';
     this.lastConnectionAt = Date.now();
     this.lastAttemptToReconnect = Date.now();
 
@@ -17,7 +17,8 @@ class ConnectionMonitor {
     this.onDisconnectDo = this.onDisconnectDo.bind(this);
     this.onReconnectDo = this.onReconnectDo.bind(this);
 
-    this.createEvents();
+    this.disconnectListener = this.listenToEvent('disconnected', [ this.onDisconnectDo ]);
+    this.reconnectListener = this.listenToEvent('reconnected', [ this.onReconnectDo ]);
   }
 
   listenToEvent(event, callbacks) {
@@ -27,9 +28,7 @@ class ConnectionMonitor {
     }
 
     return this.connectionEmitter.on(event, () => {
-      if (callbacks.length === 1) {
-        callbacks();
-      } else if (callbacks.length > 2) {
+      if (callbacks.length > 0) {
         callbacks.forEach(callback => {
           callback();
         });
@@ -39,41 +38,36 @@ class ConnectionMonitor {
     });
   }
 
-  createEvents() {
-    // TODO: use the factory?
-    this.connectionEmitter.on(
-      'disconnected',
-      this.onDisconnectDo
-      );
-
-    this.connectionEmitter.on('reconnected', this.onReconnectDo);
-  }
-
   onDisconnectDo() {
     this.status = 'down';
-    // this.hasAcknowledge = false;
+    this.lastConnectionAt = Date.now();
     this.monitorConnectionToServer();
-    // console.log('working')
   }
 
   onReconnectDo() {
     this.status = 'up';
-    // this.listen();
+  }
 
-    // this.sendToServer();
+  emit(event) {
+    if (typeof event !== 'string') {
+      throw new Error('Event must be a string');
+    }
 
-    // console.log('working too')
+    this.connectionEmitter.emit(event);
+
+    return null;
   }
 
   monitorConnectionToServer() {
     let retry = true;
+    this.lastAttemptToReconnect = Date.now();
 
     let monitoredRequest = request
       .head(MONITOR_URL)
       .timeout(300)
       .end((err, res) => {
-        if (!res) {
-          this.connectionEmitter.emit('reconnected');
+        if (res) {
+          this.emit('reconnected');
           retry = false;
           return {};
         }
@@ -89,7 +83,7 @@ class ConnectionMonitor {
       if (retry) {
         this.monitorConnectionToServer();
       }
-    }, 5000);
+    }, 10000);
 
     return null;
   }

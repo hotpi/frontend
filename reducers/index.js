@@ -14,6 +14,8 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 
+export const getFocusedNoteLine = (state) =>
+  fromCursor.getFocusedNoteLine(state.cursor);
 export const isFocusChangeAllowed = (state) =>
   fromCursor.isFocusChangeAllowed(state.cursor);
 export const getCursorPosition = (state) =>

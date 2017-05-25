@@ -10,7 +10,7 @@ const AddIcon = ({ last }) => {
         height: 18,
         width: 18,
         color: 'grey',
-        paddingTop: 13,
+        paddingTop: 8,
         paddingRight: 2,
         marginRight: 5,
         marginLeft: 5

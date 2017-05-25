@@ -64,3 +64,5 @@ export default cursor;
 
 export const getCursorPosition = (state) => state.cursorPosition;
 export const isFocusChangeAllowed = (state) => state.allowedFocusChange;
+export const getFocusedNoteLine = (state) => state.noteLineId;
+

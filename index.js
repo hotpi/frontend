@@ -15,6 +15,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import configureStore from './store/configureStore';
 
 import Syncer from './syncer';
+import ConnectionMonitor from './resync/src/connectionMonitor';
 
 export const db = new Dexie('hotpi');
 
@@ -23,6 +24,7 @@ db.version(1).stores({
   state: '++id, state'
 });
 
+export const connectionMonitor = new ConnectionMonitor();
 export const middleware = new Syncer();
 
 middleware.initialLoad().then(state => {

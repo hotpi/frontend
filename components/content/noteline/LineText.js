@@ -4,7 +4,7 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import EventListener from 'react-event-listener';
 
-const rowsHeight = 24;
+const rowsHeight = 18;
 
 class LineText extends React.Component {
   constructor() {
@@ -30,7 +30,7 @@ class LineText extends React.Component {
       this.input.focus();
     }
 
-    this.syncHeight();
+    this.syncHeight(this.props.text);
   }
 
   componentDidUpdate() {
@@ -57,7 +57,9 @@ class LineText extends React.Component {
     if (newValue !== null) {
       this.shadow.value = newValue;
     }
-    // console.log('scroll Height input', this.input.scrollHeight)
+
+    // eslint-disable-next-line
+    console.log('>>>> noteLines text: ', this.props.text, 'scroll Height input', this.input.scrollHeight, 'scroll Height shadow', this.shadow.scrollHeight)
     let newHeight = this.shadow.scrollHeight;
 
     if (this.state.height !== newHeight) {
@@ -106,7 +108,8 @@ class LineText extends React.Component {
         fontStretch: 'inherit',
         fontSize: 16,
         transition: 'height 200ms cubic-bezier(0.23, 1, 0.32, 1)',
-        lineHeight: '24px',
+        height: this.state.height,
+        lineHeight: '18px',
         display: 'inline-block'
       }}
       >
@@ -127,7 +130,7 @@ class LineText extends React.Component {
               height: 'initial',
               visibility: 'hidden',
               overflow: 'hidden',
-              lineHeight: '24px',
+              lineHeight: '18px',
               resize: 'none'
             }}
         />
@@ -147,13 +150,11 @@ class LineText extends React.Component {
             height: this.state.height,
             overflow: 'hidden',
             fontFamily: this.props.muiTheme.fontFamily,
-            lineHeight: '24px',
+            lineHeight: '18px',
             fontSize: 16,
             outline: 'none',
             border: 'none',
-            marginRight: 0,
-            marginBottom: 13,
-            marginTop: 13,
+            marginTop: 6,
             paddingTop: 0,
             width: '94%',
             paddingBottom: 0,

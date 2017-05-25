@@ -43,7 +43,7 @@ class NoteLineOptions extends React.Component {
         <div style={{
           width: '100%',
           margin: 0,
-          height: 30,
+          height: 20,
           display: 'inline-flex'
         }}>
           <ImportantIcon

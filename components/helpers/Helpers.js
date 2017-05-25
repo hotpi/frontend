@@ -7,7 +7,7 @@ import {
   amber400,
   amber300,
   amber100,
-  yellowA100,
+  yellow500,
   blueA100,
   blue800,
   teal200,
@@ -18,8 +18,8 @@ import {
   grey400
 } from 'material-ui/styles/colors';
 
-export const importantColors = ['grey', amber700, amber400, amber100];
-export const highlightColors = ['grey', yellowA100, blueA100, greenA100, orangeA100, cyanA100];
+export const importantColors = [ 'grey', amber700, amber400, amber100 ];
+export const highlightColors = [ 'grey', yellow500, blueA100, greenA100, orangeA100, cyanA100 ];
 export const typeValues = [
   {
     type: 'new',
@@ -141,11 +141,11 @@ export const iconStyles = {
     color: 'grey'
   },
   iconArea: {
-    width: '46px',
-    height: '46px',
+    width: '30px',
+    height: '30px',
     padding: 0,
     marginRight: 5,
-    marginLeft: 0,
+    marginLeft: 10,
     right: 13,
     bottom: 5
   }
@@ -161,9 +161,9 @@ export const inlineIconStyle = Object.assign({}, iconStyles, {
   iconArea: {
     padding: 0,
     margin: 10,
-    marginTop: 14,
-    width: 20,
-    height: 20
+    marginTop: 7,
+    width: 16,
+    height: 16
   }
 });
 

@@ -13,15 +13,15 @@
 }
 
 .note-line-container:hover .line-buttons {
-  visibility: visible;
+  display: inline-flex;
 }
 
 .note-line-container:focus .line-buttons {
-  visibility: visible;
+  display: inline-flex;
 }
 
 .line-buttons {
-  visibility: hidden;
+  display: none;
 }
 
 .line-w-button {

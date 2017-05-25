@@ -10,7 +10,7 @@ import EditorHighlight from 'material-ui/svg-icons/editor/highlight';
 import ImageLens from 'material-ui/svg-icons/image/lens';
 
 import {
-  yellowA100,
+  yellow500,
   blueA100,
   greenA100,
   orangeA100,
@@ -59,7 +59,7 @@ class HighlightIcon extends React.Component {
         }}
       >
           <MenuItem value="0" leftIcon={<ImageLens color="transparent"/>} primaryText="No color" />
-          <MenuItem value="1" leftIcon={<ImageLens color={yellowA100}/>} primaryText="Yellow" />
+          <MenuItem value="1" leftIcon={<ImageLens color={yellow500}/>} primaryText="Yellow" />
           <MenuItem value="2" leftIcon={<ImageLens color={blueA100}/>} primaryText="Blue" />
           <MenuItem value="3" leftIcon={<ImageLens color={greenA100}/>} primaryText="Green" />
           <MenuItem value="4" leftIcon={<ImageLens color={orangeA100}/>} primaryText="Orange" />

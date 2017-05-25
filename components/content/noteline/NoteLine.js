@@ -12,7 +12,10 @@ import LineText from './LineText';
 
 import { lineOutHover } from '../../helpers/Helpers';
 
-import { getNoteLine } from '../../../reducers';
+import {
+  getNoteLine,
+  getFocusedNoteLine
+} from '../../../reducers';
 
 class NoteLine extends React.Component {
   constructor(props) {
@@ -26,19 +29,23 @@ class NoteLine extends React.Component {
   shouldComponentUpdate(nextProps) {
     return this.props.text !== nextProps.text ||
       this.props.highlight !== nextProps.highlight ||
-      this.props.important !== nextProps.important;
+      this.props.important !== nextProps.important ||
+      this.props.isFocused !== nextProps.isFocused;
   }
 
   render() {
-    const { deleteLine, last, important, highlight, text, canGetFocus } = this.props;
+    const { isFocused, deleteLine, last, important, highlight, text, canGetFocus } = this.props;
 
     if (!this.props.noteLine) {
       return null;
     }
 
     return (
-      <div className="note-line-container" style={last ? lineOutHover.last : lineOutHover.notLast}>
-        <div className="line-w-button" tabIndex="0">
+      <div
+        className={'note-line-container'}
+        style={last ? lineOutHover.last : lineOutHover.notLast}
+      >
+        <div className={'line-w-button'} tabIndex="0">
           <AddIcon
             last={last}
             />
@@ -52,20 +59,22 @@ class NoteLine extends React.Component {
             text={text}
             highlight={highlight}
             canGetFocus={canGetFocus}
-
-            />
+          />
           <CancelButton
             last={last}
             onClickDo={deleteLine}
             />
         </div>
-        <NoteLineOptions
-          last={last}
-          important={important}
-          highlight={highlight}
-          onHighlight={this.props.onHighlight}
-          onImportant={this.props.onImportant}
-          />
+        { isFocused ?
+          <NoteLineOptions
+            last={last}
+            important={important}
+            highlight={highlight}
+            onHighlight={this.props.onHighlight}
+            onImportant={this.props.onImportant}
+          /> :
+          null
+        }
       </div>
     );
   }
@@ -87,7 +96,7 @@ NoteLine.propTypes = {
     value: React.PropTypes.any.isRequired
   }).isRequired,
   deleteLine: React.PropTypes.func.isRequired,
-  noteLine: React.PropTypes.obj,
+  noteLine: React.PropTypes.object,
   onChangeDo: React.PropTypes.func,
   keyDownHandler: React.PropTypes.func,
   onFocusDo: React.PropTypes.func,
@@ -95,25 +104,18 @@ NoteLine.propTypes = {
   updateCursorPosition: React.PropTypes.func,
   onChangeOfHeightDo: React.PropTypes.func,
   onHighlight: React.PropTypes.func,
-  onImportant: React.PropTypes.func
+  onImportant: React.PropTypes.func,
+  isFocused: React.PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {
   const noteLine = getNoteLine(state, ownProps.ID);
-  if (noteLine) {
-    return {
-      noteLine,
-      text: noteLine.text,
-      important: noteLine.important,
-      highlight: noteLine.highlight
-    };
-  }
-
   return {
     noteLine,
-    text: '',
-    important: {},
-    highlight: {}
+    isFocused: getFocusedNoteLine(state) === ownProps.ID,
+    text: noteLine.text || '',
+    important: noteLine.important || {},
+    highlight: noteLine.highlight || {}
   };
 };
 

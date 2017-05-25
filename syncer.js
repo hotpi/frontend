@@ -9,7 +9,9 @@ import {
   translateActionToOperation,
   translateOperationToAction
 } from './helpers/actionTranslator';
-import ConnectionMonitor from './resync/src/connectionMonitor';
+
+// TODO: change this logic
+import { connectionMonitor } from './index';
 // eslint-disable-next-line
 const connectionEmitter = new Emitter;
 
@@ -18,7 +20,7 @@ const ROOT_URL = __API_ROOT_URL__;
 const BROADCAST_URL = ROOT_URL + 'sync/status/';
 const SEND_OP_URL = ROOT_URL + 'sync/sendOp';
 const SUBSCRIBE_URL = ROOT_URL + 'sync/subscribe';
-const INITAL_STATE_URL = ROOT_URL + 'sync/initialState';
+const INITIAL_STATE_URL = ROOT_URL + 'sync/initialState';
 
 const superagentThrottle = new Throttle({
   // set false to pause queue
@@ -33,10 +35,7 @@ const superagentThrottle = new Throttle({
 
 class Syncer {
   constructor() {
-    this.lastConnectionAt = Date.now();
-    this.initialLoad = false;
     this.hasAcknowledge = true;
-    // TODO: get it from connectionMonitor
     this.longPolledRequests = [];
     this.newOperationRequests = [];
 
@@ -46,15 +45,15 @@ class Syncer {
     this.revisionNr = 0;
     this.uid = 0;
 
-    this.connectionMonitor = new ConnectionMonitor();
-    this.disconnectionListener = this.connectionMonitor.listenToEvent(
+
+    this.disconnectionListener = connectionMonitor.listenToEvent(
       'disconnected',
       [
         this.onDisconnectDo.bind(this, this.longPolledRequests, this.newOperationRequests)
       ]
     );
 
-    this.reconnectionListener = this.connectionMonitor.listenToEvent(
+    this.reconnectionListener = connectionMonitor.listenToEvent(
       'reconnected',
       [
         this.listen.bind(this),
@@ -73,10 +72,13 @@ class Syncer {
     // this.hasAcknowledge = false;
     // Abort all queued long-polled requests that are open.
     queuedLongPollingRequests.map(longPolledRequest => {
+      console.log('>>>>> listen request aborted')
       if (typeof longPolledRequest.abort === 'function') {
         longPolledRequest.abort();
       }
     });
+    queuedLongPollingRequests.length = 0;
+
 
     // Abort all queued new operation requests that are open.
     queuedOperationRequests.map(newOperationRequest => {
@@ -124,7 +126,7 @@ class Syncer {
       this.inFlight = true;
       this.inflightOp = newOp;
 
-      if (this.connectionMonitor.getConnectionStatus() === 'up') {
+      if (connectionMonitor.getConnectionStatus() === 'up') {
         this.sendToServer();
       }
     }
@@ -133,7 +135,7 @@ class Syncer {
   transform(operations, receivedOp) {
     receivedOp = operations.reduce((prev, curr) => {
       return xformT(prev[0], curr);
-    }, [receivedOp, {}]);
+    }, [ receivedOp, {} ]);
 
     return receivedOp;
   }
@@ -170,7 +172,7 @@ class Syncer {
             return true;
           },
           (err) => {
-            connectionEmitter.emit('disconnected');
+            connectionMonitor.emit('disconnected');
             throw new Error('Something went wrong..', err);
             // console.log('Something went wrong..', err)
           }
@@ -198,7 +200,7 @@ class Syncer {
           return true;
         },
         (err) => {
-          connectionEmitter.emit('disconnected');
+          connectionMonitor.emit('disconnected');
           throw new Error('Something went wrong..', err);
         }
       );
@@ -206,16 +208,23 @@ class Syncer {
 
   // Fetch current status
   listen() {
-    if (this.uid === 0 || this.connectionMonitor.getConnectionStatus() === 'down') {
+    if (this.uid === 0 || connectionMonitor.getConnectionStatus() === 'down') {
       return setTimeout(() => this.listen(), 500);
     }
 
-    if (this.connectionMonitor.getConnectionStatus() === 'up') {
+    if (connectionMonitor.getConnectionStatus() === 'up') {
+      // let requestNumber = this.longPolledRequests.length;
+      console.log('>>> listen request');
       let nextRequest = request
         .get(BROADCAST_URL + this.uid + '/' + this.revisionNr)
         .use(superagentThrottle.plugin())
         .then(
           (res) => {
+            console.log('>>>>>>> listen request success');
+
+            // find a way to delete entry in array elegantly
+            // this.longPolledRequests[requestNumber].pop();
+
             if (!res.body.empty) {
               this.opReceived(res.body);
             } else {
@@ -228,7 +237,7 @@ class Syncer {
           },
           (err) => {
             if (err !== null) {
-              connectionEmitter.emit('disconnected');
+              connectionMonitor.emit('disconnected');
               throw new Error('Something went wrong..', err);
             }
           }
@@ -277,9 +286,9 @@ class Syncer {
 
   initialLoad() {
     // if connection === up get the initialLoad from server
-    if (this.connectionMonitor.getConnectionStatus() === 'up') {
+    if (connectionMonitor.getConnectionStatus() === 'up') {
       return request
-        .get(INITAL_STATE_URL)
+        .get(INITIAL_STATE_URL)
         .then(
           (res) => {
             // console.log(res.body)
@@ -289,7 +298,7 @@ class Syncer {
             };
           },
           (err) => {
-            connectionEmitter.emit('disconnected');
+            connectionMonitor.emit('disconnected');
             throw new Error('Something went wrong fetching initial state..' + err);
           }
         );
@@ -319,7 +328,7 @@ class Syncer {
   }
 
   fetchState() {
-    if (this.connectionMonitor.getConnectionStatus() === 'up') {
+    if (connectionMonitor.getConnectionStatus() === 'up') {
       return this.delay(500).then(() => {
         return fromFakeBackend.fakeBackend;
       })
