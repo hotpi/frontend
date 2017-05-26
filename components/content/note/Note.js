@@ -266,7 +266,7 @@ class Note extends Component {
     if (index < this.props.noteLines.length - 1 || this.props.type !== 'new') {
       // console.log('adding upper margin');
       // upper margin and buttons and padding
-      newHeight = newHeight + 20 + (this.props.focusedNoteLine === noteLineId ? 30 : 0);
+      newHeight = newHeight + 13 + (this.props.focusedNoteLine === noteLineId ? 30 : 0);
     } else if (index === this.props.noteLines.length - 1) {
       newHeight = newHeight + 10;
     }
@@ -290,9 +290,14 @@ class Note extends Component {
     */
     console.log('>>>>>> heights array', this.heights)
     this.setState({
+      // notelines' heights
       totalNoteHeight: this.heights.reduce((prev, current) => {
         return prev + current.height;
       }, 0)
+      // upper padding
+      + 10
+      // bottom padding
+      + 10
     });
   }
 
@@ -301,7 +306,7 @@ class Note extends Component {
       this.heights.filter((line) => line.ID === noteLineId)[0].height =
         this.heights.filter((line) => line.ID === noteLineId)[0].height + 30;
     }
-    console.log('>>>>>> focusedNoteLine', this.props.focusedNoteLine)
+
     if (this.props.focusedNoteLine !== '' && this.props.focusedNoteLine !== this.lastNoteLine) {
       this.heights.filter((line) => line.ID === this.props.focusedNoteLine)[0].height =
         this.heights.filter((line) => line.ID === this.props.focusedNoteLine)[0].height - 30;
@@ -390,7 +395,7 @@ class Note extends Component {
 
   getFooterHeight() {
     return this.canShowHeaderAndFooter('footer') ?
-    110 :
+    75 :
     0;
   }
 
@@ -419,14 +424,26 @@ class Note extends Component {
       );
     }
 
-    let minHeight = this.heights.filter((height) => height.height > 0)[0] ?
+    let minHeightNoteLinesArea = this.heights.filter((height) => height.height > 0)[0] ?
     this.heights.filter((height) => height.height > 0)[0].height :
     0;
 
-    if (minHeight === 22) {
+    if (minHeightNoteLinesArea === 22) {
       // 40 might be related to the line options area which now is 30px big
-      minHeight = minHeight + 40;
+      minHeightNoteLinesArea = minHeightNoteLinesArea +
+      10 +
+      (this.props.focusedNoteLine !== '' ? 30 : 0);
     }
+
+    let minHeightNoteAreaMobile = this.props.focusedNoteLine !== '' &&
+    this.props.focusedNoteLine !== this.lastNoteLine ?
+    287 :
+    257;
+
+    let minHeightNoteAreaTabletOrBigger = this.state.totalNoteHeight +
+    this.getFooterHeight() +
+    this.getHeaderHeight();
+
     // console.log('minHeight:', minHeight, this.state.totalNoteHeight)
     return (
       <div className="columns row"
@@ -459,15 +476,12 @@ class Note extends Component {
             style={{
               overflow: 'hidden',
               margin: 0,
-              height: Math.max(minHeight,
-                this.state.totalNoteHeight - 30 + this.getFooterHeight() + this.getHeaderHeight()
+              height: Math.max(minHeightNoteLinesArea,
+                this.state.totalNoteHeight + this.getFooterHeight() + this.getHeaderHeight()
               ),
-              minHeight: (
-                this.props.focusedNoteLine !== '' &&
-                this.props.focusedNoteLine !== this.lastNoteLine ?
-                287 :
-                257
-              ),
+              minHeight: this.props.height * 0.6 < minHeightNoteAreaTabletOrBigger ? 
+              minHeightNoteAreaMobile : 
+              minHeightNoteAreaTabletOrBigger,
               maxHeight: this.props.height - 185
             }}
             onTouchTap={this.handleClick}>
@@ -482,9 +496,9 @@ class Note extends Component {
             <div style={{
               position: 'relative',
               overflow: 'auto',
-              minHeight: minHeight,
+              minHeight: minHeightNoteLinesArea,
               maxHeight: Math.max(
-                minHeight,
+                minHeightNoteLinesArea,
                 this.props.height - 185 - this.getHeaderHeight() - this.getFooterHeight()
               )
             }}

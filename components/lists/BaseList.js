@@ -48,7 +48,6 @@ class BaseList extends React.Component {
   }
 
   setBackgroundColor(color) {
-    console.log('>>>>> changing background color to ' , color)
     this.setState({ colorState: (color === 'green' ?
       green100 :
       red100
