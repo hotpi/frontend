@@ -1,5 +1,9 @@
 /**
- * TODO: Change React.Component and React.PropTypes to just Component and PropTypes
+ * NoteLine component that holds {@link LineText}, {@link NoteLineOptions}, {@link AddIcon}
+ * and {@link CancelButton}.
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.Component and React.PropTypes to just Component and PropTypes
  */
 
 import React from 'react';
@@ -18,6 +22,12 @@ import {
 } from '../../../reducers';
 
 class NoteLine extends React.Component {
+
+  /**
+   * Initializes the state of the component
+   * @constructor
+   * @param {object} props - the properties of the component
+   */
   constructor(props) {
     super(props);
 
@@ -26,6 +36,14 @@ class NoteLine extends React.Component {
     };
   }
 
+  /**
+   * Lifecycle hook method that determines whether the component should be updated.
+   * It overrides the standard behaviour that updates the component on every change.
+   *
+   * @param   {object} nextProps - new properties received.
+   * @return  {boolean} true when it should be updated; false otherwise.
+   * @see https://facebook.github.io/react/docs/react-component.html#shouldcomponentupdate
+   */
   shouldComponentUpdate(nextProps) {
     return this.props.text !== nextProps.text ||
       this.props.highlight !== nextProps.highlight ||
@@ -33,6 +51,11 @@ class NoteLine extends React.Component {
       this.props.isFocused !== nextProps.isFocused;
   }
 
+  /**
+   * Render method of the component
+   *
+   * @return {node} React Component
+   */
   render() {
     const { isFocused, deleteLine, last, important, highlight, text, canGetFocus } = this.props;
 

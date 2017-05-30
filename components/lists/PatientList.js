@@ -1,3 +1,11 @@
+/**
+ * PatientList component shows the list of the patients.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
+
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';

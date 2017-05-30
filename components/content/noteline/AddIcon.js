@@ -1,3 +1,12 @@
+/**
+ * AddIcon component which shows the plus icon on the last note's
+ * notelines.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.PropTypes to just Component and PropTypes
+ */
+
 import React from 'react';
 
 import ContentAdd from 'material-ui/svg-icons/content/add';

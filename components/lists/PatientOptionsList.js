@@ -1,3 +1,11 @@
+/**
+ * PatientOptionsList component shows the list of the different note types.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
+
 import React from 'react';
 import { withRouter, browserHistory } from 'react-router';
 import { connect } from 'react-redux';

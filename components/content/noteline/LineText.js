@@ -1,12 +1,28 @@
+/**
+ * LineText component holds the textareas on which the information is written
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.Component and React.PropTypes to just Component and PropTypes
+ */
+
 import React from 'react';
 
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import EventListener from 'react-event-listener';
 
+/**
+ * Equals the html's line height.
+ */
 const rowsHeight = 18;
 
 class LineText extends React.Component {
+
+  /**
+   * Initializes the state of the component
+   * @constructor
+   */
   constructor() {
     super();
 
@@ -17,12 +33,27 @@ class LineText extends React.Component {
     this.rows = 1;
   }
 
+  /**
+   * Lifecycle hook method that sets state's property height
+   * right when the component is being mounted.
+   *
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentwillmount
+   */
   componentWillMount() {
     this.setState({
       height: this.rows * rowsHeight
     });
   }
 
+  /**
+   * Lifecycle hook method that focus the input if it's possible and synchronizes
+   * the height of the textarea according to the text inside it right after the component has been
+   * mounted.
+   *
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentdidmount
+   */
   componentDidMount() {
     const { canGetFocus } = this.props;
 
@@ -33,27 +64,59 @@ class LineText extends React.Component {
     this.syncHeight(this.props.text);
   }
 
+  /**
+   * Lifecycle hook method that synchronizes the cursor position with input's selectionStart and
+   * selectionEnd every time that the component updates.
+   *
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentdidmount
+   */
   componentDidUpdate() {
     // console.log('cursor pos before:', this.input.selectionStart)
     this.input.selectionStart = this.input.selectionEnd = this.props.cursorPosition;
     // console.log('cursor pos after:', this.input.selectionStart)
   }
 
+  /**
+   * Lifecycle hook method that synchronizes the height with its needed height depending on
+   * the text inside the textarea right before it updates.
+   *
+   * @param {object} nextProps - new properties received
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentdidmount
+   */
   componentWillReceiveProps(nextProps) {
     if (nextProps.text !== this.props.text) {
       this.syncHeight(nextProps.text, 'componentWillReceiveProps');
     }
   }
 
+  /**
+   * Handles the key down event which fires a callback passed as a property
+   * and updates the cursor position according to the key pressed.
+   *
+   * @param {SyntheticEvent} e - React's SyntheticEvent
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentdidmount
+   */
   handleKeyDown(e) {
     const { onKeyDownDo } = this.props;
     let start = e.target.selectionStart;
+    // if delete key is pressed it must move to the right as it is the cursor must remain
+    // at the same position it was before
     this.props.updateCursorPosition(e.keyCode === 46 ? start : start + 1);
     onKeyDownDo(e);
   }
 
+  /**
+   * Synchronizes the height of the textarea depending on the space needed for the text.
+   *
+   * @param {string} newValue - the new text value in the textarea.
+   * @return {null} No return value
+   */
   syncHeight(newValue) {
-    // console.log('triggered', caller)
+    // the shadow is a normal textarea that is hidden and it holds the exact same text
+    // as the visible textarea; this makes the textarea responsive.
     if (newValue !== null) {
       this.shadow.value = newValue;
     }
@@ -71,21 +134,47 @@ class LineText extends React.Component {
     }
   }
 
+  /**
+   * Fires the callback when it receives a focus and it updates the cursor position to
+   * its actual one.
+   *
+   * @return {null} No return value
+   */
   handleFocus() {
     const { onFocusDo } = this.props;
     onFocusDo();
     this.props.updateCursorPosition(this.input.selectionStart);
   }
 
+  /**
+   * Handles the resizing of the window.
+   *
+   * @return {null} Returns no value
+   */
   handleResize() {
     this.syncHeight(null);
   }
 
+  /**
+   * Handles the changes of the text in the textarea
+   *
+   * @param {SynthethicEvent} e - React's SynthethicEvent object
+   * @return {null} Returns no value
+   */
   handleChange(e) {
     this.syncHeight(e.target.value, 'onChange');
     this.props.onChangeDo(e);
   }
 
+  /**
+   * Lifecycle hook method that determines whether the component should be updated.
+   * It overrides the standard behaviour that updates the component on every change.
+   *
+   * @param   {object} nextProps - new properties received.
+   * @param   {object} nextState - new state received.
+   * @return  {boolean} true when it should be updated; false otherwise.
+   * @see https://facebook.github.io/react/docs/react-component.html#shouldcomponentupdate
+   */
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.cursorPosition !== nextProps.cursorPosition ||
       this.props.text !== nextProps.text ||
@@ -93,6 +182,11 @@ class LineText extends React.Component {
       this.state.height !== nextState.height;
   }
 
+  /**
+   * Render method of the component
+   *
+   * @return {node} React Component
+   */
   render() {
     const { text, highlight } = this.props;
 

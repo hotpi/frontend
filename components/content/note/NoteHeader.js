@@ -1,3 +1,8 @@
+/**
+ * NoteHeader component used for showing the type of the Note.
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
 import React from 'react';
 
 import { titleArea } from '../../helpers/Helpers';

@@ -1,3 +1,12 @@
+/**
+ * CancelButton component which shows the delete icon at the right of each
+ * noteline.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.PropTypes to just Component and PropTypes
+ */
+
 import React from 'react';
 
 import IconButton from 'material-ui/IconButton';

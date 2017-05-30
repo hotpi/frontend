@@ -1,14 +1,12 @@
+/**
+ * NoteLineOptions component which holds the different line modifiers.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.PropTypes to just Component and PropTypes
+ */
+
 import React from 'react';
-
-/*
-import IconButton from 'material-ui/IconButton';
-import Chip from 'material-ui/Chip';
-
-import ActionTouchApp from 'material-ui/svg-icons/action/touch-app';
-import ContentMoveToInbox from 'material-ui/svg-icons/content/move-to-inbox';
-import NavigationMoreVert from 'material-ui/svg-icons/navigation/more-vert';
-import { iconStyles, importantColors, highlightColors } from './Helpers';
-*/
 
 import ImportantIcon from './ImportantIcon';
 import HighlightIcon from './HighlightIcon';

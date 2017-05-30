@@ -1,4 +1,11 @@
-// TODO: Can be abstracted together with ImportantIcon component.
+/**
+ * HighlightIcon component which shows the color icon and shows the different options
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.Component and React.PropTypes to just Component and PropTypes
+ * @todo Create a ComponentFactory for this and {@link ImportantIcon}
+ */
 
 import React from 'react';
 

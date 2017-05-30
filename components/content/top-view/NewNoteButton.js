@@ -1,3 +1,10 @@
+/**
+ * NewNoteButton component which holds the button component used to create a new note.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';

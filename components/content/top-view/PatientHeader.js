@@ -1,3 +1,11 @@
+/**
+ * PatientHeader component which shows the most relevant information of a patient
+ * through {@link InfoLabels}.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -10,22 +18,8 @@ import { blue800 } from 'material-ui/styles/colors';
 
 import { getPatientById, getFirstPatientId } from '../../../reducers';
 
-import { dateToString, headerStylesMobile, labelStyles } from '../../helpers/Helpers';
-
-const InfoLabels = (props) => {
-  return (
-    <div className={props.classForPosition} style={labelStyles.infoItem}>
-      <h6 style={labelStyles.label}> {props.label} </h6>
-      <p style={labelStyles.info}> {props.info}</p>
-    </div>
-  );
-};
-
-InfoLabels.propTypes = {
-  classForPosition: React.PropTypes.string,
-  label: React.PropTypes.string,
-  info: React.PropTypes.string
-};
+import InfoLabels from './InfoLabels';
+import { dateToString, headerStylesMobile } from '../../helpers/Helpers';
 
 class PatientHeader extends React.Component {
   shouldComponentUpdate(nextProps) {

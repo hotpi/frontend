@@ -1,5 +1,5 @@
 /**
- * @deprecated
+ * @deprecated Will be removed in the next version
  */
 
 import React from 'react';

@@ -1,3 +1,12 @@
+/**
+ * Note component that contains
+ * {@link NoteFooter}, {@link NoteHeader}, {@link NoteLine}, {@link NewNoteButton}
+ * and {@link EmptySelection}
+ * This component serves as the container of information.
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router';
@@ -53,7 +62,12 @@ import { typeValues } from '../../helpers/Helpers';
 import { connectionMonitor } from '../../../index';
 
 class Note extends Component {
-
+  /**
+   * Initializes state, global variables and binds callbacks.
+   *
+   * @constructor
+   * @param {object} props the props object
+   */
   constructor(props) {
     super(props);
 
@@ -64,44 +78,72 @@ class Note extends Component {
       totalNoteHeight: 0,
       connectionStatus: 'up'
     };
-
+    // the ID of the last noteline in the list
     this.lastNoteLine = '';
+    // heights of all the notelines
     this.heights = [];
+    // left-most cursor position
     this.selStart = 0;
+    // right-most cursor position
     this.selEnd = 0;
     this.isDelete = false;
+    // callback for clicking inside the note
     this.handleClick = this.handleClick.bind(this);
+    // callback for clicking on the new button
     this.handleNewButton = this.handleNewButton.bind(this);
+    // callback for text input on notelines
     this.handleChange = this.handleChange.bind(this);
+    // callback for changes in the select field
     this.handleSelectField = this.handleSelectField.bind(this);
 
+    // listener for connection changes
     this.disconnectListener = connectionMonitor.listenToEvent(
       'disconnected',
       [ this.connectionStatusChanged.bind(this, 'disconnected') ]
       );
+    // listener for connection changes
     this.reconnectListener = connectionMonitor.listenToEvent(
       'reconnected',
       [ this.connectionStatusChanged.bind(this, 'reconnected') ]
       );
   }
 
-  connectionStatusChanged(event) {
-    this.setState({
-      connectionStatus: (event === 'disconnected' ? 'down' : 'up')
-    });
-  }
-
+  /**
+   * Lifecycle hook method that creates a new note and line when no note is loaded
+   * right when the component is being mounted.
+   *
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentwillmount
+   */
   componentWillMount() {
     if (this.props.type === 'new' && this.props.note === null) {
       this.props.newNoteAndLine(this.props.patientId);
     }
+    return null;
   }
 
+  /**
+   * Lifecycle hook method that allows the input's focus to be set and calculates
+   * the total height available in the current window right after the component has been
+   * mounted.
+   *
+   * @return {null} No return value.
+   * @see https://facebook.github.io/react/docs/react-component.html#componentdidmount
+   */
   componentDidMount() {
     this.props.allowFocusChange(true);
     this.calculateTotalHeight();
   }
 
+  /**
+   * Lifecycle hook method that determines whether the component should be updated.
+   * It overrides the standard behaviour that updates the component on every change.
+   *
+   * @param   {object} nextProps - new properties received.
+   * @param   {object} nextState - new state received.
+   * @return  {boolean} true when it should be updated; false otherwise.
+   * @see https://facebook.github.io/react/docs/react-component.html#shouldcomponentupdate
+   */
   shouldComponentUpdate(nextProps, nextState) {
     return _has(this.props, 'note.ID') !== _has(nextProps, 'note.ID') ||
     this.props.noteLines.length !== nextProps.noteLines.length ||
@@ -114,6 +156,25 @@ class Note extends Component {
     this.state.connectionStatus !== nextState.connectionStatus;
   }
 
+  /**
+   * Changes connectionStatus property of the state when connection's status change detected
+   *
+   * @param   {string}   event   type of triggered event
+   * @return  {null}  Nothing is returned
+   */
+  connectionStatusChanged(event) {
+    this.setState({
+      connectionStatus: (event === 'disconnected' ? 'down' : 'up')
+    });
+
+    return null;
+  }
+
+  /**
+   * Checks whether the noteline is empty or not.
+   *
+   * @return {boolean} true if it's empty; false otherwise
+   */
   isNoteLineEmpty() {
     if (this.props.noteLines.length < 1 || !_has(this.props.noteLines[0], 'text')) {
       return false;
@@ -122,6 +183,12 @@ class Note extends Component {
     return this.props.noteLines[0].text === '';
   }
 
+  /**
+   * Checks whether footer and/or header can be shown.
+   *
+   * @param  {string}   part  either header or footer
+   * @return {boolean}  true if it can be shown; false otherwise
+   */
   canShowHeaderAndFooter(part) {
     if (part === 'header') {
       return this.props.noteLines.length > 1 ||
@@ -136,6 +203,13 @@ class Note extends Component {
     this.props.type === 'new';
   }
 
+  /**
+   * Dispatches a Redux action to create a new line.
+   *
+   * @param   {number}  index             noteline's index
+   * @param   {string}  positionToInsert  either next to a noteline or at the end
+   * @return  {null}                      nothing is returned
+   */
   createNewLine(index, positionToInsert) {
     switch (positionToInsert) {
     case 'append_next':
@@ -147,8 +221,19 @@ class Note extends Component {
     default:
       throw new Error('New Line could not be created');
     }
+
+    return null;
   }
 
+  /**
+   * Holds the save logic of a note.
+   * 1. Merges notelines into the existing note of the same type
+   * 2. Deletes the current note
+   * 3. Resets state of the current component
+   * 4. Creates a new note with its corresponding line.
+   *
+   * @return {null|alert} Alert if type has not been set; otherwise no return value.
+   */
   saveNote() {
     if (this.state.type === '0') {
       // TODO: Deliver a prettier alert
@@ -191,18 +276,42 @@ class Note extends Component {
     return null;
   }
 
+  /**
+   * Changes the note's type of the state.
+   *
+   * @param {SyntheticEvent} e - React's SyntheticEvent
+   * @param {number} index - index of the selected field
+   * @param {number} value - value of the selected field
+   * @return {null} No return value.
+   */
   handleSelectField(e, index, value) {
     this.setState({ type: value });
   }
 
+  /**
+   * Captures when the note is being focused which makes a difference to show header and footer
+   *
+   * @return {null} No return value
+   */
   handleClick() {
     this.setState({ hasFocus: true });
   }
 
+  /**
+   * Captures the event of pressing a key to either delete a line or add a new one
+   * depending on the key pressed.
+   *
+   * @param {string} id - noteline's ID
+   * @param {number} index - position of the current noteline
+   * @param {boolean} last - whether is the last noteline of the note
+   * @param {SyntheticEvent} e - React's SyntheticEvent object
+   * @return {null} No return value
+   */
   handleKeyDown(id, index, last, e) {
     this.isDelete = false;
 
     if (e.keyCode === 13) {
+      // enter key has been pressed
       e.preventDefault();
 
       if (!last) {
@@ -213,22 +322,37 @@ class Note extends Component {
       (e.keyCode === 8 || e.keyCode === 46)
       &&
       this.props.noteLines[index].text.length !== 0) {
+      // backspace or delete without alt or control key pressed and noteline is not empty
       this.isDelete = true;
     } else if (!e.ctrlKey &&
       !e.altKey &&
       e.keyCode === 8 &&
       this.props.noteLines[index].text.length === 0) {
+      // backspace without alt or control key pressed and noteline is empty
       e.preventDefault();
 
       if (!last) {
-        // is there a better way?
+        // set's note line height to 0
+        // TODO: double check whether there is a more elegant way to do this
         this.heights.filter((line) => line.ID === id)[0].height = 0;
         this.calculateTotalHeight();
+
+        // if it's the last noteline it shoudn't be deleted as it would make the note unusable
         this.props.deleteLine(id, this.props.note.ID);
       }
     }
   }
 
+  /**
+   * Dispatches a Redux action to update the noteline's text and if it's the last
+   * noteline it will create a new one
+   *
+   * @param {string} id - noteline's id
+   * @param {boolean} last - whether is the last note's noteline
+   * @param {boolean} isEmpty - whether the noteline's text is empty
+   * @param {SyntheticEvent} e - React's SynthethicEvent object
+   * @return {null} No return value
+   */
   handleChange(id, last, isEmpty, e) {
     if (isEmpty && last) {
       this.createNewLine(null, 'append_end');
@@ -237,6 +361,13 @@ class Note extends Component {
     this.props.updateLineValue(id, this.isDelete ? 'delete' : 'insert', e);
   }
 
+  /**
+   * Handles the navigation between the different history's note type.
+   *
+   * @deprecated not used anymore and will be removed in the next version
+   * @param {string} navigateTo - left or right which navigates through time of creation
+   * @return {null} No return value
+   */
   handleNavigation(navigateTo) {
     const { noteNumber } = this.props;
     const nextNote = navigateTo === 'left' ?
@@ -245,11 +376,25 @@ class Note extends Component {
     browserHistory.push('/patient/' + this.props.patientId + '/history/' + nextNote);
   }
 
+  /**
+   * Handles the pressing of the new note button.
+   *
+   * @return {null} No return value
+   */
   handleNewButton() {
     this.props.newNoteAndLine(this.props.patientId);
     browserHistory.push('/patient/' + this.props.patientId + '/new');
   }
 
+  /**
+   * Handles the line modifiers which at the moment are highlighting and setting as important.
+   *
+   * @param {string} id - noteline's id
+   * @param {string} type - type of line modifier
+   * @param {SyntheticEvent} e - React's Synthetic Event object
+   * @param {number} value - value of the selected modifier
+   * @return {null} No return value
+   */
   lineModifierHandler(id, type, e, value) {
     switch (type) {
     case 'onImportant':
@@ -261,6 +406,14 @@ class Note extends Component {
     }
   }
 
+  /**
+   * Handles the change of height caused by an increase in the input's height
+   *
+   * @param {number} index - noteline's position
+   * @param {string} noteLineId - noteline's id
+   * @param {number} newHeight - new height of the noteline
+   * @return {null} No return value
+   */
   handleChangeOfHeight(index, noteLineId, newHeight) {
     // console.log(newHeight)
     if (index < this.props.noteLines.length - 1 || this.props.type !== 'new') {
@@ -276,19 +429,13 @@ class Note extends Component {
     this.calculateTotalHeight();
   }
 
+  /**
+   * Recalculates the total height of the noteline's area by summing each noteline's height
+   *
+   * @return {null} No return value
+   */
   calculateTotalHeight() {
-    /*
-    console.log(this.props.height - 260 - (this.props.height * 0.4));
-    console.log('calculation',
-    this.heights.reduce((prev, current) => prev+current.height, 0) +
-    (this.canShowHeaderAndFooter('footer') ?
-    110 :
-    0) +
-    (this.canShowHeaderAndFooter('header') ?
-    60 :
-    0))
-    */
-    console.log('>>>>>> heights array', this.heights)
+    // console.log('>>>>>> heights array', this.heights)
     this.setState({
       // notelines' heights
       totalNoteHeight: this.heights.reduce((prev, current) => {
@@ -301,6 +448,12 @@ class Note extends Component {
     });
   }
 
+  /**
+   * Captures when a noteline received focus to show its modifier options
+   *
+   * @param {string} noteLineId - noteline's ID
+   * @return {null} No return value
+   */
   handleNoteLineFocus(noteLineId) {
     if (noteLineId !== this.lastNoteLine) {
       this.heights.filter((line) => line.ID === noteLineId)[0].height =
@@ -316,18 +469,72 @@ class Note extends Component {
     this.props.focusChanged(noteLineId);
   }
 
+  /**
+   * Handles the noteline's deletion
+   *
+   * @param {string} noteLineId - noteline's ID
+   * @param {string} noteId - note's ID
+   * @return {null} No return value
+   */
   handleDelete(noteLineId, noteId) {
     this.props.deleteLine(noteLineId, noteId);
     // is there a better way?
     this.heights.filter((line) => line.ID === noteLineId)[0].height = 0;
     this.calculateTotalHeight();
   }
-
-
+  /**
+   * Getter for the cursor position
+   *
+   * @return {int} The cursor position on a current line
+   */
   getCursorPosition() {
     return this.props.cursorPosition;
   }
 
+  /**
+   * Getter for the connection status text
+   *
+   * @param {string} status - connection status
+   * @return {string} text corresponding to the connection status
+   */
+  getConnectionStatusText(status) {
+    switch (status) {
+    case 'up':
+      return 'All changes are saved online.';
+    case 'down':
+      return 'All changes are saved locally.';
+    default:
+      return 'All changes are saved.';
+    }
+  }
+
+  /**
+   * Getter for getting the height value of the header depending on current state
+   *
+   * @return {number} height value of the header
+   */
+  getHeaderHeight() {
+    return this.canShowHeaderAndFooter('header') ?
+    60 :
+    0;
+  }
+
+  /**
+   * Getter for getting the height value of the footer depending on current state
+   *
+   * @return {number} height value of the footer
+   */
+  getFooterHeight() {
+    return this.canShowHeaderAndFooter('footer') ?
+    75 :
+    0;
+  }
+
+  /**
+   * Holds the logic of rendering the different notelines.
+   *
+   * @return {null|array} Null if no notelines, array of notelines components
+   */
   renderNoteLines() {
     let noteLines = {};
     const { type } = this.props;
@@ -376,29 +583,11 @@ class Note extends Component {
     return noteLines;
   }
 
-  getConnectionStatusText(status) {
-    switch (status) {
-    case 'up':
-      return 'All changes are saved online.';
-    case 'down':
-      return 'All changes are saved locally.';
-    default:
-      return 'All changes are saved.';
-    }
-  }
-
-  getHeaderHeight() {
-    return this.canShowHeaderAndFooter('header') ?
-    60 :
-    0;
-  }
-
-  getFooterHeight() {
-    return this.canShowHeaderAndFooter('footer') ?
-    75 :
-    0;
-  }
-
+  /**
+   * Render method of the component
+   *
+   * @return {node} React Component
+   */
   render() {
     const { noteLines, type } = this.props;
 
@@ -479,8 +668,8 @@ class Note extends Component {
               height: Math.max(minHeightNoteLinesArea,
                 this.state.totalNoteHeight + this.getFooterHeight() + this.getHeaderHeight()
               ),
-              minHeight: this.props.height * 0.6 < minHeightNoteAreaTabletOrBigger ? 
-              minHeightNoteAreaMobile : 
+              minHeight: this.props.height * 0.6 < minHeightNoteAreaTabletOrBigger ?
+              minHeightNoteAreaMobile :
               minHeightNoteAreaTabletOrBigger,
               maxHeight: this.props.height - 185
             }}

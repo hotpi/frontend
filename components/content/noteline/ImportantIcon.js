@@ -1,3 +1,12 @@
+/**
+ * ImportantIcon component which shows the star's icon and shows the different options
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ * @todo Change React.Component and React.PropTypes to just Component and PropTypes
+ * @todo Create a ComponentFactory for this and {@link HighlightIcon}
+ */
+
 import React from 'react';
 
 import IconButton from 'material-ui/IconButton';

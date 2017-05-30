@@ -1,3 +1,10 @@
+/**
+ * EmptySelection component which shows text in a large area.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';

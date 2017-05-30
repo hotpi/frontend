@@ -1,3 +1,9 @@
+/**
+ * NoteFooter component used for showing actions of the Notes of which type is new.
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 
 import SelectField from 'material-ui/SelectField';
@@ -7,10 +13,6 @@ import FlatButton from 'material-ui/FlatButton';
 import ActionDone from 'material-ui/svg-icons/action/done';
 
 import { actionsArea } from '../../helpers/Helpers';
-
-// TODO: Why do are those things here??
-/* "small-3 small-offset-3 small-centered large-2 large-centered large-offset-6 columns" */
-/* "small-6 large-4 columns" */
 
 const NoteFooter = ({
   show,

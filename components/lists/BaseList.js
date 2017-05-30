@@ -1,3 +1,11 @@
+/**
+ * BaseList component is a the base component of {@link PatientList} and {@link PatientOptionsList}
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
+
 import React from 'react';
 
 import List from 'material-ui/List';

@@ -1,3 +1,10 @@
+/**
+ * EmergencyCallButton component which displays a modal with the emergency numbers.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';

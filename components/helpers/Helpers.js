@@ -1,3 +1,10 @@
+/**
+ * Helpers objects, arrays, and functions used across the system.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 
 import ActionLabel from 'material-ui/svg-icons/action/label';

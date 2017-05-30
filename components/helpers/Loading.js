@@ -1,3 +1,10 @@
+/**
+ * Styled loading component.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 
 import CircularProgress from 'material-ui/CircularProgress';

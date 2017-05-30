@@ -1,3 +1,10 @@
+/**
+ * AddPatientForm component which displays a modal for adding a new patient.
+ *
+ * @copyright Juan Cabello
+ * @license GPLv3
+ */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -49,13 +56,11 @@ class AddPatientForm extends React.Component {
 
   submitForm(data) {
     // eslint-disable-next-line no-alert
-    alert(JSON.stringify(data, null, 4));
     this.props.addPatient(data);
     this.props.closeDialog();
   }
 
   notifyFormError(data) {
-    // console.error('Form error:', data);
     throw new Error('Form error: ', data);
   }
 
