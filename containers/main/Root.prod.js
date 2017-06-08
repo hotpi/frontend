@@ -1,9 +1,8 @@
 import React from 'react';
-import { Router, Route } from 'react-router';
+import { Router } from 'react-router';
 import { Provider } from 'react-redux';
 
-import PatientContainer from '../PatientContainer';
-import PatientDetailContainer from '../PatientDetailContainer';
+import routes from '../../routes';
 
 class Root extends React.Component {
   render() {
@@ -11,14 +10,7 @@ class Root extends React.Component {
 
     return (
       <Provider store={store}>
-        <Router history={history}>
-          <Route path="/" component={PatientContainer} />
-          <Route path="/patients" component={PatientContainer} />
-          <Route
-            path="/patient/:patientId(/:type(/:noteNumber))"
-            component={PatientDetailContainer}
-          />
-        </Router>
+        <Router history={history} routes={routes} />
       </Provider>
     );
   }

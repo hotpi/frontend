@@ -5,24 +5,22 @@
  * @license GPLv3
  */
 
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 
 import CommunicationPhone from 'material-ui/svg-icons/communication/phone';
 
-class EmergencyCallButton extends React.Component {
+import { getWidth } from '../../../reducers';
+
+class EmergencyCallButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      width: props.width
+      open: false
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ width: nextProps.width });
   }
 
   handleOpen() {
@@ -41,7 +39,7 @@ class EmergencyCallButton extends React.Component {
           onTouchTap={this.handleOpen.bind(this)}
           style={{
             position: 'fixed',
-            left: this.state.width - 80,
+            left: this.props.width - 80,
             top: 20
           }}
           >
@@ -61,7 +59,15 @@ class EmergencyCallButton extends React.Component {
 }
 
 EmergencyCallButton.propTypes = {
-  width: React.PropTypes.number
+  width: PropTypes.number
 };
 
-export default EmergencyCallButton;
+const mapStateToProps = (state) => {
+  const width = getWidth(state);
+ 
+  return {
+    width
+  };
+};
+
+export default connect(mapStateToProps, null)(EmergencyCallButton);

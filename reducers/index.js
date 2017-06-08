@@ -4,11 +4,15 @@ import { routerReducer as routing } from 'react-router-redux';
 import entities, * as fromEntities from './entities';
 import sync, * as fromSync from './sync';
 import cursor, * as fromCursor from './cursor';
+import opHistory, * as fromOpHistory from './opHistory';
+import dimensions, * as fromDimensions from './dimensions';
 
 const rootReducer = combineReducers({
   entities,
   cursor,
   sync,
+  opHistory,
+  dimensions,
   routing
 });
 
@@ -42,3 +46,11 @@ export const getIsFetching = (state) =>
   fromSync.getIsFetching(state.sync);
 export const getIsSynced = (state) =>
   fromSync.getIsSynced(state.sync);
+export const filterOperations = (state, level, id) =>
+  fromOpHistory.filterOperations(state.opHistory, level, id);
+export const getHeight = (state) =>
+  fromDimensions.getHeight(state.dimensions);
+export const getWidth = (state) =>
+  fromDimensions.getWidth(state.dimensions);
+export const getDimensions = (state) =>
+  fromDimensions.getDimensions(state.dimensions);

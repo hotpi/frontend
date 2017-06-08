@@ -1,3 +1,9 @@
+/**
+ * TO BE IMPLEMENTED: Filter functionality
+ * Create a filter function that goes through the history and gets all the operations
+ * related to one specific index
+ */
+
 import 'isomorphic-fetch';
 import Emitter from 'component-emitter';
 import request from 'superagent';
@@ -43,6 +49,8 @@ class Syncer {
     this.inFlight = false;
     this.buffer = [];
     this.revisionNr = 0;
+    // TODO: is it better to store them as operations are generated or get them from server?
+    this.history = [];
     this.uid = 0;
 
 
@@ -120,6 +128,8 @@ class Syncer {
   }
 
   generateOperation(newOp) {
+    this.store.dispatch({ type: 'NEW_OPERATION', operation: newOp });
+
     if (this.inFlight) {
       this.buffer.push(newOp);
     } else {
@@ -186,6 +196,10 @@ class Syncer {
     }
 
     return;
+  }
+
+  getHistory() {
+    return this.history;
   }
 
   // Fetch uid
@@ -272,7 +286,7 @@ class Syncer {
 
         receivedOp = this.transform(this.buffer, receivedOp)[0];
       }
-
+      this.store.dispatch({ type: 'NEW_OPERATION', operation: receivedOp });
       this.apply(this.store.dispatch)(translateOperationToAction(receivedOp, this.store));
     }
   }

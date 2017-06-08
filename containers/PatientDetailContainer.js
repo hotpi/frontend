@@ -1,45 +1,19 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import PatientOptionsList from '../components/lists/PatientOptionsList';
 import PatientHeader from '../components/content/top-view/PatientHeader';
 import Note from '../components/content/note/Note';
-import Loading from '../components/helpers/Loading';
-import EmergencyCallButton from '../components/content/top-view/EmergencyCallButton';
 
-import { getIsFetching, getIsSynced } from '../reducers/index';
-import { fetchData } from '../actions/sync';
+import { getDimensions } from '../reducers/index';
 
-class PatientDetailContainer extends React.Component {
+class PatientDetailContainer extends Component {
   constructor() {
     super();
     this.state = {
-      isDrawerOpen: false,
-      width: window.innerWidth,
-      height: window.innerHeight
+      isDrawerOpen: false
     };
-  }
-
-  componentWillMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions.bind(this));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions.bind(this));
-  }
-
-  updateWindowDimensions() {
-    // console.log('at container updates')
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  }
-
-  componentDidMount() {
-    const { isSynced } = this.props;
-    if (!isSynced) {
-      this.props.fetchData();
-    }
   }
 
   handleClick() {
@@ -49,10 +23,6 @@ class PatientDetailContainer extends React.Component {
   }
 
   render() {
-    if (this.props.isLoading) {
-      return <Loading />;
-    }
-
     return (
       <div
         className="row"
@@ -65,7 +35,7 @@ class PatientDetailContainer extends React.Component {
         }}
         >
           <PatientOptionsList
-            width={this.state.width}
+            width={this.props.width}
             isDrawerOpen={this.state.isDrawerOpen}
             onClickDo={this.handleClick.bind(this)}
           />
@@ -76,30 +46,30 @@ class PatientDetailContainer extends React.Component {
         >
             <PatientHeader onClickDo={this.handleClick.bind(this)}/>
             <Note
-              width={this.state.width}
-              height={this.state.height - 150}
+              width={this.props.width}
+              height={this.props.height - 150}
               type={this.props.type}
             />
         </div>
-        <EmergencyCallButton width={this.state.width} />
       </div>
     );
   }
 }
 
 PatientDetailContainer.propTypes = {
-  fetchData: React.PropTypes.func,
-  isSynced: React.PropTypes.string,
-  isLoading: React.PropTypes.bool,
-  type: React.PropTypes.string
+  height: PropTypes.number,
+  width: PropTypes.number,
+  type: PropTypes.string
 };
 
 const mapStateToProps = (state, { params }) => {
+  const { height, width } = getDimensions(state);
+
   return {
-    isSynced: getIsSynced(state),
-    isLoading: getIsFetching(state),
-    type: params.type
+    type: params.type,
+    height,
+    width
   };
 };
 
-export default withRouter(connect(mapStateToProps, { fetchData })(PatientDetailContainer));
+export default withRouter(connect(mapStateToProps)(PatientDetailContainer));

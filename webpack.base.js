@@ -33,7 +33,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-          presets: ['es2015', 'react'],
+          presets: [ 'es2015', 'react' ],
           plugins: [
             'transform-object-rest-spread',
             'lodash',
@@ -42,7 +42,7 @@ module.exports = {
           ],
           env: {
             production: {
-              presets: ['babili']
+              presets: [ 'babili' ]
             }
           }
         },
