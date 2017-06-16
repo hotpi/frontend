@@ -27,6 +27,7 @@ const BROADCAST_URL = ROOT_URL + 'sync/status/';
 const SEND_OP_URL = ROOT_URL + 'sync/sendOp';
 const SUBSCRIBE_URL = ROOT_URL + 'sync/subscribe';
 const INITIAL_STATE_URL = ROOT_URL + 'sync/initialState';
+const HISTORY_URL = ROOT_URL + 'sync/history';
 
 const superagentThrottle = new Throttle({
   // set false to pause queue
@@ -49,8 +50,6 @@ class Syncer {
     this.inFlight = false;
     this.buffer = [];
     this.revisionNr = 0;
-    // TODO: is it better to store them as operations are generated or get them from server?
-    this.history = [];
     this.uid = 0;
 
 
@@ -184,7 +183,6 @@ class Syncer {
           (err) => {
             connectionMonitor.emit('disconnected');
             throw new Error('Something went wrong..', err);
-            // console.log('Something went wrong..', err)
           }
         );
       this.newOperationRequests.push(newOperationRequest);
@@ -199,7 +197,18 @@ class Syncer {
   }
 
   getHistory() {
-    return this.history;
+    return request
+      .get(HISTORY_URL)
+      .then(
+          (res) => {
+            // TODO: Error handling 
+            if (res.body.history) {
+              res.body.history.map((operation) => {
+                this.store.dispatch({ type: 'NEW_OPERATION', operation });
+              });
+            }
+          }
+        );
   }
 
   // Fetch uid
@@ -236,8 +245,8 @@ class Syncer {
           (res) => {
             console.log('>>>>>>> listen request success');
 
-            // find a way to delete entry in array elegantly
-            // this.longPolledRequests[requestNumber].pop();
+            // resets arrays to avoid memory leaks
+            this.longPolledRequests.length = 0;
 
             if (!res.body.empty) {
               this.opReceived(res.body);

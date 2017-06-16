@@ -11,7 +11,10 @@ const opHistory = (
     return {
       history: [
         ...state.history,
-        action.operation
+        {
+          operation: action.operation,
+          revisionNr: state.history.length
+        }
       ]
     };
   default:
@@ -24,15 +27,16 @@ export default opHistory;
 export const filterOperations = (state, level, id) => {
   let idObjectName = '';
 
-  if (level === 1) {
+  if (level === 0) {
     idObjectName = 'PatientID';
-  } else if (level === 2) {
+  } else if (level === 1 || level === 2) {
     idObjectName = 'NoteID';
   } else if (level > 2) {
     idObjectName = 'NoteLineID';
   }
 
-  state.history.filter((operation) => {
-    return operation.action[idObjectName] === id && operation.accesPath.length === level;
+  return state.history.filter((entry) => {
+    return entry.operation.action[idObjectName] === id &&
+    entry.operation.action.level === level;
   });
 };

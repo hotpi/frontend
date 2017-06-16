@@ -40,6 +40,7 @@
     "lodash": "^4.13.1",
     "material-ui": "^0.16.4",
     "mdi": "^1.6.50",
+    "node-sass": "/Users/juancabello4.5.3",
     "node-uuid": "^1.4.7",
     "offline-js": "^0.7.18",
     "rc-swipeout": "^1.1.5",

@@ -32,6 +32,7 @@ middleware.initialLoad().then(state => {
   const history = syncHistoryWithStore(browserHistory, store);
 
   middleware.setStore(store);
+  middleware.getHistory();
 
   injectTapEventPlugin();
 

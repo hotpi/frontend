@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import PatientOptionsList from '../components/lists/PatientOptionsList';
 import PatientHeader from '../components/content/top-view/PatientHeader';
-import Note from '../components/content/note/Note';
+import NoteLevel from '../components/history-view/NoteLevel';
 
 import { getDimensions } from '../reducers';
 
@@ -43,12 +43,12 @@ class PatientDetailChronologyContainer extends Component {
           />
         </div>
         <div className="small-12 medium-8 large-9 columns" style={{
-          padding: 0
+          padding: 0,
+          overflow: 'auto'
         }}
         >
             <PatientHeader onClickDo={this.handleClick.bind(this)}/>
-            <Note
-              reviewMode={true}
+            <NoteLevel
               width={this.props.width}
               height={this.props.height - 150}
               type={this.props.type}

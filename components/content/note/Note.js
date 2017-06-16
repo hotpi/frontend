@@ -70,7 +70,6 @@ class Note extends Component {
    */
   constructor(props) {
     super(props);
-
     this.state = {
       canAllocateFocus: false,
       hasFocus: false,
@@ -78,6 +77,7 @@ class Note extends Component {
       totalNoteHeight: 0,
       connectionStatus: 'up'
     };
+
     // the ID of the last noteline in the list
     this.lastNoteLine = '';
     // heights of all the notelines
@@ -576,7 +576,7 @@ class Note extends Component {
           onChangeOfHeightDo={this.handleChangeOfHeight.bind(this, index, ID)}
           updateCursorPosition={this.props.updateCursorPosition.bind(this)}
           cursorPosition={this.getCursorPosition.bind(this)}
-          />
+        />
       );
     });
 
@@ -755,24 +755,28 @@ Note.propTypes = {
   createAndAppendNext: PropTypes.func,
   createAndAppendLast: PropTypes.func,
   updateLineValue: PropTypes.func,
-  focusedNoteLine: PropTypes.string
+  focusedNoteLine: PropTypes.string,
+  reviewMode: PropTypes.bool
 };
 
 Note.defaultProps = {
+  reviewMode: false,
   title: 'New note',
   type: 'new'
 };
 
-const mapStateToProps = (state, { params }) => {
+const mapStateToProps = (state, ownProps) => {
+  const { params } = ownProps;
+  let operations = [];
   const cursorPosition = getCursorPosition(state);
   const canAllocateFocus = isFocusChangeAllowed(state);
-  // console.log('receives new cursor', cursorPosition)
   const noteNumber = params.noteNumber || 0;
   const patientId = params.patientId;
   const typeFilter = params.type || 'new';
   const patientNotesFromType = getNotesByTypeFromPatient(state, patientId, typeFilter);
   let sortedNotes = patientNotesFromType;
 
+  // NOTE: may be not necessary anymore
   if (patientNotesFromType.length > 1) {
     sortedNotes = patientNotesFromType.sort((a, b) => {
       if (a.createdAt < b.createdAt) {
@@ -788,15 +792,15 @@ const mapStateToProps = (state, { params }) => {
   const noteLines = sortedNotes[noteNumber] &&
     getAllNoteLines(state, sortedNotes[noteNumber].ID) ||
     [];
-
+  
   return {
     canAllocateFocus,
     cursorPosition,
     noteLines,
-    focusedNoteLine: getFocusedNoteLine(state),
-    note: sortedNotes[noteNumber] || null,
     patientId,
     noteNumber,
+    operations,
+    note: sortedNotes[noteNumber] || null,
     numberOfNotesOfCurrentType: patientNotesFromType.length,
     getPatientNotes: () => getAllPatientNotes(state, patientId),
     getNoteLineObj: (noteLineId) => getNoteLine(state, noteLineId)
@@ -821,5 +825,13 @@ const mapDispatchToProps = (dispatch) => {
     allowFocusChange: (isAllowed) => dispatch(allowFocusChange(isAllowed))
   };
 };
+
+/*const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  if (ownProps.reviewMode) {
+    console.log(filterOperations))
+    // use a helper funciton that parses insertions and deletions
+    // 
+  }
+}*/
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Note));
