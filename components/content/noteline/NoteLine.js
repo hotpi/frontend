@@ -51,13 +51,46 @@ class NoteLine extends React.Component {
       this.props.isFocused !== nextProps.isFocused;
   }
 
+  getTextComponent() {
+    if (this.props.reviewMode) {
+      return (
+        <div>
+          {this.props.text}
+        </div>
+      );
+    }
+
+    return (
+      <div className={'line-w-button'} tabIndex="0">
+        <AddIcon
+          last={this.props.last}
+        />
+        <LineText
+          onChangeDo={this.props.onChangeDo}
+          onKeyDownDo={this.props.keyDownHandler}
+          onFocusDo={this.props.onFocusDo}
+          cursorPosition={this.props.cursorPosition()}
+          updateCursorPosition={this.props.updateCursorPosition}
+          onChangeOfHeightDo={this.props.onChangeOfHeightDo}
+          text={this.props.text}
+          highlight={this.props.highlight}
+          canGetFocus={this.props.canGetFocus}
+        />
+        <CancelButton
+          last={this.props.last}
+          onClickDo={this.props.deleteLine}
+        />
+      </div>
+    );
+  }
+
   /**
    * Render method of the component
    *
    * @return {node} React Component
    */
   render() {
-    const { isFocused, deleteLine, last, important, highlight, text, canGetFocus } = this.props;
+    const { isFocused, last, important, highlight, reviewMode } = this.props;
 
     if (!this.props.noteLine) {
       return null;
@@ -66,29 +99,10 @@ class NoteLine extends React.Component {
     return (
       <div
         className={'note-line-container'}
-        style={last ? lineOutHover.last : lineOutHover.notLast}
+        style={last ? lineOutHover.last : lineOutHover.notLaststyle}
       >
-        <div className={'line-w-button'} tabIndex="0">
-          <AddIcon
-            last={last}
-            />
-          <LineText
-            onChangeDo={this.props.onChangeDo}
-            onKeyDownDo={this.props.keyDownHandler}
-            onFocusDo={this.props.onFocusDo}
-            cursorPosition={this.props.cursorPosition()}
-            updateCursorPosition={this.props.updateCursorPosition}
-            onChangeOfHeightDo={this.props.onChangeOfHeightDo}
-            text={text}
-            highlight={highlight}
-            canGetFocus={canGetFocus}
-          />
-          <CancelButton
-            last={last}
-            onClickDo={deleteLine}
-            />
-        </div>
-        { isFocused ?
+        {this.getTextComponent()}
+        { isFocused || reviewMode ?
           <NoteLineOptions
             last={last}
             important={important}
@@ -102,6 +116,10 @@ class NoteLine extends React.Component {
     );
   }
 }
+
+NoteLine.defaultProps = {
+  reviewMode: false
+};
 
 NoteLine.propTypes = {
   ID: React.PropTypes.string.isRequired,
@@ -118,7 +136,7 @@ NoteLine.propTypes = {
     color: React.PropTypes.any.isRequired,
     value: React.PropTypes.any.isRequired
   }).isRequired,
-  deleteLine: React.PropTypes.func.isRequired,
+  deleteLine: React.PropTypes.func,
   noteLine: React.PropTypes.object,
   onChangeDo: React.PropTypes.func,
   keyDownHandler: React.PropTypes.func,
@@ -128,7 +146,8 @@ NoteLine.propTypes = {
   onChangeOfHeightDo: React.PropTypes.func,
   onHighlight: React.PropTypes.func,
   onImportant: React.PropTypes.func,
-  isFocused: React.PropTypes.bool
+  isFocused: React.PropTypes.bool,
+  reviewMode: React.PropTypes
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -136,9 +155,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
     noteLine,
     isFocused: getFocusedNoteLine(state) === ownProps.ID,
-    text: noteLine.text || '',
-    important: noteLine.important || {},
-    highlight: noteLine.highlight || {}
+    text: noteLine && noteLine.text || '',
+    important: noteLine && noteLine.important || {},
+    highlight: noteLine && noteLine.highlight || {}
   };
 };
 

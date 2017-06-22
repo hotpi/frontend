@@ -6,6 +6,11 @@
     background: transparent;  /* optional: just make scrollbar invisible */
 }
 
+.note-line-container {
+  border-top: 1px transparent solid;
+  border-bottom: 1px transparent solid;
+}
+
 .note-line-container:hover {
   border-top: 1px lightgrey solid;
   border-bottom: 1px lightgrey solid;
@@ -32,9 +37,4 @@
 
 .line-w-button:focus {
   outline: none;
-}
-
-.note-line-container {
-  border-top: 1px transparent solid;
-  border-bottom: 1px transparent solid;
 }
