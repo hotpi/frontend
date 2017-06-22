@@ -455,6 +455,7 @@ class Note extends Component {
    * @return {null} No return value
    */
   handleNoteLineFocus(noteLineId) {
+    console.log('this.heights::', this.heights);
     if (noteLineId !== this.lastNoteLine) {
       this.heights.filter((line) => line.ID === noteLineId)[0].height =
         this.heights.filter((line) => line.ID === noteLineId)[0].height + 30;
@@ -802,6 +803,7 @@ const mapStateToProps = (state, ownProps) => {
     operations,
     note: sortedNotes[noteNumber] || null,
     numberOfNotesOfCurrentType: patientNotesFromType.length,
+    focusedNoteLine: getFocusedNoteLine(state),
     getPatientNotes: () => getAllPatientNotes(state, patientId),
     getNoteLineObj: (noteLineId) => getNoteLine(state, noteLineId)
   };
